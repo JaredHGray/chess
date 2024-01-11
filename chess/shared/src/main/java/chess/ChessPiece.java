@@ -35,7 +35,7 @@ public class ChessPiece {
      * @return Which team this chess piece belongs to
      */
     public ChessGame.TeamColor getTeamColor() {
-        throw new RuntimeException("Not implemented");
+        return pieceColor;
     }
 
     /**
@@ -69,10 +69,8 @@ public class ChessPiece {
                 throw new RuntimeException("Not implemented");
             default:
                 throw new RuntimeException("Unknown game piece");
-
         }
     }
-
     private Set<ChessMove> calculateBishop(ChessBoard board, ChessPosition myPosition){
         Set<ChessMove> validMoves = new HashSet<>();
         int boardSize = 8;
@@ -85,7 +83,7 @@ public class ChessPiece {
         //create loop to go through the whole list of possible directions and check each spot to see if it is valid to move there
         for(int[] dir: possDirections){
             for(int i = 1; i <= boardSize; i++){
-                //creates next square to check on the board
+                //creates next square to check on the board by incrementing by 1 and running through the possible directions to go
                 int newRow = row + i * dir[0];
                 int newCol = col + i * dir[1];
                 if(validateMove(newRow, newCol, board)){
@@ -98,8 +96,20 @@ public class ChessPiece {
                 }
             }
         }
+        //return HashSet of valid moves for the bishop
+        return validMoves;
+    }
 
-        throw new RuntimeException("Not implemented");
+    private boolean validateMove(int row, int col, ChessBoard board){
+        int boardSize = 8;
+        //make sure the new position is in the parameters of the board
+        if((row >= 0 && row <= boardSize) && (col >= 0 && col <= boardSize)){
+            //check to see if that space is already occupied
+            if(){
+
+            }
+        }
+        return false;
     }
 
 }
