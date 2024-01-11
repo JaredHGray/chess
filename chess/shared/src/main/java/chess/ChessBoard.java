@@ -8,10 +8,11 @@ package chess;
  */
 public class ChessBoard {
     //initalize the board
-    private final int[][] board;
+    private final ChessPiece[][] board;
     public ChessBoard() {
         //set board size
-        board = new int[8][8];
+        //why class is ChessPiece?
+        board = new ChessPiece[8][8];
     }
 
     /**
@@ -21,7 +22,12 @@ public class ChessBoard {
      * @param piece    the piece to add
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
-
+        //need to first see if something is on the position first
+        if(board[position.getRow()][position.getColumn()] == null) {
+            board[position.getRow()][position.getColumn()] = piece;
+        } else{
+            throw new RuntimeException("Position on Chessboard already Occupied");
+        }
     }
 
     /**
