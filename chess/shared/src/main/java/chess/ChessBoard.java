@@ -11,7 +11,7 @@ public class ChessBoard {
     private final ChessPiece[][] board;
     public ChessBoard() {
         //set board size
-        //why class is ChessPiece?
+        //why class is ChessPiece? - makes sense as the pieces are of this class, just confused since weird parameters
         board = new ChessPiece[8][8];
     }
 
@@ -38,7 +38,11 @@ public class ChessBoard {
      * position
      */
     public ChessPiece getPiece(ChessPosition position) {
-        throw new RuntimeException("Not implemented");
+        if(board[position.getRow()][position.getColumn()] == null) {
+            return null;
+        }else{
+            return board[position.getRow()][position.getColumn()];
+        }
     }
 
     /**
