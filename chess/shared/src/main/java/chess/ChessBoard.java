@@ -7,9 +7,11 @@ package chess;
  * signature of the existing methods.
  */
 public class ChessBoard {
-
+    //initalize the board
+    private final int[][] board;
     public ChessBoard() {
-        
+        //set board size
+        board = new int[8][8];
     }
 
     /**
@@ -20,7 +22,6 @@ public class ChessBoard {
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
 
-        throw new RuntimeException("Not implemented");
     }
 
     /**
