@@ -1,6 +1,8 @@
 package chess;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Represents a single chess piece
@@ -9,8 +11,12 @@ import java.util.Collection;
  * signature of the existing methods.
  */
 public class ChessPiece {
-
+    //class variables intialized
+    PieceType type;
+    ChessGame.TeamColor pieceColor;
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
+        this.type = type;
+        this.pieceColor = pieceColor;
     }
 
     /**
@@ -36,7 +42,7 @@ public class ChessPiece {
      * @return which type of chess piece this piece is
      */
     public PieceType getPieceType() {
-        throw new RuntimeException("Not implemented");
+        return type;
     }
 
     /**
@@ -47,6 +53,53 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
+    /** figure out which piece type is being tested then call a piece moves function based on that*/
+        switch(type) {
+            case KING:
+                throw new RuntimeException("Not implemented");
+            case QUEEN:
+                throw new RuntimeException("Not implemented");
+            case BISHOP:
+                return calculateBishop(board, myPosition);
+            case KNIGHT:
+                throw new RuntimeException("Not implemented");
+            case ROOK:
+                throw new RuntimeException("Not implemented");
+            case PAWN:
+                throw new RuntimeException("Not implemented");
+            default:
+                throw new RuntimeException("Unknown game piece");
+
+        }
+    }
+
+    private Set<ChessMove> calculateBishop(ChessBoard board, ChessPosition myPosition){
+        Set<ChessMove> validMoves = new HashSet<>();
+        int boardSize = 8;
+        //calculate possible directions the bishop can move
+        //bishops can move in any diagonal direction
+        int row = myPosition.getRow();
+        int col = myPosition.getColumn();
+        int[][] possDirections = {{1,1}, {1,-1}, {-1,1}, {-1,-1}};
+
+        //create loop to go through the whole list of possible directions and check each spot to see if it is valid to move there
+        for(int[] dir: possDirections){
+            for(int i = 1; i <= boardSize; i++){
+                //creates next square to check on the board
+                int newRow = row + i * dir[0];
+                int newCol = col + i * dir[1];
+                if(validateMove(newRow, newCol, board)){
+                    //if valid, add move to list of possible moves and continue the loop
+                    ChessPosition validPosition = new ChessPosition(newRow, newCol);
+                    validMoves.add(new ChessMove(myPosition, validPosition, type));
+                }else{
+                    //stop searching this direction if it is blocked by another piece
+                    break;
+                }
+            }
+        }
+
         throw new RuntimeException("Not implemented");
     }
+
 }

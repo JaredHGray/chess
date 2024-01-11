@@ -7,9 +7,15 @@ package chess;
  * signature of the existing methods.
  */
 public class ChessMove {
-
+    //initalize class variables
+    ChessPosition startPosition;
+    ChessPosition endPosition;
+    ChessPiece.PieceType promotionPiece;
     public ChessMove(ChessPosition startPosition, ChessPosition endPosition,
                      ChessPiece.PieceType promotionPiece) {
+        this.startPosition = startPosition;
+        this.endPosition = endPosition;
+        this.promotionPiece = promotionPiece;
     }
 
     /**
@@ -33,6 +39,10 @@ public class ChessMove {
      * @return Type of piece to promote a pawn to, or null if no promotion
      */
     public ChessPiece.PieceType getPromotionPiece() {
-        throw new RuntimeException("Not implemented");
+        if(promotionPiece == ChessPiece.PieceType.PAWN){
+            throw new RuntimeException("Not implemented");
+        } else{
+            return null;
+        }
     }
 }
