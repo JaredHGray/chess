@@ -82,7 +82,7 @@ public class ChessPiece {
 
         //create loop to go through the whole list of possible directions and check each spot to see if it is valid to move there
         for(int[] dir: possDirections){
-            for(int i = 1; i <= boardSize; i++){
+            for(int i = 1; i < boardSize; i++){
                 //creates next square to check on the board by incrementing by 1 and running through the possible directions to go
                 int newRow = row + i * dir[0];
                 int newCol = col + i * dir[1];
@@ -103,10 +103,11 @@ public class ChessPiece {
     private boolean validateMove(int row, int col, ChessBoard board){
         int boardSize = 8;
         //make sure the new position is in the parameters of the board
-        if((row >= 0 && row <= boardSize) && (col >= 0 && col <= boardSize)){
+        if((row >= 0 && row < boardSize) && (col >= 0 && col < boardSize)){
             //check to see if that space is already occupied
-            if(){
-
+            if(board.getPiece(new ChessPosition(row,col)) == null){
+                //will probably need to check for enemies as well
+                return true;
             }
         }
         return false;

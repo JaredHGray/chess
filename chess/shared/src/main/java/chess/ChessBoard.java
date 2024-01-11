@@ -40,6 +40,7 @@ public class ChessBoard {
         if(board[position.getRow()][position.getColumn()] == null) {
             return null;
         }else{
+            //need to fix this
             return board[position.getRow()][position.getColumn()];
         }
     }
