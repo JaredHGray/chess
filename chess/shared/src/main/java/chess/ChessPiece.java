@@ -91,15 +91,17 @@ public class ChessPiece {
     /**function to calculate the possible moves of the king piece*/
     private Set<ChessMove> calculateKing(ChessBoard board, ChessPosition myPosition){
         Set<ChessMove> validMoves = new HashSet<>();
-        //calculate possible directions the king can move
-        //kings can move in any direction one spot
+
+        // Possible directions the king can move (any direction one spot)
         int row = myPosition.getRow();
         int col = myPosition.getColumn();
+
         for(int i = -1; i <= 1; i++){
             for(int j = -1; j <= 1; j++){
                 //creates next square to check on the board by incrementing by 1 in each direction
                 int newRow = row + i;
                 int newCol = col + j;
+
                 if(validateMove(newRow, newCol, board, myPosition)){
                     //if valid, add move to list of possible moves and continue the loop
                     ChessPosition validPosition = new ChessPosition(newRow, newCol);
@@ -119,17 +121,20 @@ public class ChessPiece {
     private Set<ChessMove> calculateQueen(ChessBoard board, ChessPosition myPosition){
         Set<ChessMove> validMoves = new HashSet<>();
         int boardSize = 8;
-        //calculate possible directions the queen can move
-        //queens can move in straight lines and diagonals as far as there is open space
+
+        // Possible directions the queen can move (straight lines and diagonals)
+        int[][] possDirections = {{1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1}, {0, -1}, {1, -1}, {1, 0}};
+
         int row = myPosition.getRow();
         int col = myPosition.getColumn();
-        int[][] possDirections = {{1,1}, {0,1}, {-1,1}, {-1,0}, {-1,-1}, {0,-1}, {1,-1}, {1,0}};
 
+        // Loop to go through the whole list of possible directions and check each spot
         for(int[] dir: possDirections){
             for(int i = 1; i < boardSize; i++){
-                //creates next square to check on the board by incrementing by 1 and running through the possible directions to go
+                //creates next square to check on the board by incrementing by 1 and running through all possible directions
                 int newRow = row + i * dir[0];
                 int newCol = col + i * dir[1];
+
                 if(validateMove(newRow, newCol, board, myPosition)){
                     //if valid, add move to list of possible moves and continue the loop
                     ChessPosition validPosition = new ChessPosition(newRow, newCol);
@@ -152,17 +157,20 @@ public class ChessPiece {
     private Set<ChessMove> calculateBishop(ChessBoard board, ChessPosition myPosition){
         Set<ChessMove> validMoves = new HashSet<>();
         int boardSize = 8;
-        //calculate possible directions the bishop can move
-        //bishops can move in any diagonal direction
+
+        // Possible directions the bishop can move (diagonals)
+        int[][] possDirections = {{1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
+
         int row = myPosition.getRow();
         int col = myPosition.getColumn();
-        int[][] possDirections = {{1,1}, {1,-1}, {-1,1}, {-1,-1}};
-        //create loop to go through the whole list of possible directions and check each spot to see if it is valid to move there
+
+        // Loop to go through the whole list of possible directions and check each spot
         for(int[] dir: possDirections){
             for(int i = 1; i < boardSize; i++){
                 //creates next square to check on the board by incrementing by 1 and running through the possible directions to go
                 int newRow = row + i * dir[0];
                 int newCol = col + i * dir[1];
+
                 if(validateMove(newRow, newCol, board, myPosition)){
                     //if valid, add move to list of possible moves and continue the loop
                     ChessPosition validPosition = new ChessPosition(newRow, newCol);
@@ -184,14 +192,18 @@ public class ChessPiece {
     /**function to calculate the possible moves of the knight piece*/
     private Set<ChessMove> calculateKnight(ChessBoard board, ChessPosition myPosition){
         Set<ChessMove> validMoves = new HashSet<>();
-        //calculate possible directions the knight can move
-        //knights can move in an L shape, moving 2 squares in one direction and 1 square in the other direction
+
+        // Possible directions the knight can move (L-shape)
+        int[][] possDirections = {{2, 1}, {2, -1}, {-2, 1}, {-2, -1}, {1, 2}, {1, -2}, {-1, 2}, {-1, -2}};
+
         int row = myPosition.getRow();
         int col = myPosition.getColumn();
-        int[][] possDirections = {{2,1}, {2,-1}, {-2,1}, {-2,-1}, {1,2}, {1,-2}, {-1,2}, {-1,-2}};
-        for(int[] dir: possDirections){ //iterate through each possible move
+
+        for(int[] dir: possDirections){
+            //iterate through each possible move
             int newRow = row + dir[0];
             int newCol = col + dir[1];
+
             if(validateMove(newRow, newCol, board, myPosition)){
                 //if valid, add move to list of possible moves and continue the loop
                 ChessPosition validPosition = new ChessPosition(newRow, newCol);
@@ -206,17 +218,19 @@ public class ChessPiece {
     private Set<ChessMove> calculateRook(ChessBoard board, ChessPosition myPosition){
         Set<ChessMove> validMoves = new HashSet<>();
         int boardSize = 8;
-        //calculate possible directions the rook can move
-        //rooks can move in straight lines as far as there is open space
+
+        // Possible directions the rook can move (straight lines)
+        int[][] possDirections = {{0, 1}, {0, -1}, {-1, 0}, {1, 0}};
+
         int row = myPosition.getRow();
         int col = myPosition.getColumn();
-        int[][] possDirections = {{0,1}, {0,-1}, {-1,0}, {1,0}};
 
         for(int[] dir: possDirections){
             for(int i = 1; i < boardSize; i++){
                 //creates next square to check on the board by incrementing by 1 and running through the possible directions to go
                 int newRow = row + i * dir[0];
                 int newCol = col + i * dir[1];
+
                 if(validateMove(newRow, newCol, board, myPosition)){
                     //if valid, add move to list of possible moves and continue the loop
                     ChessPosition validPosition = new ChessPosition(newRow, newCol);
@@ -231,7 +245,7 @@ public class ChessPiece {
                 }
             }
         }
-
+        //return HashSet of valid moves for the rook
         return validMoves;
     }
 
@@ -239,13 +253,13 @@ public class ChessPiece {
         int boardSize = 8;
         enemy = false;
 
-        //make sure the new position is in the parameters of the board
+        //make sure the new position is within the parameters of the board
         if((row > 0 && row <= boardSize) && (col > 0 && col <= boardSize)){
             if(board.getPiece(new ChessPosition(row,col)) != null){
-                //if square on board is occupied, discover color of piece
+                //if square on board is occupied, discover the color of piece
                 enemy = board.getPiece(new ChessPosition(row,col)).getTeamColor() != board.getPiece(myPosition).getTeamColor();
             }
-            //check to see if that space is already occupied or if the space is occupied by the opponent
+            //check if that space is already occupied or if the space is occupied by the opponent
             return board.getPiece(new ChessPosition(row, col)) == null || enemy;
         }
         return false;
