@@ -138,12 +138,9 @@ public class ChessPiece {
                     ChessPosition validPosition = new ChessPosition(newRow, newCol);
                     validMoves.add(new ChessMove(myPosition, validPosition, null));
                     if(enemy){
-                        //stop searching if bishop takes enemy
+                        //stop searching if king takes enemy
                         break;
                     }
-                }else{
-                    //stop searching this direction if it is blocked by friendly piece or out of bounds
-                    break;
                 }
             }
         }
