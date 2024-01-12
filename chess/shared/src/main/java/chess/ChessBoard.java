@@ -1,5 +1,7 @@
 package chess;
 
+import java.util.Arrays;
+
 /**
  * A chessboard that can hold and rearrange chess pieces.
  * <p>
@@ -9,6 +11,20 @@ package chess;
 public class ChessBoard {
     //initalize the board
     private final ChessPiece[][] board;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChessBoard that = (ChessBoard) o;
+        return Arrays.deepEquals(board, that.board);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.deepHashCode(board);
+    }
+
     public ChessBoard() {
         //set board size
         board = new ChessPiece[8][8];
@@ -22,8 +38,8 @@ public class ChessBoard {
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
         //need to first see if something is on the position first
-        if(board[position.getRow()][position.getColumn()] == null) {
-            board[position.getRow()][position.getColumn()] = piece;
+        if(board[position.getRow()-1][position.getColumn()-1] == null) {
+            board[position.getRow()-1][position.getColumn()-1] = piece;
         } else{
             throw new RuntimeException("Position on Chessboard already Occupied");
         }
@@ -37,12 +53,9 @@ public class ChessBoard {
      * position
      */
     public ChessPiece getPiece(ChessPosition position) {
-        if(board[position.getRow()][position.getColumn()] == null) {
-            return null;
-        }else{
-            //need to fix this
-            return board[position.getRow()][position.getColumn()];
-        }
+
+            return board[position.getRow()-1][position.getColumn()-1];
+
     }
 
     /**

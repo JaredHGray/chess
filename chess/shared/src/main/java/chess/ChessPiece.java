@@ -2,6 +2,7 @@ package chess;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -79,31 +80,49 @@ public class ChessPiece {
         int row = myPosition.getRow();
         int col = myPosition.getColumn();
         int[][] possDirections = {{1,1}, {1,-1}, {-1,1}, {-1,-1}};
-
+        int count = 0;
         //create loop to go through the whole list of possible directions and check each spot to see if it is valid to move there
         for(int[] dir: possDirections){
+
             for(int i = 1; i < boardSize; i++){
+                count++;
                 //creates next square to check on the board by incrementing by 1 and running through the possible directions to go
                 int newRow = row + i * dir[0];
                 int newCol = col + i * dir[1];
                 if(validateMove(newRow, newCol, board, myPosition)){
                     //if valid, add move to list of possible moves and continue the loop
                     ChessPosition validPosition = new ChessPosition(newRow, newCol);
-                    validMoves.add(new ChessMove(myPosition, validPosition, type));
+                    validMoves.add(new ChessMove(myPosition, validPosition, null));
                 }else{
                     //stop searching this direction if it is blocked by another piece
+                    System.out.println("break");
                     break;
                 }
+                System.out.println(count);
             }
+            count = 0;
         }
         //return HashSet of valid moves for the bishop
         return validMoves;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChessPiece that = (ChessPiece) o;
+        return type == that.type && pieceColor == that.pieceColor;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(type, pieceColor);
+    }
+
     private boolean validateMove(int row, int col, ChessBoard board, ChessPosition myPosition){
         int boardSize = 8;
         //make sure the new position is in the parameters of the board
-        if((row >= 0 && row < boardSize) && (col >= 0 && col < boardSize)){
+        if((row > 0 && row <= boardSize) && (col > 0 && col <= boardSize)){
             //check to see if that space is already occupied or if the space is occupied by the opponent
             if(board.getPiece(new ChessPosition(row,col)) == null || board.getPiece(new ChessPosition(row,col)).getTeamColor() != board.getPiece(myPosition).getTeamColor()){
                 return true;
