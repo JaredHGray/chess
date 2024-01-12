@@ -78,7 +78,7 @@ public class ChessPiece {
             case BISHOP:
                 return calculateBishop(board, myPosition);
             case KNIGHT:
-                throw new RuntimeException("Not implemented");
+                return calculateKnight(board, myPosition);
             case ROOK:
                 throw new RuntimeException("Not implemented");
             case PAWN:
@@ -123,7 +123,6 @@ public class ChessPiece {
     /**function to calculate the possible moves of the king piece*/
     private Set<ChessMove> calculateKing(ChessBoard board, ChessPosition myPosition){
         Set<ChessMove> validMoves = new HashSet<>();
-        int boardSize = 8;
         //calculate possible directions the king can move
         //kings can move in any direction one spot
         int row = myPosition.getRow();
@@ -148,6 +147,26 @@ public class ChessPiece {
         return validMoves;
     }
 
+    /**function to calculate the possible moves of the knight piece*/
+    private Set<ChessMove> calculateKnight(ChessBoard board, ChessPosition myPosition){
+        Set<ChessMove> validMoves = new HashSet<>();
+        //calculate possible directions the knight can move
+        //knights can move in an L shape, moving 2 squares in one direction and 1 square in the other direction
+        int row = myPosition.getRow();
+        int col = myPosition.getColumn();
+        int[][] possDirections = {{2,1}, {2,-1}, {-2,1}, {-2,-1}, {1,2}, {1,-2}, {-1,2}, {-1,-2}};
+        for(int[] dir: possDirections){ //iterate through each possible move
+            int newRow = row + dir[0];
+            int newCol = col + dir[1];
+            if(validateMove(newRow, newCol, board, myPosition)){
+                //if valid, add move to list of possible moves and continue the loop
+                ChessPosition validPosition = new ChessPosition(newRow, newCol);
+                validMoves.add(new ChessMove(myPosition, validPosition, null));
+            }
+        }
+        //return HashSet of valid moves for the knight
+        return validMoves;
+    }
 
     private boolean validateMove(int row, int col, ChessBoard board, ChessPosition myPosition){
         int boardSize = 8;
