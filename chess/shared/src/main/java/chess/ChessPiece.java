@@ -130,7 +130,7 @@ public class ChessPiece {
         int col = myPosition.getColumn();
         for(int i = -1; i <= 1; i++){
             for(int j = -1; j <= 1; j++){
-                //creates next square to check on the board by incrementing by 1 and running through the possible directions to go
+                //creates next square to check on the board by incrementing by 1 in each direction
                 int newRow = row + i;
                 int newCol = col + j;
                 if(validateMove(newRow, newCol, board, myPosition)){
