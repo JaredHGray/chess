@@ -74,7 +74,7 @@ public class ChessPiece {
             case KING:
                 return calculateKing(board, myPosition);
             case QUEEN:
-                throw new RuntimeException("Not implemented");
+                return calculateQueen(board, myPosition);
             case BISHOP:
                 return calculateBishop(board, myPosition);
             case KNIGHT:
@@ -87,6 +87,45 @@ public class ChessPiece {
                 throw new RuntimeException("Unknown game piece");
         }
     }
+
+    /**function to calculate the possible moves of the king piece*/
+    private Set<ChessMove> calculateKing(ChessBoard board, ChessPosition myPosition){
+        Set<ChessMove> validMoves = new HashSet<>();
+        //calculate possible directions the king can move
+        //kings can move in any direction one spot
+        int row = myPosition.getRow();
+        int col = myPosition.getColumn();
+        for(int i = -1; i <= 1; i++){
+            for(int j = -1; j <= 1; j++){
+                //creates next square to check on the board by incrementing by 1 in each direction
+                int newRow = row + i;
+                int newCol = col + j;
+                if(validateMove(newRow, newCol, board, myPosition)){
+                    //if valid, add move to list of possible moves and continue the loop
+                    ChessPosition validPosition = new ChessPosition(newRow, newCol);
+                    validMoves.add(new ChessMove(myPosition, validPosition, null));
+                    if(enemy){
+                        //stop searching if king takes enemy
+                        break;
+                    }
+                }
+            }
+        }
+        //return HashSet of valid moves for the king
+        return validMoves;
+    }
+
+    /**function to calculate the possible moves of the queen piece*/
+    private Set<ChessMove> calculateQueen(ChessBoard board, ChessPosition myPosition){
+        Set<ChessMove> validMoves = new HashSet<>();
+        //calculate possible directions the queen can move
+        //queens can move in straight lines and diagonals as far as there is open space
+        int row = myPosition.getRow();
+        int col = myPosition.getColumn();
+
+        return validMoves;
+    }
+
     /**function to calculate the possible moves of the bishop piece*/
     private Set<ChessMove> calculateBishop(ChessBoard board, ChessPosition myPosition){
         Set<ChessMove> validMoves = new HashSet<>();
@@ -117,33 +156,6 @@ public class ChessPiece {
             }
         }
         //return HashSet of valid moves for the bishop
-        return validMoves;
-    }
-
-    /**function to calculate the possible moves of the king piece*/
-    private Set<ChessMove> calculateKing(ChessBoard board, ChessPosition myPosition){
-        Set<ChessMove> validMoves = new HashSet<>();
-        //calculate possible directions the king can move
-        //kings can move in any direction one spot
-        int row = myPosition.getRow();
-        int col = myPosition.getColumn();
-        for(int i = -1; i <= 1; i++){
-            for(int j = -1; j <= 1; j++){
-                //creates next square to check on the board by incrementing by 1 in each direction
-                int newRow = row + i;
-                int newCol = col + j;
-                if(validateMove(newRow, newCol, board, myPosition)){
-                    //if valid, add move to list of possible moves and continue the loop
-                    ChessPosition validPosition = new ChessPosition(newRow, newCol);
-                    validMoves.add(new ChessMove(myPosition, validPosition, null));
-                    if(enemy){
-                        //stop searching if king takes enemy
-                        break;
-                    }
-                }
-            }
-        }
-        //return HashSet of valid moves for the king
         return validMoves;
     }
 
