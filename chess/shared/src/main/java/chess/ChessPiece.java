@@ -179,9 +179,7 @@ public class ChessPiece {
                 enemy = board.getPiece(new ChessPosition(row,col)).getTeamColor() != board.getPiece(myPosition).getTeamColor();
             }
             //check to see if that space is already occupied or if the space is occupied by the opponent
-            if(board.getPiece(new ChessPosition(row,col)) == null || enemy){
-                return true;
-            }
+            return board.getPiece(new ChessPosition(row, col)) == null || enemy;
         }
         return false;
     }
