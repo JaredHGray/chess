@@ -16,6 +16,19 @@ public class ChessPiece {
     PieceType type;
     ChessGame.TeamColor pieceColor;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChessPiece that = (ChessPiece) o;
+        return type == that.type && pieceColor == that.pieceColor;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(type, pieceColor);
+    }
+
     boolean enemy;
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         this.type = type;
@@ -59,7 +72,7 @@ public class ChessPiece {
     /** figure out which piece type is being tested then call a piece moves function based on that*/
         switch(type) {
             case KING:
-                throw new RuntimeException("Not implemented");
+                return calculateKing(board, myPosition);
             case QUEEN:
                 throw new RuntimeException("Not implemented");
             case BISHOP:
@@ -74,6 +87,7 @@ public class ChessPiece {
                 throw new RuntimeException("Unknown game piece");
         }
     }
+    /**function to calculate the possible moves of the bishop piece*/
     private Set<ChessMove> calculateBishop(ChessBoard board, ChessPosition myPosition){
         Set<ChessMove> validMoves = new HashSet<>();
         int boardSize = 8;
@@ -106,18 +120,11 @@ public class ChessPiece {
         return validMoves;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ChessPiece that = (ChessPiece) o;
-        return type == that.type && pieceColor == that.pieceColor;
+    /**function to calculate the possible moves of the king piece*/
+    private Set<ChessMove> calculateKing(ChessBoard board, ChessPosition myPosition){
+
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(type, pieceColor);
-    }
 
     private boolean validateMove(int row, int col, ChessBoard board, ChessPosition myPosition){
         int boardSize = 8;
@@ -138,3 +145,4 @@ public class ChessPiece {
     }
 
 }
+
