@@ -253,6 +253,7 @@ public class ChessPiece {
     private Set<ChessMove> calculatePawn(ChessBoard board, ChessPosition myPosition){
         Set<ChessMove> validMoves = new HashSet<>();
         int boardSize = 8;
+        ChessPiece.PieceType proPawn = null;
 
         int row = myPosition.getRow();
         int col = myPosition.getColumn();
@@ -260,22 +261,25 @@ public class ChessPiece {
         //split function by color
         if(pieceColor == ChessGame.TeamColor.WHITE){
 
-            if(validateMove(row+1, col, board, myPosition)){
+            if(validateMove(row+1, col, board, myPosition)){ //basic forward movement of pawn
                 ChessPosition validPosition = new ChessPosition(row+1, col);
-                validMoves.add(new ChessMove(myPosition, validPosition, null));
+                if(row == 7){ //if pawn is getting promoted
+                    proPawn = type;
+                }
+                validMoves.add(new ChessMove(myPosition, validPosition, proPawn));
             }
-            if(row == 2){ //if the inital move of the pawn
+            if(row == 2){ //if it is the inital move of the pawn
                 ChessPosition validPosition = new ChessPosition(row+2, col);
-                validMoves.add(new ChessMove(myPosition, validPosition, null));
+                validMoves.add(new ChessMove(myPosition, validPosition, proPawn));
             }
         }
         if(pieceColor == ChessGame.TeamColor.BLACK){
 
-            if(validateMove(row-1, col, board, myPosition)){
+            if(validateMove(row-1, col, board, myPosition)){ //basic forward movement of pawn
                 ChessPosition validPosition = new ChessPosition(row-1, col);
                 validMoves.add(new ChessMove(myPosition, validPosition, null));
             }
-            if(row == 7){ //if the inital move of the pawn
+            if(row == 7){ //if it is the inital move of the pawn
                 ChessPosition validPosition = new ChessPosition(row-2, col);
                 validMoves.add(new ChessMove(myPosition, validPosition, null));
             }
