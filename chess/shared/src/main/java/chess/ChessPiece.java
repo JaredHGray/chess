@@ -259,20 +259,28 @@ public class ChessPiece {
 
         //split function by color
         if(pieceColor == ChessGame.TeamColor.WHITE){
-            System.out.println("test white");
+
             if(validateMove(row+1, col, board, myPosition)){
                 ChessPosition validPosition = new ChessPosition(row+1, col);
                 validMoves.add(new ChessMove(myPosition, validPosition, null));
             }
+            if(row == 2){ //if the inital move of the pawn
+                ChessPosition validPosition = new ChessPosition(row+2, col);
+                validMoves.add(new ChessMove(myPosition, validPosition, null));
+            }
         }
         if(pieceColor == ChessGame.TeamColor.BLACK){
-            System.out.println("test black");
+
             if(validateMove(row-1, col, board, myPosition)){
                 ChessPosition validPosition = new ChessPosition(row-1, col);
                 validMoves.add(new ChessMove(myPosition, validPosition, null));
             }
+            if(row == 7){ //if the inital move of the pawn
+                ChessPosition validPosition = new ChessPosition(row-2, col);
+                validMoves.add(new ChessMove(myPosition, validPosition, null));
+            }
         }
-
+        //return HashSet of valid moves for the pawn
         return validMoves;
     }
 
