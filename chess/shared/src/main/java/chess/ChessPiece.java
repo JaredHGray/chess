@@ -82,12 +82,9 @@ public class ChessPiece {
         int row = myPosition.getRow();
         int col = myPosition.getColumn();
         int[][] possDirections = {{1,1}, {1,-1}, {-1,1}, {-1,-1}};
-        int count = 0;
         //create loop to go through the whole list of possible directions and check each spot to see if it is valid to move there
         for(int[] dir: possDirections){
-
             for(int i = 1; i < boardSize; i++){
-                count++;
                 //creates next square to check on the board by incrementing by 1 and running through the possible directions to go
                 int newRow = row + i * dir[0];
                 int newCol = col + i * dir[1];
@@ -103,9 +100,7 @@ public class ChessPiece {
                     //stop searching this direction if it is blocked by friendly piece or out of bounds
                     break;
                 }
-                System.out.println(count);
             }
-            count = 0;
         }
         //return HashSet of valid moves for the bishop
         return validMoves;
