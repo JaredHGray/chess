@@ -144,7 +144,7 @@ public class ChessPiece {
                 }
             }
         }
-
+        //return HashSet of valid moves for the queen
         return validMoves;
     }
 
