@@ -82,7 +82,7 @@ public class ChessPiece {
             case ROOK:
                 return calculateRook(board, myPosition);
             case PAWN:
-                throw new RuntimeException("Not implemented");
+                return calculatePawn(board, myPosition);
             default:
                 throw new RuntimeException("Unknown game piece");
         }
@@ -246,6 +246,33 @@ public class ChessPiece {
             }
         }
         //return HashSet of valid moves for the rook
+        return validMoves;
+    }
+
+    /**function to calculate the possible moves of the pawn piece*/
+    private Set<ChessMove> calculatePawn(ChessBoard board, ChessPosition myPosition){
+        Set<ChessMove> validMoves = new HashSet<>();
+        int boardSize = 8;
+
+        int row = myPosition.getRow();
+        int col = myPosition.getColumn();
+
+        //split function by color
+        if(pieceColor == ChessGame.TeamColor.WHITE){
+            System.out.println("test white");
+            if(validateMove(row+1, col, board, myPosition)){
+                ChessPosition validPosition = new ChessPosition(row+1, col);
+                validMoves.add(new ChessMove(myPosition, validPosition, null));
+            }
+        }
+        if(pieceColor == ChessGame.TeamColor.BLACK){
+            System.out.println("test black");
+            if(validateMove(row-1, col, board, myPosition)){
+                ChessPosition validPosition = new ChessPosition(row-1, col);
+                validMoves.add(new ChessMove(myPosition, validPosition, null));
+            }
+        }
+
         return validMoves;
     }
 
