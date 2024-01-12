@@ -122,7 +122,33 @@ public class ChessPiece {
 
     /**function to calculate the possible moves of the king piece*/
     private Set<ChessMove> calculateKing(ChessBoard board, ChessPosition myPosition){
-
+        Set<ChessMove> validMoves = new HashSet<>();
+        int boardSize = 8;
+        //calculate possible directions the king can move
+        //kings can move in any direction one spot
+        int row = myPosition.getRow();
+        int col = myPosition.getColumn();
+        for(int i = -1; i <= 1; i++){
+            for(int j = -1; j <= 1; j++){
+                //creates next square to check on the board by incrementing by 1 and running through the possible directions to go
+                int newRow = row + i;
+                int newCol = col + j;
+                if(validateMove(newRow, newCol, board, myPosition)){
+                    //if valid, add move to list of possible moves and continue the loop
+                    ChessPosition validPosition = new ChessPosition(newRow, newCol);
+                    validMoves.add(new ChessMove(myPosition, validPosition, null));
+                    if(enemy){
+                        //stop searching if bishop takes enemy
+                        break;
+                    }
+                }else{
+                    //stop searching this direction if it is blocked by friendly piece or out of bounds
+                    break;
+                }
+            }
+        }
+        //return HashSet of valid moves for the king
+        return validMoves;
     }
 
 
