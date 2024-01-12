@@ -86,7 +86,7 @@ public class ChessPiece {
                 //creates next square to check on the board by incrementing by 1 and running through the possible directions to go
                 int newRow = row + i * dir[0];
                 int newCol = col + i * dir[1];
-                if(validateMove(newRow, newCol, board)){
+                if(validateMove(newRow, newCol, board, myPosition)){
                     //if valid, add move to list of possible moves and continue the loop
                     ChessPosition validPosition = new ChessPosition(newRow, newCol);
                     validMoves.add(new ChessMove(myPosition, validPosition, type));
@@ -100,13 +100,12 @@ public class ChessPiece {
         return validMoves;
     }
 
-    private boolean validateMove(int row, int col, ChessBoard board){
+    private boolean validateMove(int row, int col, ChessBoard board, ChessPosition myPosition){
         int boardSize = 8;
         //make sure the new position is in the parameters of the board
         if((row >= 0 && row < boardSize) && (col >= 0 && col < boardSize)){
-            //check to see if that space is already occupied
-            if(board.getPiece(new ChessPosition(row,col)) == null){
-                //will probably need to check for enemies as well
+            //check to see if that space is already occupied or if the space is occupied by the opponent
+            if(board.getPiece(new ChessPosition(row,col)) == null || board.getPiece(new ChessPosition(row,col)).getTeamColor() != board.getPiece(myPosition).getTeamColor()){
                 return true;
             }
         }
