@@ -30,7 +30,7 @@ public class ChessPiece {
     }
 
     boolean enemy;
-    public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
+    public ChessPiece(ChessGame.TeamColor pieceColor, PieceType type) {
         this.type = type;
         this.pieceColor = pieceColor;
     }
@@ -252,25 +252,24 @@ public class ChessPiece {
     /**function to calculate the possible moves of the pawn piece*/
     private Set<ChessMove> calculatePawn(ChessBoard board, ChessPosition myPosition){
         Set<ChessMove> validMoves = new HashSet<>();
-        int boardSize = 8;
-        ChessPiece.PieceType proPawn = null;
 
         int row = myPosition.getRow();
         int col = myPosition.getColumn();
 
         //split function by color
         if(pieceColor == ChessGame.TeamColor.WHITE){
-
-            if(validateMove(row+1, col, board, myPosition)){ //basic forward movement of pawn
-                ChessPosition validPosition = new ChessPosition(row+1, col);
-                if(row == 7){ //if pawn is getting promoted
-                    proPawn = type;
-                }
-                validMoves.add(new ChessMove(myPosition, validPosition, proPawn));
-            }
-            if(row == 2){ //if it is the inital move of the pawn
-                ChessPosition validPosition = new ChessPosition(row+2, col);
-                validMoves.add(new ChessMove(myPosition, validPosition, proPawn));
+            ChessPosition validPosition = new ChessPosition(row+1, col);
+            if(validateMove(row+1, col, board, myPosition) && row == 7){
+               //if pawn is getting promoted, provide promotion options
+                    validMoves.add(new ChessMove(myPosition, validPosition, PieceType.QUEEN));
+                    validMoves.add(new ChessMove(myPosition, validPosition, PieceType.BISHOP));
+                    validMoves.add(new ChessMove(myPosition, validPosition, PieceType.KNIGHT));
+                    validMoves.add(new ChessMove(myPosition, validPosition, PieceType.ROOK));
+            } else if(validateMove(row+1, col, board, myPosition)){ //basic forward movement of pawn
+                validMoves.add(new ChessMove(myPosition, validPosition, null));
+            } else if(validateMove(row+1, col, board, myPosition) && row == 2){ //if it is the inital move of the pawn
+                validPosition = new ChessPosition(row+2, col);
+                validMoves.add(new ChessMove(myPosition, validPosition, null));
             }
         }
         if(pieceColor == ChessGame.TeamColor.BLACK){
