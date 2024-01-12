@@ -15,6 +15,8 @@ public class ChessPiece {
     //class variables intialized
     PieceType type;
     ChessGame.TeamColor pieceColor;
+
+    boolean enemy;
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         this.type = type;
         this.pieceColor = pieceColor;
@@ -93,9 +95,12 @@ public class ChessPiece {
                     //if valid, add move to list of possible moves and continue the loop
                     ChessPosition validPosition = new ChessPosition(newRow, newCol);
                     validMoves.add(new ChessMove(myPosition, validPosition, null));
+                    if(enemy){
+                        //stop searching if bishop takes enemy
+                        break;
+                    }
                 }else{
-                    //stop searching this direction if it is blocked by another piece
-                    System.out.println("break");
+                    //stop searching this direction if it is blocked by friendly piece or out of bounds
                     break;
                 }
                 System.out.println(count);
@@ -121,10 +126,16 @@ public class ChessPiece {
 
     private boolean validateMove(int row, int col, ChessBoard board, ChessPosition myPosition){
         int boardSize = 8;
+        enemy = false;
+
         //make sure the new position is in the parameters of the board
         if((row > 0 && row <= boardSize) && (col > 0 && col <= boardSize)){
+            if(board.getPiece(new ChessPosition(row,col)) != null){
+                //if square on board is occupied, discover color of piece
+                enemy = board.getPiece(new ChessPosition(row,col)).getTeamColor() != board.getPiece(myPosition).getTeamColor();
+            }
             //check to see if that space is already occupied or if the space is occupied by the opponent
-            if(board.getPiece(new ChessPosition(row,col)) == null || board.getPiece(new ChessPosition(row,col)).getTeamColor() != board.getPiece(myPosition).getTeamColor()){
+            if(board.getPiece(new ChessPosition(row,col)) == null || enemy){
                 return true;
             }
         }
