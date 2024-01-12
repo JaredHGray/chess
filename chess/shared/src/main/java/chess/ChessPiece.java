@@ -80,7 +80,7 @@ public class ChessPiece {
             case KNIGHT:
                 return calculateKnight(board, myPosition);
             case ROOK:
-                throw new RuntimeException("Not implemented");
+                return calculateRook(board, myPosition);
             case PAWN:
                 throw new RuntimeException("Not implemented");
             default:
@@ -199,6 +199,18 @@ public class ChessPiece {
             }
         }
         //return HashSet of valid moves for the knight
+        return validMoves;
+    }
+
+    /**function to calculate the possible moves of the rook piece*/
+    private Set<ChessMove> calculateRook(ChessBoard board, ChessPosition myPosition){
+        Set<ChessMove> validMoves = new HashSet<>();
+        int boardSize = 8;
+        //calculate possible directions the rook can move
+        //rooks can move in straight lines as far as there is open space
+        int row = myPosition.getRow();
+        int col = myPosition.getColumn();
+
         return validMoves;
     }
 
