@@ -135,7 +135,7 @@ public class ChessPiece {
                     ChessPosition validPosition = new ChessPosition(newRow, newCol);
                     validMoves.add(new ChessMove(myPosition, validPosition, null));
                     if(enemy){
-                        //stop searching if bishop takes enemy
+                        //stop searching if queen takes enemy
                         break;
                     }
                 }else{
@@ -210,6 +210,27 @@ public class ChessPiece {
         //rooks can move in straight lines as far as there is open space
         int row = myPosition.getRow();
         int col = myPosition.getColumn();
+        int[][] possDirections = {{0,1}, {0,-1}, {-1,0}, {1,0}};
+
+        for(int[] dir: possDirections){
+            for(int i = 1; i < boardSize; i++){
+                //creates next square to check on the board by incrementing by 1 and running through the possible directions to go
+                int newRow = row + i * dir[0];
+                int newCol = col + i * dir[1];
+                if(validateMove(newRow, newCol, board, myPosition)){
+                    //if valid, add move to list of possible moves and continue the loop
+                    ChessPosition validPosition = new ChessPosition(newRow, newCol);
+                    validMoves.add(new ChessMove(myPosition, validPosition, null));
+                    if(enemy){
+                        //stop searching if rook takes enemy
+                        break;
+                    }
+                }else{
+                    //stop searching this direction if it is blocked by friendly piece or out of bounds
+                    break;
+                }
+            }
+        }
 
         return validMoves;
     }
