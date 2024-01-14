@@ -252,6 +252,7 @@ public class ChessPiece {
     /**function to calculate the possible moves of the pawn piece*/
     private Set<ChessMove> calculatePawn(ChessBoard board, ChessPosition myPosition){
         Set<ChessMove> validMoves = new HashSet<>();
+        int boardSize = 8;
 
         int row = myPosition.getRow();
         int col = myPosition.getColumn();
@@ -274,10 +275,43 @@ public class ChessPiece {
                 (validateMove(row+player, col, board, myPosition))){ //if it is the inital move of the pawn
             validPosition = new ChessPosition(row+2*player, col);
             validMoves.add(new ChessMove(myPosition, validPosition, null));
+        } else if(validateMove(row+player, col, board, myPosition)){
+
         }
+
+        //check diagonals for capture capabilities
+        int[][] possDirections = {{1, 1}, {1,-1}};
+
+        for(int[] dir: possDirections){
+                //creates next square to check on the board by incrementing by 1 and running through the possible directions to go
+                int newRow = row + player * dir[0];
+                int newCol = col + player * dir[1];
+
+                if(validateMove(newRow, newCol, board, myPosition)){
+                    //if valid, add move to list of possible moves and continue the loop
+                    validPosition = new ChessPosition(newRow, newCol);
+                    validMoves.add(new ChessMove(myPosition, validPosition, null));
+                    if(enemy){
+                        //stop searching if rook takes enemy
+                        break;
+                    }
+                }else{
+                    //stop searching this direction if it is blocked by friendly piece or out of bounds
+                    break;
+                }
+        }
+
+
 
         //return HashSet of valid moves for the pawn
         return validMoves;
+    }
+    /**function to check if square is occupied*/
+    private boolean enemyChecker(int row, int col, ChessBoard board, ChessPosition myPosition){
+        if(board.getPiece(new ChessPosition(row,col)) != null){
+            return true;
+        }
+        return false;
     }
 
     private boolean validateMove(int row, int col, ChessBoard board, ChessPosition myPosition){
