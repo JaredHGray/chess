@@ -273,6 +273,8 @@ public class ChessPiece {
                 if(validatePawn(row+(player*i), col, board, myPosition)){
                     validPosition = new ChessPosition(row+(i*player), col);
                     validMoves.add(new ChessMove(myPosition, validPosition, null));
+                }else{
+                    break;
                 }
             }
         } else if(validatePawn(row+player, col, board, myPosition)) { //basic forward movement of pawn
