@@ -69,23 +69,15 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-    /** figure out which piece type is being tested then call a piece moves function based on that*/
-        switch(type) {
-            case KING:
-                return calculateKing(board, myPosition);
-            case QUEEN:
-                return calculateQueen(board, myPosition);
-            case BISHOP:
-                return calculateBishop(board, myPosition);
-            case KNIGHT:
-                return calculateKnight(board, myPosition);
-            case ROOK:
-                return calculateRook(board, myPosition);
-            case PAWN:
-                return calculatePawn(board, myPosition);
-            default:
-                throw new RuntimeException("Unknown game piece");
-        }
+    /**figure out which piece type is being tested then call a piece moves function based on that*/
+        return switch (type) {
+            case KING -> calculateKing(board, myPosition);
+            case QUEEN -> calculateQueen(board, myPosition);
+            case BISHOP -> calculateBishop(board, myPosition);
+            case KNIGHT -> calculateKnight(board, myPosition);
+            case ROOK -> calculateRook(board, myPosition);
+            case PAWN -> calculatePawn(board, myPosition);
+        };
     }
 
     /**function to calculate the possible moves of the king piece*/
