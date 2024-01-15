@@ -261,10 +261,7 @@ public class ChessPiece {
 
         if (promotionRow(row) && (validatePawn(row+player, col, board))){ //valid move
             //if pawn is getting promoted, provide promotion options
-            validMoves.add(new ChessMove(myPosition, validPosition, PieceType.QUEEN));
-            validMoves.add(new ChessMove(myPosition, validPosition, PieceType.BISHOP));
-            validMoves.add(new ChessMove(myPosition, validPosition, PieceType.KNIGHT));
-            validMoves.add(new ChessMove(myPosition, validPosition, PieceType.ROOK));
+            promotionMoves(validMoves, myPosition, validPosition);
         } else if(initialRow(row)){
             for(int i = 1; i < 3; i++){ //if it is the initial move of the pawn
                 if(validatePawn(row+(player*i), col, board)){
@@ -292,10 +289,7 @@ public class ChessPiece {
                     if(((pieceColor == ChessGame.TeamColor.WHITE && row == 7) || //white piece
                             (pieceColor == ChessGame.TeamColor.BLACK && row == 2))){
                         //if pawn is getting promoted, provide promotion options
-                        validMoves.add(new ChessMove(myPosition, validPosition, PieceType.QUEEN));
-                        validMoves.add(new ChessMove(myPosition, validPosition, PieceType.BISHOP));
-                        validMoves.add(new ChessMove(myPosition, validPosition, PieceType.KNIGHT));
-                        validMoves.add(new ChessMove(myPosition, validPosition, PieceType.ROOK));
+                        promotionMoves(validMoves, myPosition, validPosition);
                     }else{
                         //if valid, add move to list of possible moves and continue the loop
                         validMoves.add(new ChessMove(myPosition, validPosition, null));
@@ -331,6 +325,14 @@ public class ChessPiece {
     private boolean initialRow(int row){
         return (pieceColor == ChessGame.TeamColor.WHITE && row == 2) || //white piece
                 (pieceColor == ChessGame.TeamColor.BLACK && row == 7); //black piece
+    }
+
+    /**function to create Promotion Moves*/
+    private void promotionMoves(Set<ChessMove> validMoves, ChessPosition myPosition, ChessPosition validPosition){
+        validMoves.add(new ChessMove(myPosition, validPosition, PieceType.QUEEN));
+        validMoves.add(new ChessMove(myPosition, validPosition, PieceType.BISHOP));
+        validMoves.add(new ChessMove(myPosition, validPosition, PieceType.KNIGHT));
+        validMoves.add(new ChessMove(myPosition, validPosition, PieceType.ROOK));
     }
 
     /**function to validate if pawn can move*/
