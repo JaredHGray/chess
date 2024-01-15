@@ -289,10 +289,20 @@ public class ChessPiece {
                 int newRow = row + player * dir[0];
                 int newCol = col + player * dir[1];
 
+                validPosition = new ChessPosition(newRow, newCol);
+
                 if(enemyChecker(newRow, newCol, board, myPosition)) {
-                    //if valid, add move to list of possible moves and continue the loop
-                    validPosition = new ChessPosition(newRow, newCol);
-                    validMoves.add(new ChessMove(myPosition, validPosition, null));
+                    if(((pieceColor == ChessGame.TeamColor.WHITE && row == 7) || //white piece
+                            (pieceColor == ChessGame.TeamColor.BLACK && row == 2))){
+                        //if pawn is getting promoted, provide promotion options
+                        validMoves.add(new ChessMove(myPosition, validPosition, PieceType.QUEEN));
+                        validMoves.add(new ChessMove(myPosition, validPosition, PieceType.BISHOP));
+                        validMoves.add(new ChessMove(myPosition, validPosition, PieceType.KNIGHT));
+                        validMoves.add(new ChessMove(myPosition, validPosition, PieceType.ROOK));
+                    }else{
+                        //if valid, add move to list of possible moves and continue the loop
+                        validMoves.add(new ChessMove(myPosition, validPosition, null));
+                    }
                 }
         }
         //return HashSet of valid moves for the pawn
