@@ -274,28 +274,9 @@ public class ChessPiece {
         } else if(validatePawn(row+player, col, board)) { //basic forward movement of pawn
             validMoves.add(new ChessMove(myPosition, validPosition, null));
         }
+        //check if the pawn can capture diagonally
+        diagonalPawnMoves(validMoves, row, col, player, myPosition, board);
 
-        //check diagonals for capture capabilities
-        int[][] possDirections = {{1, 1}, {1,-1}};
-
-        for(int[] dir: possDirections){
-                //creates next square to check on the board by incrementing by 1 and running through the possible directions to go
-                int newRow = row + player * dir[0];
-                int newCol = col + player * dir[1];
-
-                validPosition = new ChessPosition(newRow, newCol);
-
-                if(enemyChecker(newRow, newCol, board, myPosition)) {
-                    if(((pieceColor == ChessGame.TeamColor.WHITE && row == 7) || //white piece
-                            (pieceColor == ChessGame.TeamColor.BLACK && row == 2))){
-                        //if pawn is getting promoted, provide promotion options
-                        promotionMoves(validMoves, myPosition, validPosition);
-                    }else{
-                        //if valid, add move to list of possible moves and continue the loop
-                        validMoves.add(new ChessMove(myPosition, validPosition, null));
-                    }
-                }
-        }
         //return HashSet of valid moves for the pawn
         return validMoves;
     }
@@ -335,19 +316,40 @@ public class ChessPiece {
         validMoves.add(new ChessMove(myPosition, validPosition, PieceType.ROOK));
     }
 
-    /**function to validate if pawn can move*/
+    /**function to check diagonal moves of pawn*/
+    private void diagonalPawnMoves(Set<ChessMove> validMoves, int row, int col, int player, ChessPosition myPosition, ChessBoard board){
+        //check diagonals for capture capabilities
+        int[][] possDirections = {{1, 1}, {1,-1}};
 
-    private boolean validatePawn(int row, int col, ChessBoard board){
-        int boardSize = 8;
+        for(int[] dir: possDirections){
+            //creates next square to check on the board by incrementing by 1 and running through the possible directions to go
+            int newRow = row + player * dir[0];
+            int newCol = col + player * dir[1];
 
-        //make sure the new position is within the parameters of the board
-        if((row > 0 && row <= boardSize) && (col > 0 && col <= boardSize)){
-            //check if that space is already occupied
-            return board.getPiece(new ChessPosition(row, col)) == null;
+            ChessPosition validPosition = new ChessPosition(newRow, newCol);
+
+            if(enemyChecker(newRow, newCol, board, myPosition)) {
+                if(((pieceColor == ChessGame.TeamColor.WHITE && row == 7) || //white piece
+                        (pieceColor == ChessGame.TeamColor.BLACK && row == 2))){
+                    //if pawn is getting promoted, provide promotion options
+                    promotionMoves(validMoves, myPosition, validPosition);
+                }else{
+                    //if valid, add move to list of possible moves and continue the loop
+                    validMoves.add(new ChessMove(myPosition, validPosition, null));
+                }
+            }
         }
-        return false;
     }
 
+    /**function to validate if pawn can move*/
+    private boolean validatePawn(int row, int col, ChessBoard board){
+        int boardSize = 8;
+        //make sure the new position is within the parameters of the board
+        return (row > 0 && row <= boardSize) && (col > 0 && col <= boardSize)
+                && board.getPiece(new ChessPosition(row, col)) == null; //check if space is occupied
+    }
+
+    /**function to validate possible moves of chess pieces(except pawns)*/
     private boolean validateMove(int row, int col, ChessBoard board, ChessPosition myPosition){
         int boardSize = 8;
         enemy = false;
