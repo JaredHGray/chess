@@ -275,8 +275,6 @@ public class ChessPiece {
                 (validateMove(row+player, col, board, myPosition))){ //if it is the inital move of the pawn
             validPosition = new ChessPosition(row+2*player, col);
             validMoves.add(new ChessMove(myPosition, validPosition, null));
-        } else if(validateMove(row+player, col, board, myPosition)){
-
         }
 
         //check diagonals for capture capabilities
@@ -287,17 +285,10 @@ public class ChessPiece {
                 int newRow = row + player * dir[0];
                 int newCol = col + player * dir[1];
 
-                if(validateMove(newRow, newCol, board, myPosition)){
+                if(enemyChecker(newRow, newCol, board, myPosition)) {
                     //if valid, add move to list of possible moves and continue the loop
                     validPosition = new ChessPosition(newRow, newCol);
                     validMoves.add(new ChessMove(myPosition, validPosition, null));
-                    if(enemy){
-                        //stop searching if rook takes enemy
-                        break;
-                    }
-                }else{
-                    //stop searching this direction if it is blocked by friendly piece or out of bounds
-                    break;
                 }
         }
 
@@ -308,8 +299,17 @@ public class ChessPiece {
     }
     /**function to check if square is occupied*/
     private boolean enemyChecker(int row, int col, ChessBoard board, ChessPosition myPosition){
-        if(board.getPiece(new ChessPosition(row,col)) != null){
-            return true;
+        int boardSize = 8;
+        enemy = false;
+
+        //make sure the new position is within the parameters of the board
+        if((row > 0 && row <= boardSize) && (col > 0 && col <= boardSize)) {
+            if (board.getPiece(new ChessPosition(row, col)) != null) {
+                //if square on board is occupied, discover the color of piece
+                enemy = board.getPiece(new ChessPosition(row,col)).getTeamColor() != board.getPiece(myPosition).getTeamColor();
+            }
+            //check if the space is occupied by the opponent
+            return enemy;
         }
         return false;
     }
