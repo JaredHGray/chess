@@ -321,8 +321,7 @@ public class ChessPiece {
             ChessPosition validPosition = new ChessPosition(newRow, newCol);
 
             if(enemyChecker(newRow, newCol, board, myPosition)) {
-                if(((pieceColor == ChessGame.TeamColor.WHITE && row == 7) || //white piece
-                        (pieceColor == ChessGame.TeamColor.BLACK && row == 2))){
+                if(promotionRow(row)){
                     //if pawn is getting promoted, provide promotion options
                     promotionMoves(validMoves, myPosition, validPosition);
                 }else{
@@ -344,20 +343,18 @@ public class ChessPiece {
     /**function to validate possible moves of chess pieces(except pawns)*/
     private boolean validateMove(int row, int col, ChessBoard board, ChessPosition myPosition){
         int boardSize = 8;
-        enemy = false;
 
         //make sure the new position is within the parameters of the board
         if((row > 0 && row <= boardSize) && (col > 0 && col <= boardSize)){
             if(board.getPiece(new ChessPosition(row,col)) != null){
                 //if square on board is occupied, discover the color of piece
-                enemy = board.getPiece(new ChessPosition(row,col)).getTeamColor() != board.getPiece(myPosition).getTeamColor();
+                enemy = enemyChecker(row, col, board, myPosition);
             }
             //check if that space is already occupied or if the space is occupied by the opponent
             return board.getPiece(new ChessPosition(row, col)) == null || enemy;
         }
         return false;
     }
-
 }
 
 
