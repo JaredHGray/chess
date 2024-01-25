@@ -88,11 +88,10 @@ public class ChessGame {
     public void makeMove(ChessMove move) throws InvalidMoveException {
         ChessPosition startPosition = move.getStartPosition();
         ChessPosition endPosition = move.getEndPosition();
-        ChessPiece.PieceType promotionPiece = move.getPromotionPiece();
+        //ChessPiece.PieceType promotionPiece = move.getPromotionPiece();
 
-
-        //move is illegal if the chess piece cannot move there
-        if(gameBoard.getPiece(endPosition).validateMove(endPosition.getRow(), endPosition.getColumn(), gameBoard, startPosition)){
+        //move is illegal if the chess piece cannot move there,
+        if(!(gameBoard.getPiece(startPosition).validateMove(endPosition.getRow(), endPosition.getColumn(), gameBoard, startPosition))){
             throw new InvalidMoveException("Invalid move: The chess piece cannot move to the specified position.");
         } // if it’s not the corresponding team's turn,
         if(getTeamTurn() != gameBoard.getPiece(startPosition).getTeamColor()){
@@ -101,8 +100,10 @@ public class ChessGame {
         if(isInCheck(getTeamTurn())){
             throw new InvalidMoveException("Invalid move: Will leave your king in check.");
         }
-
-//am i updating this gameBoard with this new position?
+        //update board with new piece move
+        gameBoard.movePiece(startPosition, endPosition, gameBoard.getPiece(startPosition));
+        //switch turns
+        setTeamTurn((getTeamTurn() == TeamColor.WHITE) ? TeamColor.BLACK : TeamColor.WHITE);
     }
 
     /**
@@ -112,7 +113,7 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        return false;
     }
 
     /**

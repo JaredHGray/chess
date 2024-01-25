@@ -159,4 +159,11 @@ public class ChessBoard {
             addPiece(position, piece);
         }
     }
+
+    public void movePiece(ChessPosition startPosition, ChessPosition nextPosition, ChessPiece piece){
+        //set next position to current position
+        board[nextPosition.getRow()-1][nextPosition.getColumn()-1] = piece;
+        //set previous position to null
+        board[startPosition.getRow()-1][startPosition.getColumn()-1] = null;
+    }
 }
