@@ -88,26 +88,18 @@ public class ChessGame {
     public void makeMove(ChessMove move) throws InvalidMoveException {
         ChessPosition startPosition = move.getStartPosition();
         ChessPosition endPosition = move.getEndPosition();
-        //ChessPiece.PieceType promotionPiece = move.getPromotionPiece();
         boolean moveValid = false;
+
         //have to call valid move function
         for(ChessMove check : validMoves(startPosition)){
             if(check.equals(move)){
                 moveValid = true;
                 break;
             }
-//            if (move.getEndPosition() == check.getEndPosition()) {
-//                moveValid = true;
-//                break;
-//            }
         }
-        if(!moveValid){
+        if(!moveValid){  //move is illegal if the chess piece cannot move there,
             throw new InvalidMoveException("Invalid move: The chess piece cannot move to the specified position.");
-        }
-        //move is illegal if the chess piece cannot move there,
-//        if(!(gameBoard.getPiece(startPosition).validateMove(endPosition.getRow(), endPosition.getColumn(), gameBoard, startPosition))){
-//            throw new InvalidMoveException("Invalid move: The chess piece cannot move to the specified position.");
-//        } // if it’s not the corresponding team's turn,
+        } // if it’s not the corresponding team's turn,
         if(getTeamTurn() != gameBoard.getPiece(startPosition).getTeamColor()){
             throw new InvalidMoveException("Invalid move: It is not your turn.");
         } // or if the move leaves the team’s king in danger
@@ -117,7 +109,7 @@ public class ChessGame {
         //update board with new piece move
         gameBoard.movePiece(startPosition, endPosition, gameBoard.getPiece(startPosition));
         //switch turns
-        setTeamTurn((getTeamTurn() == TeamColor.WHITE) ? TeamColor.BLACK : TeamColor.WHITE);
+        //setTeamTurn((getTeamTurn() == TeamColor.WHITE) ? TeamColor.BLACK : TeamColor.WHITE);
     }
 
     /**
