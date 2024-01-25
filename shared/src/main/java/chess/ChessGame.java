@@ -90,11 +90,16 @@ public class ChessGame {
         ChessPosition endPosition = move.getEndPosition();
         //ChessPiece.PieceType promotionPiece = move.getPromotionPiece();
         boolean moveValid = false;
-        //have to call validmove function
+        //have to call valid move function
         for(ChessMove check : validMoves(startPosition)){
-            if(move == check){
+            if(check.equals(move)){
                 moveValid = true;
+                break;
             }
+//            if (move.getEndPosition() == check.getEndPosition()) {
+//                moveValid = true;
+//                break;
+//            }
         }
         if(!moveValid){
             throw new InvalidMoveException("Invalid move: The chess piece cannot move to the specified position.");
