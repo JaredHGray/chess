@@ -242,7 +242,7 @@ public class ChessPiece {
     }
 
     /**function to validate possible moves of chess pieces(except pawns)*/
-    private boolean validateMove(int row, int col, ChessBoard board, ChessPosition myPosition){
+    public boolean validateMove(int row, int col, ChessBoard board, ChessPosition myPosition){
         int boardSize = 8;
         enemy = false;
         //make sure the new position is within the parameters of the board
