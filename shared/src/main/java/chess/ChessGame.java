@@ -1,6 +1,7 @@
 package chess;
 
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * For a class that can manage a chess game, making moves on a board
@@ -10,13 +11,33 @@ import java.util.Collection;
  */
 public class ChessGame {
 
-    ChessBoard board;
+    ChessBoard gameBoard;
     TeamColor turn;
 
     public ChessGame() {
-        board = new ChessBoard();
-        board.resetBoard();
+        gameBoard = new ChessBoard();
         turn = TeamColor.WHITE;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChessGame chessGame = (ChessGame) o;
+        return Objects.equals(gameBoard, chessGame.gameBoard) && turn == chessGame.turn;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(gameBoard, turn);
+    }
+
+    @Override
+    public String toString() {
+        return "ChessGame{" +
+                "gameBoard=" + gameBoard +
+                ", turn=" + turn +
+                '}';
     }
 
     /**
@@ -51,8 +72,8 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        if(board.getPiece(startPosition) != null){
-            return board.getPiece(startPosition).pieceMoves(board, startPosition);
+        if(gameBoard.getPiece(startPosition) != null){
+            return gameBoard.getPiece(startPosition).pieceMoves(gameBoard, startPosition);
         }else{
             return null;
         }
@@ -109,7 +130,7 @@ public class ChessGame {
      * @param board the new board to use
      */
     public void setBoard(ChessBoard board) {
-        throw new RuntimeException("Not implemented");
+        gameBoard = board;
     }
 
     /**
@@ -118,6 +139,6 @@ public class ChessGame {
      * @return the chessboard
      */
     public ChessBoard getBoard() {
-        throw new RuntimeException("Not implemented");
+        return gameBoard;
     }
 }
