@@ -89,9 +89,17 @@ public class ChessGame {
         ChessPosition startPosition = move.getStartPosition();
         ChessPosition endPosition = move.getEndPosition();
         ChessPiece.PieceType promotionPiece = move.getPromotionPiece();
-//move is illegal if the chess piece cannot move there,
-// if the move leaves the team’s king in danger,
-// or if it’s not the corresponding team's turn
+
+        //move is illegal if the chess piece cannot move there
+        if(gameBoard.getPiece(endPosition) != null){
+            throw new InvalidMoveException("Invalid move: The chess piece cannot move to the specified position.");
+        } // if it’s not the corresponding team's turn,
+        if(getTeamTurn() != gameBoard.getPiece(startPosition).getTeamColor()){
+            throw new InvalidMoveException("Invalid move: It is not your turn.");
+        } // or if the move leaves the team’s king in danger
+        if(isInCheck(getTeamTurn())){
+            throw new InvalidMoveException("Invalid move: Will leave your king in check.");
+        }
 
 //am i updating this gameBoard with this new position?
     }
