@@ -241,6 +241,25 @@ public class ChessPiece {
         return validMoves;
     }
 
+    /**function to validate possible moves of chess pieces(except pawns)*/
+    private boolean validateMove(int row, int col, ChessBoard board, ChessPosition myPosition){
+        int boardSize = 8;
+        enemy = false;
+        //make sure the new position is within the parameters of the board
+        if((row > 0 && row <= boardSize) && (col > 0 && col <= boardSize)){
+            if(board.getPiece(new ChessPosition(row,col)) != null){
+                if(board.getPiece(myPosition).getTeamColor() != board.getPiece(new ChessPosition(row,col)).getTeamColor()){
+                    //if square on board is occupied, discover the color of piece
+                    enemy = true;
+                    return true;
+                }
+            }
+            //check if that space is already occupied or if the space is occupied by the opponent
+            return board.getPiece(new ChessPosition(row, col)) == null || enemy;
+        }
+        return false;
+    }
+
     /**function to calculate the possible moves of the pawn piece*/
     private Set<ChessMove> calculatePawn(ChessBoard board, ChessPosition myPosition){
         Set<ChessMove> validMoves = new HashSet<>();
@@ -272,22 +291,7 @@ public class ChessPiece {
         //return HashSet of valid moves for the pawn
         return validMoves;
     }
-    /**function to check if square is occupied*/
-    private boolean enemyChecker(int row, int col, ChessBoard board, ChessPosition myPosition){
-        int boardSize = 8;
-        enemy = false;
 
-        //make sure the new position is within the parameters of the board
-        if((row > 0 && row <= boardSize) && (col > 0 && col <= boardSize)) {
-            if (board.getPiece(new ChessPosition(row, col)) != null) {
-                //if square on board is occupied, discover the color of piece
-                enemy = board.getPiece(new ChessPosition(row,col)).getTeamColor() != board.getPiece(myPosition).getTeamColor();
-            }
-            //check if the space is occupied by the opponent
-            return enemy;
-        }
-        return false;
-    }
     /**function to check if pawn is on a promoting row*/
     private boolean promotionRow(int row){
         return (pieceColor == ChessGame.TeamColor.WHITE && row == 7) || //white piece
@@ -340,18 +344,19 @@ public class ChessPiece {
                 && board.getPiece(new ChessPosition(row, col)) == null; //check if space is occupied
     }
 
-    /**function to validate possible moves of chess pieces(except pawns)*/
-    private boolean validateMove(int row, int col, ChessBoard board, ChessPosition myPosition){
+    /**function to check if square is occupied*/
+    private boolean enemyChecker(int row, int col, ChessBoard board, ChessPosition myPosition){
         int boardSize = 8;
         enemy = false;
+
         //make sure the new position is within the parameters of the board
-        if((row > 0 && row <= boardSize) && (col > 0 && col <= boardSize)){
-            if(board.getPiece(new ChessPosition(row,col)) != null){
+        if((row > 0 && row <= boardSize) && (col > 0 && col <= boardSize)) {
+            if (board.getPiece(new ChessPosition(row, col)) != null) {
                 //if square on board is occupied, discover the color of piece
-                enemy = enemyChecker(row, col, board, myPosition);
+                enemy = board.getPiece(new ChessPosition(row,col)).getTeamColor() != board.getPiece(myPosition).getTeamColor();
             }
-            //check if that space is already occupied or if the space is occupied by the opponent
-            return board.getPiece(new ChessPosition(row, col)) == null || enemy;
+            //check if the space is occupied by the opponent
+            return enemy;
         }
         return false;
     }

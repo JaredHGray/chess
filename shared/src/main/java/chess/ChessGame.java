@@ -91,7 +91,7 @@ public class ChessGame {
         ChessPiece.PieceType promotionPiece = move.getPromotionPiece();
 
         //move is illegal if the chess piece cannot move there
-        if(gameBoard.getPiece(endPosition) != null){
+        if(gameBoard.getPiece(endPosition) != null && gameBoard.getPiece(startPosition).getTeamColor() == getTeamTurn()){
             throw new InvalidMoveException("Invalid move: The chess piece cannot move to the specified position.");
         } // if it’s not the corresponding team's turn,
         if(getTeamTurn() != gameBoard.getPiece(startPosition).getTeamColor()){
