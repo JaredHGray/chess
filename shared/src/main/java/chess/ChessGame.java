@@ -89,8 +89,11 @@ public class ChessGame {
         ChessPosition startPosition = move.getStartPosition();
         ChessPosition endPosition = move.getEndPosition();
         ChessPiece.PieceType promotionPiece = move.getPromotionPiece();
+//move is illegal if the chess piece cannot move there,
+// if the move leaves the team’s king in danger,
+// or if it’s not the corresponding team's turn
 
-
+//am i updating this gameBoard with this new position?
     }
 
     /**
