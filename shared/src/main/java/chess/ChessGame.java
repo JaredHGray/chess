@@ -1,7 +1,9 @@
 package chess;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * For a class that can manage a chess game, making moves on a board
@@ -77,6 +79,7 @@ public class ChessGame {
         }else{
             return null;
         }
+        //pieceMoves including check - check for the self checking
     }
 
     /**
@@ -118,7 +121,24 @@ public class ChessGame {
      * @param teamColor which team to check for check
      * @return True if the specified team is in check
      */
-    public boolean isInCheck(TeamColor teamColor) {
+    public boolean isInCheck(TeamColor teamColor) { //applies to current team
+        //find the king of the team being checked
+        ChessPosition kingPosition = findKing(teamColor);
+        //check end positions of the opposing team
+        TeamColor opposingColor = (teamColor == TeamColor.WHITE) ? TeamColor.BLACK : TeamColor.WHITE;
+        ChessPosition opposingPosition;
+        for(int i = 1; i <= 8; i++){
+            for(int j = 1; j <= 8; j++) {
+                opposingPosition = new ChessPosition(i,j);
+                if(gameBoard.getPiece(opposingPosition).getPieceType() == ChessPiece.PieceType.KING && gameBoard.getPiece(opposingPosition).getTeamColor() == opposingColor){
+                    for(ChessMove check : validMoves(opposingPosition)){
+                        if(check.getEndPosition().equals(kingPosition)){
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
         return false;
     }
 
@@ -130,6 +150,7 @@ public class ChessGame {
      */
     public boolean isInCheckmate(TeamColor teamColor) {
         throw new RuntimeException("Not implemented");
+        //for opposing team
     }
 
     /**
@@ -141,6 +162,20 @@ public class ChessGame {
      */
     public boolean isInStalemate(TeamColor teamColor) {
         throw new RuntimeException("Not implemented");
+    }
+
+    private ChessPosition findKing(TeamColor teamColor){
+        for(int i = 1; i <= 8; i++){
+            for(int j = 1; j <= 8; j++){
+                ChessPosition position = new ChessPosition(i,j);
+                if(gameBoard.getPiece(position).getPieceType() == ChessPiece.PieceType.KING && gameBoard.getPiece(position).getTeamColor() == teamColor){
+                    return position;
+                }
+            }
+        }
+        return null;
+            //double for loop using getpiece check for type and color
+        //know position; ex: 4,6
     }
 
     /**
