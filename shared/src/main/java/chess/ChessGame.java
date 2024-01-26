@@ -130,7 +130,7 @@ public class ChessGame {
         for(int i = 1; i <= 8; i++){
             for(int j = 1; j <= 8; j++) {
                 opposingPosition = new ChessPosition(i,j);
-                if(gameBoard.getPiece(opposingPosition).getPieceType() == ChessPiece.PieceType.KING && gameBoard.getPiece(opposingPosition).getTeamColor() == opposingColor){
+                if(gameBoard.getPiece(opposingPosition) != null && gameBoard.getPiece(opposingPosition).getTeamColor() == opposingColor){
                     for(ChessMove check : validMoves(opposingPosition)){
                         if(check.getEndPosition().equals(kingPosition)){
                             return true;
@@ -168,7 +168,7 @@ public class ChessGame {
         for(int i = 1; i <= 8; i++){
             for(int j = 1; j <= 8; j++){
                 ChessPosition position = new ChessPosition(i,j);
-                if(gameBoard.getPiece(position).getPieceType() == ChessPiece.PieceType.KING && gameBoard.getPiece(position).getTeamColor() == teamColor){
+                if(gameBoard.getPiece(position) != null && gameBoard.getPiece(position).getPieceType() == ChessPiece.PieceType.KING && gameBoard.getPiece(position).getTeamColor() == teamColor){
                     return position;
                 }
             }
