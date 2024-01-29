@@ -112,7 +112,7 @@ public class ChessGame {
         //update board with new piece move
         gameBoard.movePiece(startPosition, endPosition, gameBoard.getPiece(startPosition));
         //switch turns
-        //setTeamTurn((getTeamTurn() == TeamColor.WHITE) ? TeamColor.BLACK : TeamColor.WHITE);
+        setTeamTurn((getTeamTurn() == TeamColor.WHITE) ? TeamColor.BLACK : TeamColor.WHITE);
     }
 
     /**
