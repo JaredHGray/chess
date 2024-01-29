@@ -21,12 +21,6 @@ public class ChessGame {
         gameBoard = new ChessBoard();
         turn = TeamColor.WHITE;
     }
-    // Copy constructor for deep copy
-
-//    public ChessGame(ChessGame original){
-//        this.gameBoard = new ChessBoard(original.gameBoard);
-//        this.turn = original.turn;
-//    }
 
     @Override
     public boolean equals(Object o) {
@@ -121,13 +115,11 @@ public class ChessGame {
         if(isInCheck(getTeamTurn())){
             throw new InvalidMoveException("Invalid move: Will leave your king in check.");
         }
-
         //update board with new piece move
         gameBoard.movePiece(startPosition, endPosition, gameBoard.getPiece(startPosition));
         //switch turns
         setTeamTurn((getTeamTurn() == TeamColor.WHITE) ? TeamColor.BLACK : TeamColor.WHITE);
     }
-//issue is im checking isInCheck before making move - should be checking after making move
     /**
      * Determines if the given team is in check
      *
