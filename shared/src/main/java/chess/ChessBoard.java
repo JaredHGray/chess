@@ -30,6 +30,24 @@ public class ChessBoard {
         board = new ChessPiece[8][8];
     }
 
+    // Copy constructor for deep copy
+    public ChessBoard(ChessBoard original) {
+        this.board = original.copy();
+    }
+
+    // Method to perform a deep copy
+    private ChessPiece[][] copy() {
+        ChessPiece[][] copy = new ChessPiece[8][8];
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (board[i][j] != null) {
+                    copy[i][j] = board[i][j].copy();
+                }
+            }
+        }
+        return copy;
+    }
+
     /**
      * Adds a chess piece to the chessboard
      *

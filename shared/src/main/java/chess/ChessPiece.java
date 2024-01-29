@@ -35,6 +35,11 @@ public class ChessPiece {
         this.pieceColor = pieceColor;
     }
 
+    // ChessPiece copy method for deep copy
+    public ChessPiece copy() {
+        return new ChessPiece(this.pieceColor, this.type);
+    }
+
     /**
      * The various different chess piece options
      */
