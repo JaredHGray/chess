@@ -143,7 +143,7 @@ public class ChessGame {
      */
     public boolean isInCheck(TeamColor teamColor) { //applies to current team
         // Use testBoard based on the flag
-        ChessBoard currentTestBoard = modifiedCopy ? testBoard : new ChessBoard(gameBoard);
+        testBoard = modifiedCopy ? testBoard : new ChessBoard(gameBoard);
         //find the king of the team being checked
         ChessPosition kingPosition = findKing(teamColor);
         //check end positions of the opposing team
@@ -152,7 +152,7 @@ public class ChessGame {
         for(int i = 1; i <= 8; i++){
             for(int j = 1; j <= 8; j++) {
                 opposingPosition = new ChessPosition(i,j);
-                if(currentTestBoard.getPiece(opposingPosition) != null && currentTestBoard.getPiece(opposingPosition).getTeamColor() == opposingColor){
+                if(testBoard.getPiece(opposingPosition) != null && testBoard.getPiece(opposingPosition).getTeamColor() == opposingColor){
                     for(ChessMove check : validMoves(opposingPosition)){
                         if(check.getEndPosition().equals(kingPosition)){
                             return true;
