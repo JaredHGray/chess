@@ -92,6 +92,8 @@ public class ChessGame {
     public void makeMove(ChessMove move) throws InvalidMoveException {
         ChessPosition startPosition = move.getStartPosition();
         ChessPosition endPosition = move.getEndPosition();
+        ChessPiece.PieceType promotionType;
+        ChessPiece promotion;
         boolean moveValid = false;
 
         //make a deepCopy of gameBoard for testing
@@ -115,8 +117,20 @@ public class ChessGame {
         if(isInCheck(getTeamTurn())){
             throw new InvalidMoveException("Invalid move: Will leave your king in check.");
         }
-        //update board with new piece move
-        gameBoard.movePiece(startPosition, endPosition, gameBoard.getPiece(startPosition));
+        if(gameBoard.getPiece(startPosition).getPieceType() == ChessPiece.PieceType.PAWN){
+            if((move.getEndPosition().getRow() == 8 && getTeamTurn() == TeamColor.WHITE) || (move.getEndPosition().getRow() == 1 && getTeamTurn() == TeamColor.BLACK)){
+                promotionType = move.getPromotionPiece();
+                promotion = new ChessPiece(getTeamTurn(), promotionType);
+                //update board with new promotion piece
+                gameBoard.movePiece(startPosition, endPosition, promotion);
+            }else {
+                // The conditions for promotion are not met, update board with the original piece move
+                gameBoard.movePiece(startPosition, endPosition, gameBoard.getPiece(startPosition));
+            }
+        }else{
+            //update board with new piece move(not pawn)
+            gameBoard.movePiece(startPosition, endPosition, gameBoard.getPiece(startPosition));
+        }
         //switch turns
         setTeamTurn((getTeamTurn() == TeamColor.WHITE) ? TeamColor.BLACK : TeamColor.WHITE);
     }
