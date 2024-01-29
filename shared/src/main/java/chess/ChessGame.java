@@ -16,10 +16,12 @@ public class ChessGame {
     ChessBoard gameBoard;
     ChessBoard testBoard;
     TeamColor turn;
+    private boolean modifiedCopy;
 
     public ChessGame() {
         gameBoard = new ChessBoard();
         turn = TeamColor.WHITE;
+        modifiedCopy = false;
     }
 
     @Override
@@ -95,11 +97,11 @@ public class ChessGame {
         ChessPiece.PieceType promotionType;
         ChessPiece promotion;
         boolean moveValid = false;
-        //make a deepCopy of gameBoard for testing
+        //make deep copy of the board
         testBoard = new ChessBoard(gameBoard);
         //move piece on testBoard
         testBoard.movePiece(startPosition, endPosition, testBoard.getPiece(startPosition));
-
+        modifiedCopy = true;
         //have to call valid move function
         for(ChessMove check : validMoves(startPosition)){
             if(check.equals(move)){
@@ -140,6 +142,8 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) { //applies to current team //adjust for testBoard
+        // Use testBoard based on the flag
+        ChessBoard currentTestBoard = modifiedCopy ? testBoard : new ChessBoard(gameBoard);
         //find the king of the team being checked
         ChessPosition kingPosition = findKing(teamColor);
         //check end positions of the opposing team
@@ -148,7 +152,7 @@ public class ChessGame {
         for(int i = 1; i <= 8; i++){
             for(int j = 1; j <= 8; j++) {
                 opposingPosition = new ChessPosition(i,j);
-                if(testBoard.getPiece(opposingPosition) != null && testBoard.getPiece(opposingPosition).getTeamColor() == opposingColor){
+                if(currentTestBoard.getPiece(opposingPosition) != null && currentTestBoard.getPiece(opposingPosition).getTeamColor() == opposingColor){
                     for(ChessMove check : validMoves(opposingPosition)){
                         if(check.getEndPosition().equals(kingPosition)){
                             return true;
