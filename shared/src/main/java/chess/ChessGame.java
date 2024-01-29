@@ -213,7 +213,7 @@ public class ChessGame {
                         testBoard.movePiece(move.getStartPosition(), move.getEndPosition(), testBoard.getPiece(move.getStartPosition()));
                         modifiedCopy = true;
                         if(!isInCheck(teamColor)){
-                            // If at least one valid move is found that doesn't result in the king being in check,
+                            // If at least one valid move is found that doesn't result in the king being checked,
                             // the team is not in stalemate
                             return false;
                         }
