@@ -141,7 +141,7 @@ public class ChessGame {
      * @param teamColor which team to check for check
      * @return True if the specified team is in check
      */
-    public boolean isInCheck(TeamColor teamColor) { //applies to current team //adjust for testBoard
+    public boolean isInCheck(TeamColor teamColor) { //applies to current team
         // Use testBoard based on the flag
         ChessBoard currentTestBoard = modifiedCopy ? testBoard : new ChessBoard(gameBoard);
         //find the king of the team being checked
@@ -171,8 +171,25 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
-        //for opposing team
+        //find the king of the team being checked
+        ChessPosition kingPosition = findKing(teamColor);
+        //check end positions of the opposing team
+        TeamColor opposingColor = (teamColor == TeamColor.WHITE) ? TeamColor.BLACK : TeamColor.WHITE;
+        ChessPosition opposingPosition;
+
+        for(int i = 1; i <= 8; i++){
+            for(int j = 1; j <= 8; j++) {
+                opposingPosition = new ChessPosition(i,j);
+                if(gameBoard.getPiece(opposingPosition) != null && gameBoard.getPiece(opposingPosition).getTeamColor() == opposingColor){
+                    for(ChessMove check : validMoves(opposingPosition)){
+                        if(check.getEndPosition().equals(kingPosition)){
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     /**
