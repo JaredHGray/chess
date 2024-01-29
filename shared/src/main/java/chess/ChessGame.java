@@ -95,7 +95,6 @@ public class ChessGame {
         ChessPiece.PieceType promotionType;
         ChessPiece promotion;
         boolean moveValid = false;
-
         //make a deepCopy of gameBoard for testing
         testBoard = new ChessBoard(gameBoard);
         //move piece on testBoard
