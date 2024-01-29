@@ -14,6 +14,7 @@ import java.util.Set;
 public class ChessGame {
 
     ChessBoard gameBoard;
+    ChessBoard testBoard;
     TeamColor turn;
 
     public ChessGame() {
@@ -22,10 +23,10 @@ public class ChessGame {
     }
     // Copy constructor for deep copy
 
-    public ChessGame(ChessGame original){
-        this.gameBoard = new ChessBoard(original.gameBoard);
-        this.turn = original.turn;
-    }
+//    public ChessGame(ChessGame original){
+//        this.gameBoard = new ChessBoard(original.gameBoard);
+//        this.turn = original.turn;
+//    }
 
     @Override
     public boolean equals(Object o) {
@@ -99,6 +100,11 @@ public class ChessGame {
         ChessPosition endPosition = move.getEndPosition();
         boolean moveValid = false;
 
+        //make a deepCopy of gameBoard for testing
+        testBoard = new ChessBoard(gameBoard);
+        //move piece on testBoard
+        testBoard.movePiece(startPosition, endPosition, testBoard.getPiece(startPosition));
+
         //have to call valid move function
         for(ChessMove check : validMoves(startPosition)){
             if(check.equals(move)){
@@ -115,8 +121,6 @@ public class ChessGame {
         if(isInCheck(getTeamTurn())){
             throw new InvalidMoveException("Invalid move: Will leave your king in check.");
         }
-        ChessBoard testBoard = gameBoard; //make a deep copy of gameBoard
-        testBoard.movePiece(startPosition, endPosition, testBoard.getPiece(startPosition)); //
 
         //update board with new piece move
         gameBoard.movePiece(startPosition, endPosition, gameBoard.getPiece(startPosition));
@@ -139,7 +143,7 @@ public class ChessGame {
         for(int i = 1; i <= 8; i++){
             for(int j = 1; j <= 8; j++) {
                 opposingPosition = new ChessPosition(i,j);
-                if(gameBoard.getPiece(opposingPosition) != null && gameBoard.getPiece(opposingPosition).getTeamColor() == opposingColor){
+                if(testBoard.getPiece(opposingPosition) != null && testBoard.getPiece(opposingPosition).getTeamColor() == opposingColor){
                     for(ChessMove check : validMoves(opposingPosition)){
                         if(check.getEndPosition().equals(kingPosition)){
                             return true;
