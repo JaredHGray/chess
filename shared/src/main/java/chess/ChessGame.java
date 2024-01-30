@@ -207,8 +207,9 @@ public class ChessGame {
             for(int j = 1; j <= 8; j++) {
                 opposingPosition = new ChessPosition(i,j);
                 if(testBoard.getPiece(opposingPosition) != null && testBoard.getPiece(opposingPosition).getTeamColor() == opposingColor){
-                    for(ChessMove check : validMoves(opposingPosition)){
+                    for(ChessMove check : testBoard.getPiece(opposingPosition).pieceMoves(testBoard, opposingPosition)){
                         if(check.getEndPosition().equals(kingPosition)){
+                            dangerPiece = check;
                             return true;
                         }
                     }
