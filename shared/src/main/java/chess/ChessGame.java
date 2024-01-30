@@ -97,6 +97,7 @@ public class ChessGame {
                     if(!isInCheck(teamPiece)){
                         allValid.add(move);
                     }
+                    modifiedCopy = false;
                 }
 //            }else{
 //                allValid = gameBoard.getPiece(startPosition).pieceMoves(gameBoard, startPosition);
@@ -119,11 +120,6 @@ public class ChessGame {
         ChessPiece.PieceType promotionType;
         ChessPiece promotion;
         boolean moveValid = false;
-        //make deep copy of the board
-        testBoard = new ChessBoard(gameBoard);
-        //move piece on testBoard
-        testBoard.movePiece(startPosition, endPosition, testBoard.getPiece(startPosition));
-        modifiedCopy = true;
         //have to call valid move function
         for(ChessMove check : validMoves(startPosition)){
             if(check.equals(move)){
@@ -131,6 +127,12 @@ public class ChessGame {
                 break;
             }
         }
+        //make deep copy of the board
+        testBoard = new ChessBoard(gameBoard);
+        //move piece on testBoard
+        testBoard.movePiece(startPosition, endPosition, testBoard.getPiece(startPosition));
+        modifiedCopy = true;
+        //modifiedCopy = false;
         if(!moveValid){  //move is illegal if the chess piece cannot move there,
             throw new InvalidMoveException("Invalid move: The chess piece cannot move to the specified position.");
         } // if it’s not the corresponding team's turn,
