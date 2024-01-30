@@ -82,15 +82,7 @@ public class ChessGame {
         Collection<ChessMove> allValid = new HashSet<>();
         TeamColor teamPiece = gameBoard.getPiece(startPosition).getTeamColor();
         if(gameBoard.getPiece(startPosition) != null){
-        //    if(isInCheck(teamPiece)){
                 for(ChessMove move : gameBoard.getPiece(startPosition).pieceMoves(gameBoard, startPosition)){
-                    //find the crossing move of dangerPiece and startPosition;
-//                    for(ChessMove check: gameBoard.getPiece(dangerPiece.getStartPosition()).pieceMoves(gameBoard, dangerPiece.getStartPosition())){
-//                        if(move.getEndPosition().equals(check.getStartPosition()) || move.getEndPosition().equals(check.getEndPosition())){
-//                            allValid.add(move);
-//                            break;
-//                        }
-//                    }
                     testBoard = new ChessBoard(gameBoard);
                     testBoard.movePiece(move.getStartPosition(), move.getEndPosition(), testBoard.getPiece(move.getStartPosition()));
                     modifiedCopy = true;
@@ -99,13 +91,8 @@ public class ChessGame {
                     }
                     modifiedCopy = false;
                 }
-//            }else{
-//                allValid = gameBoard.getPiece(startPosition).pieceMoves(gameBoard, startPosition);
-//            }
         }
         return allValid;
-        //pieceMoves including check - check for the self checking
-        //need to check for forced moves - aka get out of check
     }
 
     /**
@@ -188,9 +175,6 @@ public class ChessGame {
         }
         return false;
     }
-    //not use validMoves - only use it to see if move would put it in check
-    //check entire board - use pieceMoves
-
     /**
      * Determines if the given team is in checkmate
      *
