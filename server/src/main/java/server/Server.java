@@ -1,11 +1,24 @@
 package server;
 
+import org.eclipse.jetty.server.Authentication;
 import spark.*;
 import java.nio.file.Paths;
 import com.google.gson.Gson;
 import java.util.*;
+import service.UserService;
+import service.GameService;
+import dataAccess.DataAccessException;
+import model.*;
 
 public class Server {
+
+//    private final UserService userService;
+//    private final GameService gameService;
+
+//    public Server() {
+//        userService = new UserService(dataAccess);
+//        gameService = new GameService(dataAccess);
+//    }
 
     public int run(int desiredPort) {
         Spark.port(desiredPort);
@@ -30,7 +43,7 @@ public class Server {
         Spark.delete("/db", this::clearDatabase);
     }
 
-    private String registerUser(Request req, Response res){
+    private String registerUser(Request req, Response res) throws DataAccessException{
         //get data from the response body
         String username = req.queryParams("username");
         String password = req.queryParams("password");
