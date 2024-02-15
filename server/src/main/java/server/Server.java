@@ -21,8 +21,13 @@ public class Server {
     }
 
     private void createRoutes(){
-        Spark.post("/user", (req, res) -> registerUser(req, res));
-
+        Spark.post("/user", this::registerUser);
+        Spark.post("/session", this::loginUser);
+        Spark.delete("/session", this::logoutUser);
+        Spark.get("/game", this::listGames);
+        Spark.post("/game", this::makeGame);
+        Spark.put("/game", this::joinGame);
+        Spark.delete("/db", this::clearDatabase);
     }
 
     private String registerUser(Request req, Response res){
@@ -41,15 +46,157 @@ public class Server {
             res.status(400);
             return "{\"message\": \"Error: bad request\"}";
         }
-        //create the new user
-        /**createUser function*/
-        //register a new auth token with user
-        String authToken = generateToken();
-        /**createAuth function*/
-        //return success request
-        res.status(200);
-        res.type("\"application/json\"");
-        return "{\"username\":\"" + username + "\", \"authToken\":\"" + authToken + "\"}";
+        try{
+            //create the new user
+            /**createUser function*/
+            //register a new auth token with user
+            String authToken = generateToken();
+            /**createAuth function*/
+            //return success request
+            res.status(200);
+            res.type("\"application/json\"");
+            return "{\"username\":\"" + username + "\", \"authToken\":\"" + authToken + "\"}";
+        } catch (Exception e) {
+            // Return a failure response with status code 500 for unexpected errors
+            res.status(500);
+            res.type("application/json");
+            return "{\"message\": \"Error: description\"}";
+        }
+    }
+
+    private String loginUser(Request req, Response res){
+        //get data from the response body
+        String username = req.queryParams("username");
+        String password = req.queryParams("password");
+
+        //check if the user already exists
+        if(/**getUser function*/){ //check for matching password too
+            res.status(401);
+            return "{\"message\": \"Error: unauthorized\"}";
+        }
+        try{
+            //register a new auth token with user
+            String authToken = generateToken();
+            /**createAuth function*/
+            //return success request
+            res.status(200);
+            res.type("\"application/json\"");
+            return "{\"username\":\"" + username + "\", \"authToken\":\"" + authToken + "\"}";
+        } catch (Exception e) {
+            // Return a failure response with status code 500 for unexpected errors
+            res.status(500);
+            res.type("application/json");
+            return "{\"message\": \"Error: description\"}";
+        }
+    }
+
+    private String logoutUser(Request req, Response res){
+        //get data from the response body
+        String authToken = req.headers("authorization");
+
+        if(/**validToken*/){
+            // Return a failure response with status code 401 for unauthorized
+            res.status(401);
+            res.type("application/json");
+            return "{\"message\": \"Error: unauthorized\"}";
+        }
+        try{
+            /**logout function*/
+            //return success request
+            res.status(200);
+        } catch (Exception e) {
+            // Return a failure response with status code 500 for unexpected errors
+            res.status(500);
+            res.type("application/json");
+            return "{\"message\": \"Error: description\"}";
+        }
+    }
+
+    private String listGames(Request req, Response res){
+        //get data from the response body
+        String authToken = req.headers("authorization");
+
+        if(/**validToken*/){
+            // Return a failure response with status code 401 for unauthorized
+            res.status(401);
+            res.type("application/json");
+            return "{\"message\": \"Error: unauthorized\"}";
+        }
+        try{
+            /**gameData[] function*/
+            //return success request
+            res.status(200);
+            return "{\"games\": \"gameData\"}";
+        } catch (Exception e) {
+            // Return a failure response with status code 500 for unexpected errors
+            res.status(500);
+            res.type("application/json");
+            return "{\"message\": \"Error: description\"}";
+        }
+    }
+
+    private String makeGame(Request req, Response res){
+        //get data from the response body
+        String authToken = req.headers("authorization");
+        String gameName = req.queryParams("gameName");
+
+        if(/**validToken*/){
+            // Return a failure response with status code 401 for unauthorized
+            res.status(401);
+            res.type("application/json");
+            return "{\"message\": \"Error: unauthorized\"}";
+        }
+        try{
+            /**makeGame function*/
+            //return success request
+            res.status(200);
+            return "{\"gameID\": \"number\"}";
+        } catch (Exception e) {
+            // Return a failure response with status code 500 for unexpected errors
+            res.status(500);
+            res.type("application/json");
+            return "{\"message\": \"Error: description\"}";
+        }
+    }
+
+    private String joinGame(Request req, Response res){
+        //get data from the response body
+        String authToken = req.headers("authorization");
+        String gameID = req.queryParams("gameID");
+        String playerColor = req.queryParams("playerColor");
+
+        if(/**validToken*/){
+            // Return a failure response with status code 401 for unauthorized
+            res.status(401);
+            res.type("application/json");
+            return "{\"message\": \"Error: unauthorized\"}";
+        }
+        //check if valid request
+        if (gameID == null || gameID.isEmpty() || playerColor == null || playerColor.isEmpty()) {
+            res.status(400);
+            return "{\"message\": \"Error: bad request\"}";
+        }
+        try{
+            /**joinGame function*/
+            res.status(200);
+        } catch (Exception e) {
+            // Return a failure response with status code 500 for unexpected errors
+            res.status(500);
+            res.type("application/json");
+            return "{\"message\": \"Error: description\"}";
+        }
+    }
+
+    private String clearDatabase(Request req, Response res){
+        try{
+            /**celar database functon*/
+            res.status(200);
+        } catch (Exception e) {
+            // Return a failure response with status code 500 for unexpected errors
+            res.status(500);
+            res.type("application/json");
+            return "{\"message\": \"Error: description\"}";
+        }
     }
 
     private String generateToken(){

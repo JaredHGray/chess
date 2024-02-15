@@ -1,5 +1,7 @@
 package service;
 
+import model.UserData;
+import model.AuthData;
 public class UserService {
 
     public UserService() {
