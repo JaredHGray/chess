@@ -91,10 +91,10 @@ public class Server {
         String password = req.queryParams("password");
 
         //check if the user already exists
-        if(/**getUser function*/){ //check for matching password too
-            res.status(401);
-            return "{\"message\": \"Error: unauthorized\"}";
-        }
+//        if(/**getUser function*/){ //check for matching password too
+//            res.status(401);
+//            return "{\"message\": \"Error: unauthorized\"}";
+//        }
         try{
             //register a new auth token with user
             String authToken = generateToken();
@@ -115,12 +115,12 @@ public class Server {
         //get data from the response body
         String authToken = req.headers("authorization");
 
-        if(/**validToken*/){
-            // Return a failure response with status code 401 for unauthorized
-            res.status(401);
-            res.type("application/json");
-            return "{\"message\": \"Error: unauthorized\"}";
-        }
+//        if(/**validToken*/){
+//            // Return a failure response with status code 401 for unauthorized
+//            res.status(401);
+//            res.type("application/json");
+//            return "{\"message\": \"Error: unauthorized\"}";
+//        }
         try{
             /**logout function*/
             //return success request
@@ -131,18 +131,19 @@ public class Server {
             res.type("application/json");
             return "{\"message\": \"Error: description\"}";
         }
+        return null;
     }
 
     private String listGames(Request req, Response res){
         //get data from the response body
         String authToken = req.headers("authorization");
 
-        if(/**validToken*/){
-            // Return a failure response with status code 401 for unauthorized
-            res.status(401);
-            res.type("application/json");
-            return "{\"message\": \"Error: unauthorized\"}";
-        }
+//        if(/**validToken*/){
+//            // Return a failure response with status code 401 for unauthorized
+//            res.status(401);
+//            res.type("application/json");
+//            return "{\"message\": \"Error: unauthorized\"}";
+//        }
         try{
             /**gameData[] function*/
             //return success request
@@ -161,12 +162,12 @@ public class Server {
         String authToken = req.headers("authorization");
         String gameName = req.queryParams("gameName");
 
-        if(/**validToken*/){
-            // Return a failure response with status code 401 for unauthorized
-            res.status(401);
-            res.type("application/json");
-            return "{\"message\": \"Error: unauthorized\"}";
-        }
+//        if(/**validToken*/){
+//            // Return a failure response with status code 401 for unauthorized
+//            res.status(401);
+//            res.type("application/json");
+//            return "{\"message\": \"Error: unauthorized\"}";
+//        }
         try{
             /**makeGame function*/
             //return success request
@@ -186,12 +187,12 @@ public class Server {
         String gameID = req.queryParams("gameID");
         String playerColor = req.queryParams("playerColor");
 
-        if(/**validToken*/){
-            // Return a failure response with status code 401 for unauthorized
-            res.status(401);
-            res.type("application/json");
-            return "{\"message\": \"Error: unauthorized\"}";
-        }
+//        if(/**validToken*/){
+//            // Return a failure response with status code 401 for unauthorized
+//            res.status(401);
+//            res.type("application/json");
+//            return "{\"message\": \"Error: unauthorized\"}";
+//        }
         //check if valid request
         if (gameID == null || gameID.isEmpty() || playerColor == null || playerColor.isEmpty()) {
             res.status(400);
@@ -206,6 +207,7 @@ public class Server {
             res.type("application/json");
             return "{\"message\": \"Error: description\"}";
         }
+        return null;
     }
 
     private String clearDatabase(Request req, Response res){
@@ -218,10 +220,15 @@ public class Server {
             res.type("application/json");
             return "{\"message\": \"Error: description\"}";
         }
+        return null;
     }
 
     private String generateToken(){
         return UUID.randomUUID().toString();
+    }
+
+    public int port() {
+        return Spark.port();
     }
 
     public void stop() {
