@@ -16,9 +16,11 @@ public class Server {
     private GameService gameService = null;
     private final UserDAO userDAO = null;
 
+    private final GameDAO gameDAO = null;
+
     public Server() {
         this.userService = new UserService(userDAO);
-        this.gameService = gameService;
+        this.gameService = new GameService(gameDAO);
     }
 
 

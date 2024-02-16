@@ -15,10 +15,10 @@ public class SQLUserDAO implements UserDAO{
 
         var statement = "INSERT INTO user (username, password, email) VALUES (?, ?, ?)";
         var json = new Gson().toJson(registerUser);
-        var id = executeUpdate(statement, registerUser.username(), registerUser.password(), registerUser.email());
+       // var id = executeUpdate(statement, registerUser.username(), registerUser.password(), registerUser.email());
 
         return null;
     }
 }
 
-        return new Pet(id, pet.name(), pet.type());
+      //  return new Pet(id, pet.name(), pet.type());
