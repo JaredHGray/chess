@@ -3,9 +3,9 @@ import dataAccess.DataAccessException;
 import model.GameData;
 
 public class GameService {
-    private final DataAccessException dataAccess;
+   // private final DataAccessException dataAccess;
+    public GameService(){
 
-    public GameService(DataAccessException dataAccess) {
-        this.dataAccess = dataAccess;
     }
+
 }

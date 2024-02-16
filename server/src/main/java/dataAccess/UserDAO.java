@@ -1,4 +1,12 @@
 package dataAccess;
 
-public class UserDAO {
+import model.UserData;
+import java.util.Collection;
+import dataAccess.DataAccessException;
+
+public interface UserDAO {
+    UserData addUser(UserData registerUser) throws DataAccessException;
+
 }
+
+///need to create actual DAOs

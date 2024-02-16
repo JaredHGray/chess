@@ -1,20 +1,19 @@
 package service;
 
+import dataAccess.DataAccessException;
 import model.UserData;
 import model.AuthData;
-import dataAccess.DataAccessException;
+import dataAccess.UserDAO;
 public class UserService {
 
-    private final DataAccessException dataAccess;
+    private final UserDAO userDAO;
 
-    public UserService(DataAccessException dataAccess) {
-        this.dataAccess = dataAccess;
+    public UserService(UserDAO userDAO) {
+        this.userDAO = userDAO;
     }
 
-//    public UserService() {
-//        public AuthData register(UserData user) {}
-//        public AuthData login(UserData user) {}
-//        public void logout(UserData user) {}
-//    }
+    public UserData addUser(UserData registerUser) throws DataAccessException{
+            return userDAO.addUser(registerUser);
+    }
 
 }
