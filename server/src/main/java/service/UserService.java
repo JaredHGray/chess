@@ -6,7 +6,7 @@ import model.AuthData;
 import dataAccess.UserDAO;
 public class UserService {
 
-    private final UserDAO userDAO;
+    private final UserDAO userDAO; //nulll????
 
     public UserService(UserDAO userDAO) {
         this.userDAO = userDAO;

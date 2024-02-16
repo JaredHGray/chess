@@ -14,8 +14,7 @@ public class Server {
 
     private UserService userService = null;
     private GameService gameService = null;
-    private final UserDAO userDAO = null;
-
+    private final UserDAO userDAO = new MemoryUserDAO(); //memory only for memory
     private final GameDAO gameDAO = null;
 
     public Server() {
@@ -26,10 +25,8 @@ public class Server {
 
     public int run(int desiredPort) {
         Spark.port(desiredPort);
-
         Spark.staticFiles.location("web");
-
-        // Register your endpoints and handle exceptions here.
+        // Register endpoints and handle exceptions here.
         createRoutes();
 
         Spark.awaitInitialization();
