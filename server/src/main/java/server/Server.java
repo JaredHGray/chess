@@ -94,12 +94,12 @@ public class Server {
 //        }
         try{
             //register a new auth token with user
-            String authToken = generateToken();
+          //  String authToken = generateToken();
             /**createAuth function*/
             //return success request
             res.status(200);
             res.type("\"application/json\"");
-            return "{\"username\":\"" + username + "\", \"authToken\":\"" + authToken + "\"}";
+            return "{\"username\":\"" + username + "\", \"authToken\":\"" + "berry" + "\"}";
         } catch (Exception e) {
             // Return a failure response with status code 500 for unexpected errors
             res.status(500);

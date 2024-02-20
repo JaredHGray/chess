@@ -1,7 +1,6 @@
 package dataAccess;
-import model.AuthData;
 
 public interface AuthDAO {
 
-    void createAuth(String username) throws DataAccessException;
+    void createAuth(String username, String authToken) throws DataAccessException;
 }
