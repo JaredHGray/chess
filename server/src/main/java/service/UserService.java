@@ -6,6 +6,8 @@ import dataAccess.DataAccessException;
 import model.UserData;
 import dataAccess.UserDAO;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class UserService {
@@ -17,18 +19,21 @@ public class UserService {
         this.userDAO = userDAO;
         this.authDAO = authDAO;
     }
-    public JsonObject addUser(UserData registerUser) throws DataAccessException{
+    public Map<String, Object> addUser(UserData registerUser) throws DataAccessException{
+        Map<String, Object> result = new HashMap<>();
         if(userDAO.getUser(registerUser) == null){
             userDAO.addUser(registerUser);
             String authToken = generateToken();
             authDAO.createAuth(registerUser.username(), authToken);
-            String data = "{username: " + registerUser.username() + ", authToken: " + authToken + "}";
             Results successResult = new Results(200, null, registerUser.username(), authToken);
-            return successResult.getData();
+            result.put("code", successResult.getResponseCode());
+            result.put("data", successResult.getData());
         } else {
             Results badResult = new Results(403, "Error: already taken", null, null);
-            return badResult.getData();
+            result.put("code", badResult.getResponseCode());
+            result.put("data", badResult.getData());
         }
+        return result;
     }
 
     private String generateToken(){

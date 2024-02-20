@@ -27,6 +27,10 @@ public class Results {
         return data;
     }
 
+    public int getResponseCode() {
+        return responseCode;
+    }
+
     public String toJson() {
         return data.toString();
     }

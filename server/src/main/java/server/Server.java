@@ -1,5 +1,6 @@
 package server;
 
+import com.google.gson.JsonObject;
 import org.eclipse.jetty.server.Authentication;
 import spark.*;
 import java.nio.file.Paths;
@@ -47,8 +48,9 @@ public class Server {
     private String registerUser(Request req, Response res) throws DataAccessException{
         var registerUser = new Gson().fromJson(req.body(), UserData.class);
         //userService.addUser(registerUser);
-        var newUser = userService.addUser(registerUser);
-        return new Gson().toJson(newUser);
+        var newUser = userService.addUser(registerUser); //also return status code
+        res.status((Integer) newUser.get("code"));
+        return new Gson().toJson((JsonObject) newUser.get("data"));
     }
 
     private String loginUser(Request req, Response res){
