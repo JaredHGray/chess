@@ -14,10 +14,10 @@ public class UserService {
         this.userDAO = userDAO;
     }
     public UserData addUser(UserData registerUser) throws DataAccessException{
-        if(userDAO.getUser(registerUser) == null){
+        if(!userDAO.getUser(registerUser)){
             userDAO.addUser(registerUser);
         }
-        return userDAO.getUser(registerUser);
+        return null;
     }
 
 }
