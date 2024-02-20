@@ -9,11 +9,10 @@ public class MemoryUserDAO implements UserDAO {
     //do i need some sort of hash map?\
     //yes for storage and retrieval
     Set<UserData> users = new HashSet<>();
-    public UserData addUser(UserData registerUser) throws DataAccessException {
+    public void addUser(UserData registerUser) throws DataAccessException {
 
         registerUser = new UserData(registerUser.username(), registerUser.password(), registerUser.email());
         users.add(registerUser);
-        return registerUser; //do i return success or make this void?
     }
 
     public UserData getUser(UserData registerUser) throws DataAccessException {

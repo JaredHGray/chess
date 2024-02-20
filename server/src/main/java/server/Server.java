@@ -14,11 +14,12 @@ public class Server {
 
     private UserService userService = null;
     private GameService gameService = null;
-    private final UserDAO userDAO = new MemoryUserDAO(); //memory only for memory
+    private final UserDAO userDAO = new MemoryUserDAO(); //memory only for memory\
+    private final AuthDAO authDAO = new MemoryAuthData();
     private final GameDAO gameDAO = null;
 
     public Server() {
-        this.userService = new UserService(userDAO);
+        this.userService = new UserService(userDAO, authDAO);
         this.gameService = new GameService(gameDAO);
     }
 
@@ -217,14 +218,6 @@ public class Server {
             return "{\"message\": \"Error: description\"}";
         }
         return null;
-    }
-
-    private String generateToken(){
-        return UUID.randomUUID().toString();
-    }
-
-    public int port() {
-        return Spark.port();
     }
 
     public void stop() {

@@ -3,7 +3,7 @@ package dataAccess;
 import model.UserData;
 
 public interface UserDAO {
-    UserData addUser(UserData registerUser) throws DataAccessException;
+    void addUser(UserData registerUser) throws DataAccessException;
     UserData getUser(UserData registerUser) throws DataAccessException;
 }
 
