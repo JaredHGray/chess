@@ -17,12 +17,16 @@ public class MemoryUserDAO implements UserDAO {
     }
 
     public boolean getUser(UserData registerUser) throws DataAccessException {
-        for(UserData findUser : users){
-            if(findUser.username().equals(registerUser.username())){
-                return false;
+        if(users.isEmpty()){
+            return false;
+        }else{
+            for(UserData findUser : users){
+                if(findUser.username().equals(registerUser.username())){
+                    return false;
+                }
             }
+            return true;
         }
-        return true;
     }
 
 }
