@@ -47,7 +47,6 @@ public class Server {
 
     private String registerUser(Request req, Response res) throws DataAccessException{
         var registerUser = new Gson().fromJson(req.body(), UserData.class);
-        //userService.addUser(registerUser);
         var newUser = userService.addUser(registerUser); //also return status code
         res.status((Integer) newUser.get("code"));
         return new Gson().toJson((JsonObject) newUser.get("data"));
@@ -188,7 +187,7 @@ public class Server {
             res.type("application/json");
             return "{\"message\": \"Error: description\"}";
         }
-        return null;
+        return "{\"message\": \"Error: description\"}";
     }
 
     public void stop() {
