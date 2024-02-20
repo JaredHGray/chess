@@ -19,11 +19,5 @@ public class Main {
         } catch (Throwable ex) {
             System.out.printf("Unable to start server: %s%n", ex.getMessage());
         }
-        System.out.println("""
-                Pet Server:
-                java ServerMain <port> [<dburl> <dbuser> <dbpassword> <dbname>]
-                """);
     }
-    //create new instance of server then server.run and give port
-    //8080
 }
