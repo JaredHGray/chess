@@ -1,5 +1,6 @@
 package service;
 
+import com.google.gson.JsonObject;
 import dataAccess.AuthDAO;
 import dataAccess.DataAccessException;
 import model.UserData;
@@ -16,15 +17,19 @@ public class UserService {
         this.userDAO = userDAO;
         this.authDAO = authDAO;
     }
-    public UserData addUser(UserData registerUser) throws DataAccessException{
+    public JsonObject addUser(UserData registerUser) throws DataAccessException{
         if(userDAO.getUser(registerUser) == null){
             userDAO.addUser(registerUser);
             String authToken = generateToken();
             authDAO.createAuth(registerUser.username(), authToken);
+            String data = "{username: " + registerUser.username() + ", authToken: " + authToken + "}";
+            Results successResult = new Results(200, null, registerUser.username(), authToken);
+            return successResult.getData();
+        } else {
+            Results badResult = new Results(403, "Error: already taken", null, null);
+            return badResult.getData();
         }
-        return null; //return combo of username and token
-    } //create a result object that can turn anything into a json
-    //can also handle errors
+    }
 
     private String generateToken(){
         return UUID.randomUUID().toString();

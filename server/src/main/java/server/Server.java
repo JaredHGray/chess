@@ -45,41 +45,10 @@ public class Server {
     }
 
     private String registerUser(Request req, Response res) throws DataAccessException{
-//        //get data from the response body
-//        String username = req.queryParams("username");
-//        String password = req.queryParams("password");
-//        String email = req.queryParams("email");
-//
-//        //check if the user already exists
-//        if(/**getUser function*/){
-//            res.status(403);
-//            return "{\"message\": \"Error: already taken\"}";
-//        }
-//        //check if valid request
-//        if (username == null || username.isEmpty() || password == null || password.isEmpty() || email == null || email.isEmpty()) {
-//            res.status(400);
-//            return "{\"message\": \"Error: bad request\"}"; //try in service
-//        }
-//        try{
-//            //create the new user
-//            /**createUser function*/
-//            //register a new auth token with user
-//            String authToken = generateToken();
-//            /**createAuth function*/
-//            //return success request
-//            res.status(200);
-//            res.type("\"application/json\"");
-//            return "{\"username\":\"" + username + "\", \"authToken\":\"" + authToken + "\"}";
-//        } catch (Exception e) {
-//            // Return a failure response with status code 500 for unexpected errors
-//            res.status(500);
-//            res.type("application/json");
-//            return "{\"message\": \"Error: description\"}";
-//        }
-
         var registerUser = new Gson().fromJson(req.body(), UserData.class);
-        registerUser = userService.addUser(registerUser);
-        return new Gson().toJson(registerUser);
+        //userService.addUser(registerUser);
+        var newUser = userService.addUser(registerUser);
+        return new Gson().toJson(newUser);
     }
 
     private String loginUser(Request req, Response res){
