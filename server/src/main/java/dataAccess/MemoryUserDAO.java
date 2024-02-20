@@ -16,17 +16,15 @@ public class MemoryUserDAO implements UserDAO {
         return registerUser; //do i return success or make this void?
     }
 
-    public boolean getUser(UserData registerUser) throws DataAccessException {
-        if(users.isEmpty()){
-            return false;
-        }else{
-            for(UserData findUser : users){
-                if(findUser.username().equals(registerUser.username())){
-                    return false;
+    public UserData getUser(UserData registerUser) throws DataAccessException {
+        if (!users.isEmpty()) {
+            for (UserData findUser : users) {
+                if (findUser.username().equals(registerUser.username())) {
+                    return findUser;
                 }
             }
-            return true;
         }
+        return null;
     }
 
 }
