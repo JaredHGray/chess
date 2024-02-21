@@ -11,7 +11,14 @@ public class MemoryAuthData implements AuthDAO {
         auth.add(createToken);
     }
 
-    public boolean getAuth(String authID) throws DataAccessException {
-        return false;
+    public String getAuth(String authID) throws DataAccessException {
+        if (!auth.isEmpty()) {
+            for (AuthData findAuth : auth) {
+                if (findAuth.authToken().equals(authID)) {
+                    return findAuth.username();
+                }
+            }
+        }
+        return null;
     }
 }

@@ -22,19 +22,26 @@ public class UserService {
     public Map<String, Object> addUser(UserData registerUser) throws DataAccessException{
         Map<String, Object> result = new HashMap<>();
         if(registerUser.username() == null || registerUser.username().isEmpty() || registerUser.password() == null || registerUser.password().isEmpty() || registerUser.email() == null || registerUser.email().isEmpty()){
-            Results badResult = new Results(400, "Error: bad request", null, null);
-            result.put("code", badResult.getResponseCode());
+            result.put("message", "Error: bad request");
+            //Results badResult = new Results(400, "Error: bad request", null, null);
+            Results badResult = new Results(result);
+            result.put("code", 400);
             result.put("data", badResult.getData());
         }else if(userDAO.getUser(registerUser) == null){
             userDAO.addUser(registerUser);
             String authToken = generateToken();
             authDAO.createAuth(registerUser.username(), authToken);
-            Results successResult = new Results(200, null, registerUser.username(), authToken);
-            result.put("code", successResult.getResponseCode());
+            result.put("username", registerUser.username());
+            result.put("authToken", authToken);
+            Results successResult = new Results(result);
+            //Results successResult = new Results(200, null, registerUser.username(), authToken);
+            result.put("code", 200);
             result.put("data", successResult.getData());
         } else {
-            Results badResult = new Results(403, "Error: already taken", null, null);
-            result.put("code", badResult.getResponseCode());
+            //Results badResult = new Results(403, "Error: already taken", null, null);
+            result.put("message", "Error: already taken");
+            Results badResult = new Results(result);
+            result.put("code", 403);
             result.put("data", badResult.getData());
         }
         return result;
@@ -42,15 +49,21 @@ public class UserService {
 
     public Map<String, Object> loginUser(UserData user) throws DataAccessException{
         Map<String, Object> result = new HashMap<>();
+       // Map<String, Object> createResults = new HashMap<>();
         if(userDAO.verifyUser(user) != null){
             String authToken = generateToken();
             authDAO.createAuth(user.username(), authToken);
-            Results successResult = new Results(200, null, user.username(), authToken);
-            result.put("code", successResult.getResponseCode());
+            result.put("username", user.username());
+            result.put("authToken", authToken);
+            //Results successResult = new Results(200, null, user.username(), authToken);
+            Results successResult = new Results(result);
+            result.put("code", 200);
             result.put("data", successResult.getData());
         } else {
-            Results badResult = new Results(401, "Error: unauthorized", null, null);
-            result.put("code", badResult.getResponseCode());
+            result.put("message", "Error: unauthorized");
+            //Results badResult = new Results(401, "Error: unauthorized", null, null);
+            Results badResult = new Results(result);
+            result.put("code", 401);
             result.put("data", badResult.getData());
         }
         return result;
