@@ -21,7 +21,11 @@ public class UserService {
     }
     public Map<String, Object> addUser(UserData registerUser) throws DataAccessException{
         Map<String, Object> result = new HashMap<>();
-        if(userDAO.getUser(registerUser) == null){
+        if(registerUser.username() == null || registerUser.username().isEmpty() || registerUser.password() == null || registerUser.password().isEmpty() || registerUser.email() == null || registerUser.email().isEmpty()){
+            Results badResult = new Results(400, "Error: bad request", null, null);
+            result.put("code", badResult.getResponseCode());
+            result.put("data", badResult.getData());
+        }else if(userDAO.getUser(registerUser) == null){
             userDAO.addUser(registerUser);
             String authToken = generateToken();
             authDAO.createAuth(registerUser.username(), authToken);
@@ -34,6 +38,7 @@ public class UserService {
             result.put("data", badResult.getData());
         }
         return result;
+        //400 error is missing field such as username or password
     }
 
     private String generateToken(){
