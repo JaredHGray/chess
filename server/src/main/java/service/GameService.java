@@ -32,7 +32,7 @@ public class GameService {
             result.put("code", 400);
             result.put("data", badResult.getData());
         } else if(username != null){
-            gameDAO.createGame(newGame, username, gameID);
+            gameDAO.createGame(newGame, gameID);
             result.put("gameID", gameID);
             Results successResult = new Results(result);
             result.put("code", 200);
@@ -46,6 +46,21 @@ public class GameService {
         return result;
     }
 
+    public Map<String, Object> listGames(String authToken) throws DataAccessException{
+        Map<String, Object> result = new HashMap<>();
+        if(authDAO.getAuth(authToken) != null){
+            result.put("games", gameDAO.listGames());
+            Results successResult = new Results(result);
+            result.put("code", 200);
+            result.put("data", successResult.getData());
+        } else {
+            result.put("message", "Error: unauthorized");
+            Results badResult = new Results(result);
+            result.put("code", 401);
+            result.put("data", badResult.getData());
+        }
+        return result;
+    }
     private int generateID(){
         return new Random().nextInt(10000);
     }

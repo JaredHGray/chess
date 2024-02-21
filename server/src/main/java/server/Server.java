@@ -66,27 +66,11 @@ public class Server {
         return new Gson().toJson((JsonObject) logoutUser.get("data"));
     }
 
-    private String listGames(Request req, Response res){
-        //get data from the response body
+    private String listGames(Request req, Response res) throws DataAccessException{
         String authToken = req.headers("authorization");
-
-//        if(/**validToken*/){
-//            // Return a failure response with status code 401 for unauthorized
-//            res.status(401);
-//            res.type("application/json");
-//            return "{\"message\": \"Error: unauthorized\"}";
-//        }
-        try{
-            /**gameData[] function*/
-            //return success request
-            res.status(200);
-            return "{\"games\": \"gameData\"}";
-        } catch (Exception e) {
-            // Return a failure response with status code 500 for unexpected errors
-            res.status(500);
-            res.type("application/json");
-            return "{\"message\": \"Error: description\"}";
-        }
+        var allGames = gameService.listGames(authToken);
+        res.status((Integer) allGames.get("code"));
+        return new Gson().toJson((JsonObject) allGames.get("data"));
     }
 
     private String makeGame(Request req, Response res) throws DataAccessException {
