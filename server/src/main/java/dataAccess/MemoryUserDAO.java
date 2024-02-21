@@ -6,8 +6,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class MemoryUserDAO implements UserDAO {
-    //do i need some sort of hash map?\
-    //yes for storage and retrieval
     Set<UserData> users = new HashSet<>();
     public void addUser(UserData registerUser) throws DataAccessException {
 
