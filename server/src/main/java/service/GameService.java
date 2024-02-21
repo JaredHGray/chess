@@ -25,12 +25,23 @@ public class GameService {
         Map<String, Object> result = new HashMap<>();
         String username = authDAO.getAuth(authID);
         int gameID = generateID();
-        if(username != null){
+
+        if(newGame.gameName() == null || newGame.gameName().isEmpty() || authID == null || authID.isEmpty()){
+            result.put("message", "Error: bad request");
+            Results badResult = new Results(result);
+            result.put("code", 400);
+            result.put("data", badResult.getData());
+        } else if(username != null){
             gameDAO.createGame(newGame, username, gameID);
             result.put("gameID", gameID);
             Results successResult = new Results(result);
             result.put("code", 200);
             result.put("data", successResult.getData());
+        } else {
+            result.put("message", "Error: unauthorized");
+            Results badResult = new Results(result);
+            result.put("code", 401);
+            result.put("data", badResult.getData());
         }
         return result;
     }

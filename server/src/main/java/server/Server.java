@@ -59,27 +59,12 @@ public class Server {
         return new Gson().toJson((JsonObject) loginUser.get("data"));
     }
 
-    private String logoutUser(Request req, Response res){
-        //get data from the response body
+    private String logoutUser(Request req, Response res) throws DataAccessException{
         String authToken = req.headers("authorization");
-
-//        if(/**validToken*/){
-//            // Return a failure response with status code 401 for unauthorized
-//            res.status(401);
-//            res.type("application/json");
-//            return "{\"message\": \"Error: unauthorized\"}";
-//        }
-        try{
-            /**logout function*/
-            //return success request
-            res.status(200);
-        } catch (Exception e) {
-            // Return a failure response with status code 500 for unexpected errors
-            res.status(500);
-            res.type("application/json");
-            return "{\"message\": \"Error: description\"}";
-        }
-        return null;
+        //var logout = new Gson().fromJson(req.body(), UserData.class);
+        var logoutUser = userService.logoutUser(authToken);
+        res.status((Integer) logoutUser.get("code"));
+        return new Gson().toJson((JsonObject) logoutUser.get("data"));
     }
 
     private String listGames(Request req, Response res){
@@ -111,24 +96,6 @@ public class Server {
         var createGame = gameService.createGame(newGame, authID);
         res.status((Integer) createGame.get("code"));
         return new Gson().toJson((JsonObject) createGame.get("data"));
-
-//        if(/**validToken*/){
-//            // Return a failure response with status code 401 for unauthorized
-//            res.status(401);
-//            res.type("application/json");
-//            return "{\"message\": \"Error: unauthorized\"}";
-//        }
-//        try{
-//            /**makeGame function*/
-//            //return success request
-//            res.status(200);
-//            return "{\"gameID\": \"number\"}";
-//        } catch (Exception e) {
-//            // Return a failure response with status code 500 for unexpected errors
-//            res.status(500);
-//            res.type("application/json");
-//            return "{\"message\": \"Error: description\"}";
-//        }
     }
 
     private String joinGame(Request req, Response res){

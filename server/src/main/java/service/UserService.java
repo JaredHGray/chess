@@ -63,9 +63,24 @@ public class UserService {
         return result;
     }
 
+    public Map<String, Object> logoutUser(String authToken) throws DataAccessException{
+        Map<String, Object> result = new HashMap<>();
+        if(authDAO.deleteAuth(authToken)){
+            result.put("", "");
+            Results successResult = new Results(result);
+            result.put("code", 200);
+            result.put("data", successResult.getData());
+        }else{
+            result.put("message", "Error: unauthorized");
+            Results badResult = new Results(result);
+            result.put("code", 401);
+            result.put("data", badResult.getData());
+        }
+        return result;
+    }
+
     private String generateToken(){
         return UUID.randomUUID().toString();
     }
-
 
 }

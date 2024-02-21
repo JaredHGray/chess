@@ -26,9 +26,5 @@ public class Results {
     public JsonObject getData() {
         return data;
     }
-
-    public String toJson() {
-        return data.toString();
-    }
 }
 
