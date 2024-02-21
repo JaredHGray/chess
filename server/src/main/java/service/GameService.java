@@ -21,17 +21,18 @@ public class GameService {
         this.authDAO = authDAO;
     }
 
-    public Object createGame(GameData newGame, String authID) throws DataAccessException {
+    public Map<String, Object> createGame(GameData newGame, String authID) throws DataAccessException {
         Map<String, Object> result = new HashMap<>();
         String username = authDAO.getAuth(authID);
         int gameID = generateID();
         if(username != null){
-            gameDAO.creatGame(newGame, username, gameID);
-           // Results successResult = new Results(200, null, gameID, null);
-           // result.put("code", successResult.getResponseCode());
-            //result.put("data", successResult.getData());
+            gameDAO.createGame(newGame, username, gameID);
+            result.put("gameID", gameID);
+            Results successResult = new Results(result);
+            result.put("code", 200);
+            result.put("data", successResult.getData());
         }
-        return null;
+        return result;
     }
 
     private int generateID(){

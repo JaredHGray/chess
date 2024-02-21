@@ -109,8 +109,8 @@ public class Server {
         var newGame = new Gson().fromJson(req.body(), GameData.class);
         String authID = req.headers("authorization");
         var createGame = gameService.createGame(newGame, authID);
-      //  res.status((Integer) createGame.get("code"));
-       // return new Gson().toJson((JsonObject) createGame.get("data"));
+        res.status((Integer) createGame.get("code"));
+        return new Gson().toJson((JsonObject) createGame.get("data"));
 
 //        if(/**validToken*/){
 //            // Return a failure response with status code 401 for unauthorized
@@ -118,17 +118,17 @@ public class Server {
 //            res.type("application/json");
 //            return "{\"message\": \"Error: unauthorized\"}";
 //        }
-        try{
-            /**makeGame function*/
-            //return success request
-            res.status(200);
-            return "{\"gameID\": \"number\"}";
-        } catch (Exception e) {
-            // Return a failure response with status code 500 for unexpected errors
-            res.status(500);
-            res.type("application/json");
-            return "{\"message\": \"Error: description\"}";
-        }
+//        try{
+//            /**makeGame function*/
+//            //return success request
+//            res.status(200);
+//            return "{\"gameID\": \"number\"}";
+//        } catch (Exception e) {
+//            // Return a failure response with status code 500 for unexpected errors
+//            res.status(500);
+//            res.type("application/json");
+//            return "{\"message\": \"Error: description\"}";
+//        }
     }
 
     private String joinGame(Request req, Response res){
