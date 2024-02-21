@@ -27,6 +27,7 @@ public class MemoryAuthData implements AuthDAO {
         if (!auth.isEmpty()) {
             for (AuthData findAuth : auth) {
                 if (findAuth.authToken().equals(authToken)) {
+                    auth.remove(findAuth);
                     return true;
                 }
             }
