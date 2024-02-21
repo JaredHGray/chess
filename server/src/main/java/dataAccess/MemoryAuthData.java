@@ -10,4 +10,8 @@ public class MemoryAuthData implements AuthDAO {
         AuthData createToken = new AuthData(username, authToken);
         auth.add(createToken);
     }
+
+    public boolean getAuth(String authID) throws DataAccessException {
+        return false;
+    }
 }

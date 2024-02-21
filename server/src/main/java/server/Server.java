@@ -17,11 +17,11 @@ public class Server {
     private GameService gameService = null;
     private final UserDAO userDAO = new MemoryUserDAO(); //memory only for memory\
     private final AuthDAO authDAO = new MemoryAuthData();
-    private final GameDAO gameDAO = null;
+    private final GameDAO gameDAO = new MemoryGameDAO();
 
     public Server() {
         this.userService = new UserService(userDAO, authDAO);
-        this.gameService = new GameService(gameDAO);
+        this.gameService = new GameService(gameDAO, authDAO);
     }
 
 
@@ -105,10 +105,12 @@ public class Server {
         }
     }
 
-    private String makeGame(Request req, Response res){
-        //get data from the response body
-        String authToken = req.headers("authorization");
-        String gameName = req.queryParams("gameName");
+    private String makeGame(Request req, Response res) throws DataAccessException {
+        var newGame = new Gson().fromJson(req.body(), GameData.class);
+        String authID = req.headers("authorization");
+        var createGame = gameService.createGame(newGame, authID);
+      //  res.status((Integer) createGame.get("code"));
+       // return new Gson().toJson((JsonObject) createGame.get("data"));
 
 //        if(/**validToken*/){
 //            // Return a failure response with status code 401 for unauthorized

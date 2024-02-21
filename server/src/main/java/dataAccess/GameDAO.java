@@ -4,5 +4,4 @@ import java.util.Collection;
 import dataAccess.DataAccessException;
 
 public interface GameDAO {
-
 }
