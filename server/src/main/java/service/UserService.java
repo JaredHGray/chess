@@ -38,7 +38,22 @@ public class UserService {
             result.put("data", badResult.getData());
         }
         return result;
-        //400 error is missing field such as username or password
+    }
+
+    public Map<String, Object> loginUser(UserData user) throws DataAccessException{
+        Map<String, Object> result = new HashMap<>();
+        if(userDAO.verifyUser(user) != null){
+            String authToken = generateToken();
+            authDAO.createAuth(user.username(), authToken);
+            Results successResult = new Results(200, null, user.username(), authToken);
+            result.put("code", successResult.getResponseCode());
+            result.put("data", successResult.getData());
+        } else {
+            Results badResult = new Results(401, "Error: unauthorized", null, null);
+            result.put("code", badResult.getResponseCode());
+            result.put("data", badResult.getData());
+        }
+        return result;
     }
 
     private String generateToken(){

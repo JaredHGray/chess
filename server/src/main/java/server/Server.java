@@ -52,30 +52,33 @@ public class Server {
         return new Gson().toJson((JsonObject) newUser.get("data"));
     }
 
-    private String loginUser(Request req, Response res){
-        //get data from the response body
-        String username = req.queryParams("username");
-        String password = req.queryParams("password");
+    private String loginUser(Request req, Response res) throws DataAccessException {
+        var login = new Gson().fromJson(req.body(), UserData.class);
+        var loginUser = userService.loginUser(login);
+        res.status((Integer) loginUser.get("code"));
+        return new Gson().toJson((JsonObject) loginUser.get("data"));
+
+        //getUser, verifyUser
 
         //check if the user already exists
 //        if(/**getUser function*/){ //check for matching password too
 //            res.status(401);
 //            return "{\"message\": \"Error: unauthorized\"}";
 //        }
-        try{
-            //register a new auth token with user
-          //  String authToken = generateToken();
-            /**createAuth function*/
-            //return success request
-            res.status(200);
-            res.type("\"application/json\"");
-            return "{\"username\":\"" + username + "\", \"authToken\":\"" + "berry" + "\"}";
-        } catch (Exception e) {
-            // Return a failure response with status code 500 for unexpected errors
-            res.status(500);
-            res.type("application/json");
-            return "{\"message\": \"Error: description\"}";
-        }
+//        try{
+//            //register a new auth token with user
+//          //  String authToken = generateToken();
+//            /**createAuth function*/
+//            //return success request
+//            res.status(200);
+//            res.type("\"application/json\"");
+//            return "{\"username\":\"" + username + "\", \"authToken\":\"" + "berry" + "\"}";
+//        } catch (Exception e) {
+//            // Return a failure response with status code 500 for unexpected errors
+//            res.status(500);
+//            res.type("application/json");
+//            return "{\"message\": \"Error: description\"}";
+//        }
     }
 
     private String logoutUser(Request req, Response res){

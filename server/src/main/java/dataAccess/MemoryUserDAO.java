@@ -26,4 +26,14 @@ public class MemoryUserDAO implements UserDAO {
         return null;
     }
 
+    public UserData verifyUser(UserData verifyUser) throws DataAccessException {
+        if(!users.isEmpty()){
+            for (UserData findUser : users) {
+                if (findUser.username().equals(verifyUser.username()) && findUser.password().equals(verifyUser.password())) {
+                    return findUser;
+                }
+            }
+        }
+        return null;
+    }
 }
