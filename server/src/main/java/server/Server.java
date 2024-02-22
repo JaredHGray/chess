@@ -13,9 +13,9 @@ import model.*;
 
 public class Server {
 
-    private UserService userService = null;
-    private GameService gameService = null;
-    private final UserDAO userDAO = new MemoryUserDAO(); //memory only for memory\
+    private final UserService userService;
+    private final GameService gameService;
+    private final UserDAO userDAO = new MemoryUserDAO();
     private final AuthDAO authDAO = new MemoryAuthData();
     private final GameDAO gameDAO = new MemoryGameDAO();
 
@@ -84,18 +84,17 @@ public class Server {
     private String joinGame(Request req, Response res) throws DataAccessException{
         var joinGame = new Gson().fromJson(req.body(), JsonObject.class);
         String authToken = req.headers("authorization");
-        String playerColor = null;  // Initialize to null
+        String playerColor = null;
 
         // Check if playerColor exists in the request
         if (joinGame.has("playerColor")) {
             playerColor = joinGame.getAsJsonPrimitive("playerColor").getAsString();
         }
-        //String playerColor = joinGame.getAsJsonPrimitive("playerColor").getAsString();
         int gameID = joinGame.getAsJsonPrimitive("gameID").getAsInt();
         var findGame = gameService.joinGame(gameID, playerColor, authToken);
         res.status((Integer) findGame.get("code"));
         return new Gson().toJson((JsonObject) findGame.get("data"));
-    }
+    } //return a positive response
 
     private String clearDatabase(Request req, Response res){
         try{

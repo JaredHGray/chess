@@ -74,8 +74,10 @@ public class GameService {
             result.put("data", badResult.getData());
         } else if(user != null){
             if(playerColor == null || playerColor.isEmpty()){
-                //make the user an observer
-                return null;
+                result.put("", "");
+                Results successResult = new Results(result);
+                result.put("code", 200);
+                result.put("data", successResult.getData());
             } else if(findGame != null){
                 if((findGame.whiteUsername() != null && playerColor.equals("WHITE")) || (findGame.blackUsername() != null && playerColor.equals("BLACK"))){
                     result.put("message", "Error: already taken");

@@ -23,7 +23,6 @@ public class Results {
             } else if (value instanceof Integer) {
                 this.data.addProperty(key, (Integer) value);
             } else if (value instanceof Set<?>) {
-                // Convert each GameData to JsonObject and add to JsonArray
                 JsonArray gamesArray = new JsonArray();
                 for (Object gameData : (Set<?>) value) {
                     if (gameData instanceof GameData) {
@@ -31,7 +30,6 @@ public class Results {
                         gamesArray.add(gameDataJson);
                     }
                 }
-                // Wrap the games array in a JsonObject with the "games" key
                 this.data.add("games", gamesArray);
             }
         }
