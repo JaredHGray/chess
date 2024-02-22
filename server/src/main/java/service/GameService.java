@@ -67,7 +67,7 @@ public class GameService {
         GameData findGame = gameDAO.findGame(gameID);
         String user = authDAO.getAuth(authToken);
 
-        if(gameID < 0 || authToken == null || authToken.isEmpty()){
+        if(gameID <= 0 || authToken == null || authToken.isEmpty()){
             result.put("message", "Error: bad request");
             Results badResult = new Results(result);
             result.put("code", 400);
