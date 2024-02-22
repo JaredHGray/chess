@@ -34,4 +34,8 @@ public class MemoryAuthData implements AuthDAO {
         }
         return false;
     }
+
+    public void clearAuth() throws DataAccessException {
+        auth.clear();
+    }
 }

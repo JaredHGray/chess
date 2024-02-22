@@ -8,6 +8,8 @@ public interface UserDAO {
     UserData getUser(UserData registerUser) throws DataAccessException;
 
     UserData verifyUser(UserData verifyUser) throws DataAccessException;
+
+    void clearUsers() throws DataAccessException;
 }
 
 ///need to create actual DAOs

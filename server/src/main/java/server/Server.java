@@ -86,27 +86,21 @@ public class Server {
         String authToken = req.headers("authorization");
         String playerColor = null;
 
-        // Check if playerColor exists in the request
-        if (joinGame.has("playerColor")) {
+        if (joinGame.has("playerColor")) { // Check if playerColor exists in the request
             playerColor = joinGame.getAsJsonPrimitive("playerColor").getAsString();
         }
         int gameID = joinGame.getAsJsonPrimitive("gameID").getAsInt();
         var findGame = gameService.joinGame(gameID, playerColor, authToken);
         res.status((Integer) findGame.get("code"));
         return new Gson().toJson((JsonObject) findGame.get("data"));
-    } //return a positive response
+    }
 
-    private String clearDatabase(Request req, Response res){
-        try{
-            /**celar database functon*/
-            res.status(200);
-        } catch (Exception e) {
-            // Return a failure response with status code 500 for unexpected errors
-            res.status(500);
-            res.type("application/json");
-            return "{\"message\": \"Error: description\"}";
-        }
-        return "{\"message\": \"Error: description\"}";
+    private String clearDatabase(Request req, Response res) throws DataAccessException{
+        gameService.clearGames();
+        userService.clearUsers();
+        userService.clearAuth();
+        res.status(200);
+        return new Gson().toJson(new JsonObject());
     }
 
     public void stop() {

@@ -11,4 +11,6 @@ public interface GameDAO {
     GameData findGame(int gameID) throws DataAccessException;
 
     void joinGame(int gameID, String user, String playerColor) throws DataAccessException;
+
+    void clearGames() throws DataAccessException;
 }

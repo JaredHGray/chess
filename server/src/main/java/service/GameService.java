@@ -16,7 +16,6 @@ public class GameService {
     private final AuthDAO authDAO;
 
     public GameService(GameDAO gameDAO, AuthDAO authDAO){
-
         this.gameDAO = gameDAO;
         this.authDAO = authDAO;
     }
@@ -100,8 +99,11 @@ public class GameService {
         }
         return result;
     }
+
+    public void clearGames() throws DataAccessException{
+        gameDAO.clearGames();
+    }
     private int generateID(){
         return new Random().nextInt(10000);
     }
-
 }

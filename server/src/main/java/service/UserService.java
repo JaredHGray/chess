@@ -79,6 +79,14 @@ public class UserService {
         return result;
     }
 
+    public void clearUsers() throws DataAccessException{
+        userDAO.clearUsers();
+    }
+
+    public void clearAuth() throws DataAccessException{
+        authDAO.clearAuth();
+    }
+
     private String generateToken(){
         return UUID.randomUUID().toString();
     }
