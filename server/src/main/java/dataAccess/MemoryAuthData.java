@@ -38,4 +38,20 @@ public class MemoryAuthData implements AuthDAO {
     public void clearAuth() throws DataAccessException {
         auth.clear();
     }
+
+    public Set<AuthData> getAllAuth() throws DataAccessException {
+        return auth;
+    }
+
+    @Override
+    public String getUser(String username) throws DataAccessException {
+        if (!auth.isEmpty()) {
+            for (AuthData findAuth : auth) {
+                if (findAuth.username().equals(username)) {
+                    return findAuth.authToken();
+                }
+            }
+        }
+        return null;
+    }
 }

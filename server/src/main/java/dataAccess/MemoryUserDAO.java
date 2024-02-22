@@ -24,6 +24,10 @@ public class MemoryUserDAO implements UserDAO {
         return null;
     }
 
+    public Set<UserData> getUsers() throws DataAccessException{
+        return users;
+    }
+
     public UserData verifyUser(UserData verifyUser) throws DataAccessException {
         if(!users.isEmpty()){
             for (UserData findUser : users) {

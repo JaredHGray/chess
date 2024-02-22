@@ -1,5 +1,9 @@
 package dataAccess;
 
+import model.AuthData;
+
+import java.util.Set;
+
 public interface AuthDAO {
 
     void createAuth(String username, String authToken) throws DataAccessException;
@@ -9,4 +13,8 @@ public interface AuthDAO {
     boolean deleteAuth(String authToken) throws DataAccessException;
 
     void clearAuth() throws DataAccessException;
+
+    Set<AuthData> getAllAuth() throws DataAccessException;
+
+    String getUser(String username) throws DataAccessException;
 }
