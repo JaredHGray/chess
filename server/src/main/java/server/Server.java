@@ -84,7 +84,13 @@ public class Server {
     private String joinGame(Request req, Response res) throws DataAccessException{
         var joinGame = new Gson().fromJson(req.body(), JsonObject.class);
         String authToken = req.headers("authorization");
-        String playerColor = joinGame.getAsJsonPrimitive("playerColor").getAsString();
+        String playerColor = null;  // Initialize to null
+
+        // Check if playerColor exists in the request
+        if (joinGame.has("playerColor")) {
+            playerColor = joinGame.getAsJsonPrimitive("playerColor").getAsString();
+        }
+        //String playerColor = joinGame.getAsJsonPrimitive("playerColor").getAsString();
         int gameID = joinGame.getAsJsonPrimitive("gameID").getAsInt();
         var findGame = gameService.joinGame(gameID, playerColor, authToken);
         res.status((Integer) findGame.get("code"));
