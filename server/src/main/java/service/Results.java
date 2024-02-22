@@ -1,8 +1,11 @@
 package service;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import model.GameData;
 
 import java.util.Map;
+import java.util.Set;
 
 
 public class Results {
@@ -19,8 +22,29 @@ public class Results {
                 this.data.addProperty(key, (String) value);
             } else if (value instanceof Integer) {
                 this.data.addProperty(key, (Integer) value);
+            } else if (value instanceof Set<?>) {
+                // Convert each GameData to JsonObject and add to JsonArray
+                JsonArray gamesArray = new JsonArray();
+                for (Object gameData : (Set<?>) value) {
+                    if (gameData instanceof GameData) {
+                        JsonObject gameDataJson = convertGameDataToJson((GameData) gameData);
+                        gamesArray.add(gameDataJson);
+                    }
+                }
+                // Wrap the games array in a JsonObject with the "games" key
+                this.data.add("games", gamesArray);
             }
         }
+    }
+
+    private JsonObject convertGameDataToJson(GameData gameData) {
+        JsonObject gameDataJson = new JsonObject();
+        gameDataJson.addProperty("gameID", gameData.gameID());
+        gameDataJson.addProperty("whiteUsername", gameData.whiteUsername());
+        gameDataJson.addProperty("blackUsername", gameData.blackUsername());
+        gameDataJson.addProperty("gameName", gameData.gameName());
+
+        return gameDataJson;
     }
 
     public JsonObject getData() {
