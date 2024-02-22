@@ -8,9 +8,6 @@ import passoffTests.testClasses.TestException;
 import service.GameService;
 import service.UserService;
 
-import java.util.HashSet;
-import java.util.Set;
-
 @SuppressWarnings("unused")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class gameServiceTests {

@@ -33,13 +33,10 @@ public class userServiceTests {
     public void registerTwice() throws TestException, DataAccessException {
         var originalUser = new UserData("newUser", "abc123", "nu@gmail.com");
         var newUser = new UserData("newUser", "123abc", "un@gmail.com");
-
         userService.addUser(originalUser);
         var findUser = userDAO.getUser(originalUser);
-        // Assert that the user is not null, indicating successful registration
         Assertions.assertNotNull(findUser);
         Assertions.assertEquals(newUser.username(), findUser.username());
-
         var result = userService.addUser(newUser);
         Assertions.assertEquals(403, result.get("code"));
     }
@@ -51,10 +48,8 @@ public class userServiceTests {
         var newUser = new UserData("newUser", "abc123", "nu@gmail.com");
         userService.addUser(newUser);
         var findUser = userDAO.getUser(newUser);
-        // Assert that the user is not null, indicating successful registration
         Assertions.assertNotNull(findUser);
         Assertions.assertEquals(newUser.username(), findUser.username());
-
         var newUserLogin = new UserData("newUser", "abc123", null);
         var loginResult = userService.loginUser(newUserLogin);
         Assertions.assertEquals(200, loginResult.get("code"));
@@ -67,10 +62,8 @@ public class userServiceTests {
         var newUser = new UserData("newUser", "abc123", "nu@gmail.com");
         userService.addUser(newUser);
         var findUser = userDAO.getUser(newUser);
-        // Assert that the user is not null, indicating successful registration
         Assertions.assertNotNull(findUser);
         Assertions.assertEquals(newUser.username(), findUser.username());
-
         var newUserLogin = new UserData("newUser", "123abc", null);
         var loginResult = userService.loginUser(newUserLogin);
         Assertions.assertEquals(401, loginResult.get("code"));
@@ -83,10 +76,8 @@ public class userServiceTests {
         var newUser = new UserData("newUser", "abc123", "nu@gmail.com");
         userService.addUser(newUser);
         var findUser = userDAO.getUser(newUser);
-        // Assert that the user is not null, indicating successful registration
         Assertions.assertNotNull(findUser);
         Assertions.assertEquals(newUser.username(), findUser.username());
-
         var userAuth = authDAO.getUser(newUser.username());
         var logoutResult = userService.logoutUser(userAuth);
         Assertions.assertEquals(200, logoutResult.get("code"));
@@ -113,7 +104,6 @@ public class userServiceTests {
     public void clearUser() throws TestException, DataAccessException {
         var newUser = new UserData("newUser", "abc123", "nu@gmail.com");
         userService.addUser(newUser);
-
         userService.clearUsers();
         Assertions.assertTrue(userDAO.getUsers().isEmpty());
     }
@@ -124,7 +114,6 @@ public class userServiceTests {
     public void clearAuth() throws TestException, DataAccessException {
         var newUser = new UserData("newUser", "abc123", "nu@gmail.com");
         userService.addUser(newUser);
-
         userService.clearAuth();
         Assertions.assertTrue(authDAO.getAllAuth().isEmpty());
     }
