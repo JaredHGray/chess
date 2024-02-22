@@ -77,4 +77,48 @@ public class gameServiceTests {
         var actual = gameService.listGames("123-456");
         Assertions.assertEquals(401, actual.get("code"));
     }
+
+    @Test
+    @Order(5)
+    @DisplayName("join game")
+    public void joinGame() throws TestException, DataAccessException {
+        var newUser = new UserData("newUser", "abc123", "nu@gmail.com");
+        userService.addUser(newUser);
+        var userAuth = authDAO.getUser(newUser.username());
+        var newGame = new GameData(0, null, null, "newGame", null);
+        var gameID =  gameService.createGame(newGame, userAuth);
+        var playerColor = "BLACK";
+        var actual = gameService.joinGame((Integer) gameID.get("gameID"), playerColor, userAuth);
+        Assertions.assertEquals(200, actual.get("code"));
+    }
+
+    @Test
+    @Order(6)
+    @DisplayName("join bad team color")
+    public void badColorJoin() throws TestException, DataAccessException {
+        var newUser = new UserData("newUser", "abc123", "nu@gmail.com");
+        userService.addUser(newUser);
+        var userAuth = authDAO.getUser(newUser.username());
+        var newGame = new GameData(0, null, null, "newGame", null);
+        var gameID =  gameService.createGame(newGame, userAuth);
+        var playerColor = "BLACK";
+        gameService.joinGame((Integer) gameID.get("gameID"), playerColor, userAuth);
+        var actual = gameService.joinGame((Integer) gameID.get("gameID"), playerColor, userAuth);
+        Assertions.assertEquals(403, actual.get("code"));
+    }
+
+    @Test
+    @Order(7)
+    @DisplayName("Clear Games")
+    public void clearUser() throws TestException, DataAccessException {
+        var newGame = new GameData(0, null, null, "newGame", null);
+        var newUser = new UserData("newUser", "abc123", "nu@gmail.com");
+        userService.addUser(newUser);
+        var userAuth = authDAO.getUser(newUser.username());
+
+        gameService.createGame(newGame, userAuth);
+
+        gameService.clearGames();
+        Assertions.assertTrue(gameDAO.listGames().isEmpty());
+    }
 }
