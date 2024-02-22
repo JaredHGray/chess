@@ -64,17 +64,30 @@ public class GameService {
 
     public Map<String, Object> joinGame(int gameID, String playerColor, String authToken) throws DataAccessException{
         Map<String, Object> result = new HashMap<>();
+        GameData findGame = gameDAO.findGame(gameID);
+        String user = authDAO.getAuth(authToken);
 
         if(gameID < 0 || authToken == null || authToken.isEmpty()){
             result.put("message", "Error: bad request");
             Results badResult = new Results(result);
             result.put("code", 400);
             result.put("data", badResult.getData());
-        } else if(authDAO.getAuth(authToken) != null){
+        } else if(user != null){
             if(playerColor == null || playerColor.isEmpty()){
                 //make the user an observer
-            } else if(gameDAO.findGame(gameID) == ){
-
+            } else if(findGame != null){
+                if((findGame.whiteUsername() != null && playerColor == "WHITE") || (findGame.blackUsername() != null && playerColor == "BLACK")){
+                    result.put("message", "Error: already taken");
+                    Results badResult = new Results(result);
+                    result.put("code", 403);
+                    result.put("data", badResult.getData());
+                } else{
+                    gameDAO.joinGame(gameID, user, playerColor);
+                    result.put("", "");
+                    Results successResult = new Results(result);
+                    result.put("code", 200);
+                    result.put("data", successResult.getData());
+                }
             }
         } else {
             result.put("message", "Error: unauthorized");

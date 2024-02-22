@@ -18,7 +18,32 @@ public class MemoryGameDAO implements GameDAO {
 
 
     public GameData findGame(int gameID) throws DataAccessException {
-
+        if (!game.isEmpty()) {
+            for (GameData findGame : game) {
+                if (findGame.gameID() == gameID) {
+                    return findGame;
+                }
+            }
+        }
         return null;
+    }
+
+    public void joinGame(int gameID, String user, String playerColor) throws DataAccessException {
+        if (!game.isEmpty()) {
+            for (GameData findGame : game) {
+                if (findGame.gameID() == gameID) {
+                    if(playerColor == "WHITE"){
+                        GameData createGame = new GameData(findGame.gameID(), user, findGame.blackUsername(), findGame.gameName(), findGame.game());
+                        game.remove(findGame);
+                        game.add(createGame);
+                    } else if(playerColor == "BLACK") {
+                        GameData createGame = new GameData(findGame.gameID(), findGame.whiteUsername(), user, findGame.gameName(), findGame.game());
+                        game.remove(findGame);
+                        game.add(createGame);
+                    }
+                    break;
+                }
+            }
+        }
     }
 }
