@@ -7,4 +7,6 @@ public interface GameDAO {
     void createGame(GameData newGame, int gameID) throws DataAccessException;
 
     Set<GameData> listGames() throws DataAccessException;
+
+    GameData findGame(int gameID) throws DataAccessException;
 }

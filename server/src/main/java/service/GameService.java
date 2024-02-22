@@ -61,7 +61,31 @@ public class GameService {
         }
         return result;
     }
+
+    public Map<String, Object> joinGame(int gameID, String playerColor, String authToken) throws DataAccessException{
+        Map<String, Object> result = new HashMap<>();
+
+        if(gameID < 0 || authToken == null || authToken.isEmpty()){
+            result.put("message", "Error: bad request");
+            Results badResult = new Results(result);
+            result.put("code", 400);
+            result.put("data", badResult.getData());
+        } else if(authDAO.getAuth(authToken) != null){
+            if(playerColor == null || playerColor.isEmpty()){
+                //make the user an observer
+            } else if(gameDAO.findGame(gameID) == ){
+
+            }
+        } else {
+            result.put("message", "Error: unauthorized");
+            Results badResult = new Results(result);
+            result.put("code", 401);
+            result.put("data", badResult.getData());
+        }
+        return result;
+    }
     private int generateID(){
         return new Random().nextInt(10000);
     }
+
 }

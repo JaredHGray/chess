@@ -81,33 +81,14 @@ public class Server {
         return new Gson().toJson((JsonObject) createGame.get("data"));
     }
 
-    private String joinGame(Request req, Response res){
-        //get data from the response body
+    private String joinGame(Request req, Response res) throws DataAccessException{
+        var joinGame = new Gson().fromJson(req.body(), JsonObject.class);
         String authToken = req.headers("authorization");
-        String gameID = req.queryParams("gameID");
-        String playerColor = req.queryParams("playerColor");
-
-//        if(/**validToken*/){
-//            // Return a failure response with status code 401 for unauthorized
-//            res.status(401);
-//            res.type("application/json");
-//            return "{\"message\": \"Error: unauthorized\"}";
-//        }
-        //check if valid request
-        if (gameID == null || gameID.isEmpty() || playerColor == null || playerColor.isEmpty()) {
-            res.status(400);
-            return "{\"message\": \"Error: bad request\"}";
-        }
-        try{
-            /**joinGame function*/
-            res.status(200);
-        } catch (Exception e) {
-            // Return a failure response with status code 500 for unexpected errors
-            res.status(500);
-            res.type("application/json");
-            return "{\"message\": \"Error: description\"}";
-        }
-        return null;
+        String playerColor = joinGame.getAsJsonPrimitive("playerColor").getAsString();
+        int gameID = joinGame.getAsJsonPrimitive("gameID").getAsInt();
+        var findGame = gameService.joinGame(gameID, playerColor, authToken);
+        res.status((Integer) findGame.get("code"));
+        return new Gson().toJson((JsonObject) findGame.get("data"));
     }
 
     private String clearDatabase(Request req, Response res){

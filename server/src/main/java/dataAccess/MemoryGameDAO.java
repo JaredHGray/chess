@@ -15,4 +15,10 @@ public class MemoryGameDAO implements GameDAO {
     public Set<GameData> listGames() throws DataAccessException {
         return game;
     }
+
+
+    public GameData findGame(int gameID) throws DataAccessException {
+
+        return null;
+    }
 }
