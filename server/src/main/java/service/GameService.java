@@ -77,7 +77,7 @@ public class GameService {
                 //make the user an observer
                 return null;
             } else if(findGame != null){
-                if((findGame.whiteUsername() != null && playerColor == "WHITE") || (findGame.blackUsername() != null && playerColor == "BLACK")){
+                if((findGame.whiteUsername() != null && playerColor.equals("WHITE")) || (findGame.blackUsername() != null && playerColor.equals("BLACK"))){
                     result.put("message", "Error: already taken");
                     Results badResult = new Results(result);
                     result.put("code", 403);
