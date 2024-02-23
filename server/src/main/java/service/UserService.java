@@ -6,6 +6,8 @@ import dataAccess.DataAccessException;
 import model.UserData;
 import dataAccess.UserDAO;
 
+import javax.xml.transform.Result;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -71,11 +73,12 @@ public class UserService {
             result.put("code", 200);
             result.put("data", successResult.getData());
         }else{
-            result.put("message", "Error: unauthorized");
-            Results badResult = new Results(result);
-            result.put("code", 401);
-            result.put("data", badResult.getData());
-        }
+//            result.put("message", "Error: unauthorized");
+//            Results badResult = new Results(result);
+//            result.put("code", 401);
+//            result.put("data", badResult.getData());
+              unauthorizedAccess(result);
+        } //helper method
         return result;
     }
 
@@ -89,6 +92,13 @@ public class UserService {
 
     private String generateToken(){
         return UUID.randomUUID().toString();
+    }
+
+    private void unauthorizedAccess(Map<String, Object> result){
+        result.put("message", "Error: unauthorized");
+        Results badResult = new Results(result);
+        result.put("code", 401);
+        result.put("data", badResult.getData());
     }
 
 }
