@@ -30,7 +30,9 @@ public class UserService {
             result.put("data", badResult.getData());
         }else if(userDAO.getUser(registerUser) == null){
             userDAO.addUser(registerUser);
-            generateAuth(registerUser, result);
+            String authToken = generateToken();
+            authDAO.createAuth(registerUser.username(), authToken);
+            ResponseHelper.generateAuth(registerUser, authToken, result);
         } else {
             result.put("message", "Error: already taken");
             Results badResult = new Results(result);
@@ -43,9 +45,11 @@ public class UserService {
     public Map<String, Object> loginUser(UserData user) throws DataAccessException{
         Map<String, Object> result = new HashMap<>();
         if(userDAO.verifyUser(user) != null){
-            generateAuth(user, result);
+            String authToken = generateToken();
+            authDAO.createAuth(user.username(), authToken);
+            ResponseHelper.generateAuth(user, authToken, result);
         } else {
-            unauthorizedAccess(result);
+            ResponseHelper.unauthorizedAccess(result);
         }
         return result;
     }
@@ -53,12 +57,9 @@ public class UserService {
     public Map<String, Object> logoutUser(String authToken) throws DataAccessException{
         Map<String, Object> result = new HashMap<>();
         if(authDAO.deleteAuth(authToken)){
-            result.put("", "");
-            Results successResult = new Results(result);
-            result.put("code", 200);
-            result.put("data", successResult.getData());
+            ResponseHelper.successResult(result);
         }else{
-              unauthorizedAccess(result);
+            ResponseHelper.unauthorizedAccess(result);
         }
         return result;
     }
@@ -71,25 +72,7 @@ public class UserService {
         authDAO.clearAuth();
     }
 
-    private String generateToken(){
-        return UUID.randomUUID().toString();
-    }
+    private String generateToken(){return UUID.randomUUID().toString();}
 
-    private void generateAuth(UserData user, Map<String, Object> result) throws DataAccessException {
-        String authToken = generateToken();
-        authDAO.createAuth(user.username(), authToken);
-        result.put("username", user.username());
-        result.put("authToken", authToken);
-        Results successResult = new Results(result);
-        result.put("code", 200);
-        result.put("data", successResult.getData());
-    }
-
-    private void unauthorizedAccess(Map<String, Object> result){
-        result.put("message", "Error: unauthorized");
-        Results badResult = new Results(result);
-        result.put("code", 401);
-        result.put("data", badResult.getData());
-    }
 //base service try to make methods for each version of 200, 400, 403, 401
 }

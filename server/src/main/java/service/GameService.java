@@ -37,10 +37,7 @@ public class GameService {
             result.put("code", 200);
             result.put("data", successResult.getData());
         } else {
-            result.put("message", "Error: unauthorized");
-            Results badResult = new Results(result);
-            result.put("code", 401);
-            result.put("data", badResult.getData());
+            ResponseHelper.unauthorizedAccess(result);
         }
         return result;
     }
@@ -53,10 +50,7 @@ public class GameService {
             result.put("code", 200);
             result.put("data", successResult.getData());
         } else {
-            result.put("message", "Error: unauthorized");
-            Results badResult = new Results(result);
-            result.put("code", 401);
-            result.put("data", badResult.getData());
+            ResponseHelper.unauthorizedAccess(result);
         }
         return result;
     }
@@ -73,10 +67,7 @@ public class GameService {
             result.put("data", badResult.getData());
         } else if(user != null){
             if(playerColor == null || playerColor.isEmpty()){
-                result.put("", "");
-                Results successResult = new Results(result);
-                result.put("code", 200);
-                result.put("data", successResult.getData());
+                ResponseHelper.successResult(result);
             } else if(findGame != null){
                 if((findGame.whiteUsername() != null && playerColor.equals("WHITE")) || (findGame.blackUsername() != null && playerColor.equals("BLACK"))){
                     result.put("message", "Error: already taken");
@@ -85,17 +76,11 @@ public class GameService {
                     result.put("data", badResult.getData());
                 } else{
                     gameDAO.joinGame(gameID, user, playerColor);
-                    result.put("", "");
-                    Results successResult = new Results(result);
-                    result.put("code", 200);
-                    result.put("data", successResult.getData());
+                    ResponseHelper.successResult(result);
                 }
             }
         } else {
-            result.put("message", "Error: unauthorized");
-            Results badResult = new Results(result);
-            result.put("code", 401);
-            result.put("data", badResult.getData());
+            ResponseHelper.unauthorizedAccess(result);
         }
         return result;
     }
