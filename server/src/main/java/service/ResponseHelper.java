@@ -36,4 +36,10 @@ public class ResponseHelper {
         result.put("data", badResult.getData());
     }
 
+    public static void takenError(Map<String, Object> result){
+        result.put("message", "Error: already taken");
+        Results badResult = new Results(result);
+        result.put("code", 403);
+        result.put("data", badResult.getData());
+    }
 }

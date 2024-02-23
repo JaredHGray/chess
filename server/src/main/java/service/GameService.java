@@ -64,10 +64,7 @@ public class GameService {
                 ResponseHelper.successResult(result);
             } else if(findGame != null){
                 if((findGame.whiteUsername() != null && playerColor.equals("WHITE")) || (findGame.blackUsername() != null && playerColor.equals("BLACK"))){
-                    result.put("message", "Error: already taken");
-                    Results badResult = new Results(result);
-                    result.put("code", 403);
-                    result.put("data", badResult.getData());
+                    ResponseHelper.takenError(result);
                 } else{
                     gameDAO.joinGame(gameID, user, playerColor);
                     ResponseHelper.successResult(result);
