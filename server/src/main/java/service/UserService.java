@@ -73,12 +73,8 @@ public class UserService {
             result.put("code", 200);
             result.put("data", successResult.getData());
         }else{
-//            result.put("message", "Error: unauthorized");
-//            Results badResult = new Results(result);
-//            result.put("code", 401);
-//            result.put("data", badResult.getData());
               unauthorizedAccess(result);
-        } //helper method
+        }
         return result;
     }
 
@@ -100,5 +96,5 @@ public class UserService {
         result.put("code", 401);
         result.put("data", badResult.getData());
     }
-
+//base service try to make methods for each version of 200, 400, 403, 401
 }

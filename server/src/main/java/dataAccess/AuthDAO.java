@@ -14,7 +14,5 @@ public interface AuthDAO {
 
     void clearAuth() throws DataAccessException;
 
-    Set<AuthData> getAllAuth() throws DataAccessException;
-
     String getUser(String username) throws DataAccessException;
 }

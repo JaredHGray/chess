@@ -13,7 +13,6 @@ public interface UserDAO {
 
     void clearUsers() throws DataAccessException;
 
-    Set<UserData> getUsers() throws DataAccessException;
 }
 
 ///need to create actual DAOs

@@ -105,7 +105,7 @@ public class userServiceTests {
         var newUser = new UserData("newUser", "abc123", "nu@gmail.com");
         userService.addUser(newUser);
         userService.clearUsers();
-        Assertions.assertTrue(userDAO.getUsers().isEmpty());
+        Assertions.assertNull(userDAO.getUser(newUser));
     }
 
     @Test
@@ -114,7 +114,8 @@ public class userServiceTests {
     public void clearAuth() throws TestException, DataAccessException {
         var newUser = new UserData("newUser", "abc123", "nu@gmail.com");
         userService.addUser(newUser);
+        var userAuth = authDAO.getUser(newUser.username());
         userService.clearAuth();
-        Assertions.assertTrue(authDAO.getAllAuth().isEmpty());
+        Assertions.assertNull(authDAO.getAuth(userAuth));
     }
 }
