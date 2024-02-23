@@ -26,10 +26,7 @@ public class GameService {
         int gameID = generateID();
 
         if(newGame.gameName() == null || newGame.gameName().isEmpty() || authID == null || authID.isEmpty()){
-            result.put("message", "Error: bad request");
-            Results badResult = new Results(result);
-            result.put("code", 400);
-            result.put("data", badResult.getData());
+            ResponseHelper.badRequest(result);
         } else if(username != null){
             gameDAO.createGame(newGame, gameID);
             result.put("gameID", gameID);
@@ -61,10 +58,7 @@ public class GameService {
         String user = authDAO.getAuth(authToken);
 
         if(gameID <= 0 || authToken == null || authToken.isEmpty()){
-            result.put("message", "Error: bad request");
-            Results badResult = new Results(result);
-            result.put("code", 400);
-            result.put("data", badResult.getData());
+            ResponseHelper.badRequest(result);
         } else if(user != null){
             if(playerColor == null || playerColor.isEmpty()){
                 ResponseHelper.successResult(result);

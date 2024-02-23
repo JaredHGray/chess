@@ -24,10 +24,7 @@ public class UserService {
     public Map<String, Object> addUser(UserData registerUser) throws DataAccessException{
         Map<String, Object> result = new HashMap<>();
         if(registerUser.username() == null || registerUser.username().isEmpty() || registerUser.password() == null || registerUser.password().isEmpty() || registerUser.email() == null || registerUser.email().isEmpty()){
-            result.put("message", "Error: bad request");
-            Results badResult = new Results(result);
-            result.put("code", 400);
-            result.put("data", badResult.getData());
+            ResponseHelper.badRequest(result);
         }else if(userDAO.getUser(registerUser) == null){
             userDAO.addUser(registerUser);
             String authToken = generateToken();
@@ -73,6 +70,4 @@ public class UserService {
     }
 
     private String generateToken(){return UUID.randomUUID().toString();}
-
-//base service try to make methods for each version of 200, 400, 403, 401
 }

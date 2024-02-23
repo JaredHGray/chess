@@ -29,4 +29,11 @@ public class ResponseHelper {
         result.put("data", successResult.getData());
     }
 
+    public static void badRequest(Map<String, Object> result){
+        result.put("message", "Error: bad request");
+        Results badResult = new Results(result);
+        result.put("code", 400);
+        result.put("data", badResult.getData());
+    }
+
 }
