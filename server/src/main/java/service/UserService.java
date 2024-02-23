@@ -30,13 +30,7 @@ public class UserService {
             result.put("data", badResult.getData());
         }else if(userDAO.getUser(registerUser) == null){
             userDAO.addUser(registerUser);
-            String authToken = generateToken();
-            authDAO.createAuth(registerUser.username(), authToken);
-            result.put("username", registerUser.username());
-            result.put("authToken", authToken);
-            Results successResult = new Results(result);
-            result.put("code", 200);
-            result.put("data", successResult.getData());
+            generateAuth(registerUser, result);
         } else {
             result.put("message", "Error: already taken");
             Results badResult = new Results(result);
@@ -49,18 +43,9 @@ public class UserService {
     public Map<String, Object> loginUser(UserData user) throws DataAccessException{
         Map<String, Object> result = new HashMap<>();
         if(userDAO.verifyUser(user) != null){
-            String authToken = generateToken();
-            authDAO.createAuth(user.username(), authToken);
-            result.put("username", user.username());
-            result.put("authToken", authToken);
-            Results successResult = new Results(result);
-            result.put("code", 200);
-            result.put("data", successResult.getData());
+            generateAuth(user, result);
         } else {
-            result.put("message", "Error: unauthorized");
-            Results badResult = new Results(result);
-            result.put("code", 401);
-            result.put("data", badResult.getData());
+            unauthorizedAccess(result);
         }
         return result;
     }
@@ -88,6 +73,16 @@ public class UserService {
 
     private String generateToken(){
         return UUID.randomUUID().toString();
+    }
+
+    private void generateAuth(UserData user, Map<String, Object> result) throws DataAccessException {
+        String authToken = generateToken();
+        authDAO.createAuth(user.username(), authToken);
+        result.put("username", user.username());
+        result.put("authToken", authToken);
+        Results successResult = new Results(result);
+        result.put("code", 200);
+        result.put("data", successResult.getData());
     }
 
     private void unauthorizedAccess(Map<String, Object> result){
