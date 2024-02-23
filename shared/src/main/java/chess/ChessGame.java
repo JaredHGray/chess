@@ -155,25 +155,7 @@ public class ChessGame {
     public boolean isInCheck(TeamColor teamColor) { //applies to current team
         // Use testBoard based on the flag
         testBoard = modifiedCopy ? testBoard : new ChessBoard(gameBoard);
-        //find the king of the team being checked
-        ChessPosition kingPosition = findKing(teamColor);
-        //check end positions of the opposing team
-        TeamColor opposingColor = (teamColor == TeamColor.WHITE) ? TeamColor.BLACK : TeamColor.WHITE;
-        ChessPosition opposingPosition;
-        for(int i = 1; i <= 8; i++){
-            for(int j = 1; j <= 8; j++) {
-                opposingPosition = new ChessPosition(i,j);
-                if(testBoard.getPiece(opposingPosition) != null && testBoard.getPiece(opposingPosition).getTeamColor() == opposingColor){
-                    for(ChessMove check : testBoard.getPiece(opposingPosition).pieceMoves(testBoard, opposingPosition)){
-                        if(check.getEndPosition().equals(kingPosition)){
-                            dangerPiece = check;
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-        return false;
+        return isKingInDanger(testBoard, teamColor);
     }
     /**
      * Determines if the given team is in checkmate
@@ -182,19 +164,20 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        //find the king of the team being checked
         testBoard = new ChessBoard(gameBoard);
-        ChessPosition kingPosition = findKing(teamColor);
-        //check end positions of the opposing team
-        TeamColor opposingColor = (teamColor == TeamColor.WHITE) ? TeamColor.BLACK : TeamColor.WHITE;
-        ChessPosition opposingPosition;
+        return isKingInDanger(testBoard, teamColor);
+    }
 
-        for(int i = 1; i <= 8; i++){
-            for(int j = 1; j <= 8; j++) {
-                opposingPosition = new ChessPosition(i,j);
-                if(testBoard.getPiece(opposingPosition) != null && testBoard.getPiece(opposingPosition).getTeamColor() == opposingColor){
-                    for(ChessMove check : testBoard.getPiece(opposingPosition).pieceMoves(testBoard, opposingPosition)){
-                        if(check.getEndPosition().equals(kingPosition)){
+    private boolean isKingInDanger(ChessBoard board, TeamColor teamColor){
+        ChessPosition opposingPosition;
+        ChessPosition kingPosition = findKing(teamColor);
+        TeamColor opposingColor = (teamColor == TeamColor.WHITE) ? TeamColor.BLACK : TeamColor.WHITE;
+        for (int i = 1; i <= 8; i++) {
+            for (int j = 1; j <= 8; j++) {
+                opposingPosition = new ChessPosition(i, j);
+                if (board.getPiece(opposingPosition) != null && board.getPiece(opposingPosition).getTeamColor() == opposingColor) {
+                    for (ChessMove check : board.getPiece(opposingPosition).pieceMoves(board, opposingPosition)) {
+                        if (check.getEndPosition().equals(kingPosition)) {
                             dangerPiece = check;
                             return true;
                         }
