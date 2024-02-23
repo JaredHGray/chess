@@ -117,51 +117,32 @@ public class ChessPiece {
     /**function to calculate the possible moves of the queen piece*/
     private Set<ChessMove> calculateQueen(ChessBoard board, ChessPosition myPosition){
         Set<ChessMove> validMoves = new HashSet<>();
-        int boardSize = 8;
-
         // Possible directions the queen can move (straight lines and diagonals)
         int[][] possDirections = {{1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1}, {0, -1}, {1, -1}, {1, 0}};
-
-        int row = myPosition.getRow();
-        int col = myPosition.getColumn();
-
-        // Loop to go through the whole list of possible directions and check each spot
-        for(int[] dir: possDirections){
-            for(int i = 1; i < boardSize; i++){
-                //creates next square to check on the board by incrementing by 1 and running through all possible directions
-                int newRow = row + i * dir[0];
-                int newCol = col + i * dir[1];
-
-                if(validateMove(newRow, newCol, board, myPosition)){
-                    //if valid, add move to list of possible moves and continue the loop
-                    ChessPosition validPosition = new ChessPosition(newRow, newCol);
-                    validMoves.add(new ChessMove(myPosition, validPosition, null));
-                    if(enemy){
-                        //stop searching if queen takes enemy
-                        break;
-                    }
-                }else{
-                    //stop searching this direction if it is blocked by friendly piece or out of bounds
-                    break;
-                }
-            }
-        }
-        //return HashSet of valid moves for the queen
-        return validMoves;
+        return possibleDirections(board, myPosition, possDirections, validMoves);
     }
 
     /**function to calculate the possible moves of the bishop piece*/
     private Set<ChessMove> calculateBishop(ChessBoard board, ChessPosition myPosition){
         Set<ChessMove> validMoves = new HashSet<>();
-        int boardSize = 8;
-
         // Possible directions the bishop can move (diagonals)
         int[][] possDirections = {{1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
+        return possibleDirections(board, myPosition, possDirections, validMoves);
+    }
 
+    /**function to calculate the possible moves of the rook piece*/
+    private Set<ChessMove> calculateRook(ChessBoard board, ChessPosition myPosition){
+        Set<ChessMove> validMoves = new HashSet<>();
+        // Possible directions the rook can move (straight lines)
+        int[][] possDirections = {{0, 1}, {0, -1}, {-1, 0}, {1, 0}};
+        return possibleDirections(board, myPosition, possDirections, validMoves);
+    }
+
+    private Set<ChessMove> possibleDirections(ChessBoard board, ChessPosition myPosition, int[][] possDirections, Set<ChessMove> validMoves){
         int row = myPosition.getRow();
         int col = myPosition.getColumn();
+        int boardSize = 8;
 
-        // Loop to go through the whole list of possible directions and check each spot
         for(int[] dir: possDirections){
             for(int i = 1; i < boardSize; i++){
                 //creates next square to check on the board by incrementing by 1 and running through the possible directions to go
@@ -173,7 +154,6 @@ public class ChessPiece {
                     ChessPosition validPosition = new ChessPosition(newRow, newCol);
                     validMoves.add(new ChessMove(myPosition, validPosition, null));
                     if(enemy){
-                        //stop searching if bishop takes enemy
                         break;
                     }
                 }else{
@@ -182,7 +162,7 @@ public class ChessPiece {
                 }
             }
         }
-        //return HashSet of valid moves for the bishop
+        //return HashSet of valid moves for the rook
         return validMoves;
     }
 
@@ -208,41 +188,6 @@ public class ChessPiece {
             }
         }
         //return HashSet of valid moves for the knight
-        return validMoves;
-    }
-
-    /**function to calculate the possible moves of the rook piece*/
-    private Set<ChessMove> calculateRook(ChessBoard board, ChessPosition myPosition){
-        Set<ChessMove> validMoves = new HashSet<>();
-        int boardSize = 8;
-
-        // Possible directions the rook can move (straight lines)
-        int[][] possDirections = {{0, 1}, {0, -1}, {-1, 0}, {1, 0}};
-
-        int row = myPosition.getRow();
-        int col = myPosition.getColumn();
-
-        for(int[] dir: possDirections){
-            for(int i = 1; i < boardSize; i++){
-                //creates next square to check on the board by incrementing by 1 and running through the possible directions to go
-                int newRow = row + i * dir[0];
-                int newCol = col + i * dir[1];
-
-                if(validateMove(newRow, newCol, board, myPosition)){
-                    //if valid, add move to list of possible moves and continue the loop
-                    ChessPosition validPosition = new ChessPosition(newRow, newCol);
-                    validMoves.add(new ChessMove(myPosition, validPosition, null));
-                    if(enemy){
-                        //stop searching if rook takes enemy
-                        break;
-                    }
-                }else{
-                    //stop searching this direction if it is blocked by friendly piece or out of bounds
-                    break;
-                }
-            }
-        }
-        //return HashSet of valid moves for the rook
         return validMoves;
     }
 
