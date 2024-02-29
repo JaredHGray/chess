@@ -1,11 +1,8 @@
 package server;
 
 import com.google.gson.JsonObject;
-import org.eclipse.jetty.server.Authentication;
 import spark.*;
-import java.nio.file.Paths;
 import com.google.gson.Gson;
-import java.util.*;
 import service.UserService;
 import service.GameService;
 import dataAccess.*;
@@ -16,7 +13,7 @@ public class Server {
     private final UserService userService;
     private final GameService gameService;
     private final UserDAO userDAO = new MemoryUserDAO();
-    private final AuthDAO authDAO = new MemoryAuthData();
+    private final AuthDAO authDAO = new MemoryAuthDAO();
     private final GameDAO gameDAO = new MemoryGameDAO();
 
     public Server() {

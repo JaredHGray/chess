@@ -12,7 +12,7 @@ import service.UserService;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class gameServiceTests {
     private final UserDAO userDAO = new MemoryUserDAO();
-    private final AuthDAO authDAO = new MemoryAuthData();
+    private final AuthDAO authDAO = new MemoryAuthDAO();
     private final GameDAO gameDAO = new MemoryGameDAO();
 
     private final UserService userService = new UserService(userDAO, authDAO);
