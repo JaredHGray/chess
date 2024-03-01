@@ -12,11 +12,18 @@ public class Server {
 
     private final UserService userService;
     private final GameService gameService;
-    private final UserDAO userDAO = new MemoryUserDAO();
-    private final AuthDAO authDAO = new MemoryAuthDAO();
-    private final GameDAO gameDAO = new MemoryGameDAO();
+    private final UserDAO userDAO;
+    private final AuthDAO authDAO;
+    private final GameDAO gameDAO;
 
     public Server() {
+        try{
+            userDAO = new SQLUserDAO();
+            authDAO = new SQLAuthDAO();
+            gameDAO = new SQLGameDAO();
+        }catch (Exception e){
+            throw new RuntimeException(e);
+        }
         this.userService = new UserService(userDAO, authDAO);
         this.gameService = new GameService(gameDAO, authDAO);
     }
@@ -25,9 +32,9 @@ public class Server {
     public int run(int desiredPort) {
         Spark.port(desiredPort);
         Spark.staticFiles.location("web");
+
         // Register endpoints and handle exceptions here.
         createRoutes();
-
         Spark.awaitInitialization();
         return Spark.port();
     }
