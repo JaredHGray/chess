@@ -37,6 +37,18 @@ public class SQLUserDAO implements UserDAO{
         }
 
     public UserData getUser(UserData registerUser) throws DataAccessException {
+        var insertStatement = "SELECT username FROM users WHERE username=?";
+        try (var conn = DatabaseManager.getConnection();
+             var preparedStatement = conn.prepareStatement(insertStatement)) {
+             preparedStatement.setString(1, registerUser.username());
+            try (var rs = preparedStatement.executeQuery()) {
+                if (rs.next()) {
+                    return registerUser;
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DataAccessException(String.format("Unable find data in users table: %s", ex.getMessage()));
+        }
         return null;
     }
 
