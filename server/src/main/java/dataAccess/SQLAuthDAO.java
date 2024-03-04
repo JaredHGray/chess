@@ -15,7 +15,6 @@ public class SQLAuthDAO implements AuthDAO{
             // Set values for parameters
             preparedStatement.setString(1, username);
             preparedStatement.setString(2, authToken);
-
             // Execute the query
             preparedStatement.executeUpdate();
         } catch (SQLException ex) {
@@ -24,11 +23,31 @@ public class SQLAuthDAO implements AuthDAO{
     }
 
     public String getAuth(String authID) throws DataAccessException {
+        var insertStatement = "SELECT authToken FROM auth WHERE authToken=?";
+        try (var conn = DatabaseManager.getConnection();
+             var preparedStatement = conn.prepareStatement(insertStatement)) {
+            preparedStatement.setString(1, authID);
+                try (var rs = preparedStatement.executeQuery()) {
+                    if (rs.next()) {
+                        return authID;
+                    }
+                }
+        } catch (SQLException ex) {
+            throw new DataAccessException(String.format("Unable to read data: %s", ex.getMessage()));
+        }
         return null;
     }
 
     public boolean deleteAuth(String authToken) throws DataAccessException {
-        return false;
+        var insertStatement = "DELETE FROM auth WHERE authToken=?";
+        try (var conn = DatabaseManager.getConnection();
+             var preparedStatement = conn.prepareStatement(insertStatement)) {
+            preparedStatement.setString(1, authToken);
+            int affectedRows = preparedStatement.executeUpdate();
+            return affectedRows > 0;
+        } catch (SQLException ex) {
+            throw new DataAccessException(String.format("Unable to read data: %s", ex.getMessage()));
+        }
     }
 
     public void clearAuth() throws DataAccessException {
@@ -42,6 +61,18 @@ public class SQLAuthDAO implements AuthDAO{
     }
 
     public String getUser(String username) throws DataAccessException {
+        var insertStatement = "SELECT username FROM auth WHERE username=?";
+        try (var conn = DatabaseManager.getConnection();
+             var preparedStatement = conn.prepareStatement(insertStatement)) {
+            preparedStatement.setString(1, username);
+            try (var rs = preparedStatement.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("authToken");
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DataAccessException(String.format("Unable to read data: %s", ex.getMessage()));
+        }
         return null;
     }
 
