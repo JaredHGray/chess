@@ -9,7 +9,18 @@ public class SQLAuthDAO implements AuthDAO{
     }
 
     public void createAuth(String username, String authToken) throws DataAccessException {
+        var insertStatement = "INSERT INTO auth (username, authToken) VALUES (?, ?)";
+        try (var conn = DatabaseManager.getConnection();
+             var preparedStatement = conn.prepareStatement(insertStatement)) {
+            // Set values for parameters
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, authToken);
 
+            // Execute the query
+            preparedStatement.executeUpdate();
+        } catch (SQLException ex) {
+            throw new DataAccessException(String.format("Unable to insert data into users table: %s", ex.getMessage()));
+        }
     }
 
     public String getAuth(String authID) throws DataAccessException {
@@ -21,7 +32,13 @@ public class SQLAuthDAO implements AuthDAO{
     }
 
     public void clearAuth() throws DataAccessException {
-
+        var insertStatement = "DROP table auth";
+        try (var conn = DatabaseManager.getConnection();
+             var preparedStatement = conn.prepareStatement(insertStatement)) {
+            preparedStatement.executeUpdate();
+        } catch (SQLException ex) {
+            throw new DataAccessException(String.format("Unable to read data: %s", ex.getMessage()));
+        }
     }
 
     public String getUser(String username) throws DataAccessException {
@@ -30,7 +47,7 @@ public class SQLAuthDAO implements AuthDAO{
 
     private final String[] createStatements = {
             """
-            CREATE TABLE IF NOT EXISTS game (
+            CREATE TABLE IF NOT EXISTS auth (
             `authToken` VARCHAR(255) NOT NULL,
             `username` VARCHAR(255) NOT NULL,
             PRIMARY KEY (`authToken`)

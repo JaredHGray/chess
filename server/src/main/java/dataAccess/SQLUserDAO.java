@@ -25,8 +25,8 @@ public class SQLUserDAO implements UserDAO{
             preparedStatement.executeUpdate();
         } catch (SQLException ex) {
             throw new DataAccessException(String.format("Unable to insert data into users table: %s", ex.getMessage()));
-    }
         }
+    }
 
     public UserData getUser(UserData registerUser) throws DataAccessException {
         var insertStatement = "SELECT username FROM users WHERE username=?";
