@@ -1,16 +1,8 @@
 package dataAccess;
 
 import model.UserData;
-import com.google.gson.Gson;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
-import java.util.ArrayList;
-import java.util.Collection;
 import java.sql.*;
-
-import static java.sql.Statement.RETURN_GENERATED_KEYS;
-import static java.sql.Types.NULL;
-import java.sql.DriverManager;
 
 public class SQLUserDAO implements UserDAO{
 
@@ -74,7 +66,7 @@ public class SQLUserDAO implements UserDAO{
         var insertStatement = "DROP table users";
         try (var conn = DatabaseManager.getConnection();
              var preparedStatement = conn.prepareStatement(insertStatement)) {
-            preparedStatement.executeQuery();
+            preparedStatement.executeUpdate();
         } catch (SQLException ex) {
             throw new DataAccessException(String.format("Unable to read data: %s", ex.getMessage()));
         }

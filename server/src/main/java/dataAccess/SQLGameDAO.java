@@ -2,8 +2,8 @@ package dataAccess;
 
 import model.GameData;
 
-import java.sql.SQLException;
 import java.util.Set;
+import java.sql.*;
 
 public class SQLGameDAO implements GameDAO{
 
@@ -18,7 +18,7 @@ public class SQLGameDAO implements GameDAO{
             // Set values for parameters
             preparedStatement.setInt(1, gameID);
             preparedStatement.setString(2, newGame.whiteUsername());
-            preparedStatement.setString(3, newGame.whiteUsername());
+            preparedStatement.setString(3, newGame.blackUsername());
             preparedStatement.setString(4, newGame.gameName());
             preparedStatement.setString(5, null);
             // Execute the query
@@ -44,7 +44,7 @@ public class SQLGameDAO implements GameDAO{
         var insertStatement = "DROP table game";
         try (var conn = DatabaseManager.getConnection();
              var preparedStatement = conn.prepareStatement(insertStatement)) {
-            preparedStatement.executeQuery();
+            preparedStatement.executeUpdate();
         } catch (SQLException ex) {
             throw new DataAccessException(String.format("Unable to read data: %s", ex.getMessage()));
         }
