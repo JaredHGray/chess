@@ -47,23 +47,42 @@ public class SQLUserDAO implements UserDAO{
                 }
             }
         } catch (SQLException ex) {
-            throw new DataAccessException(String.format("Unable find data in users table: %s", ex.getMessage()));
+            throw new DataAccessException(String.format("Unable to read data: %s", ex.getMessage()));
         }
         return null;
     }
 
     public UserData verifyUser(UserData verifyUser) throws DataAccessException {
+        var insertStatement = "SELECT username, password FROM users WHERE username=?";
+        try (var conn = DatabaseManager.getConnection();
+             var preparedStatement = conn.prepareStatement(insertStatement)) {
+            preparedStatement.setString(1, verifyUser.username());
+            try (var rs = preparedStatement.executeQuery()) {
+                if (rs.next()) {
+                    if(verifyUsePassword(rs.getString("password"), verifyUser.password())){
+                        return verifyUser;
+                    }
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DataAccessException(String.format("Unable to read data: %s", ex.getMessage()));
+        }
         return null;
     }
 
     public void clearUsers() throws DataAccessException {
-
+        var insertStatement = "DROP table users";
+        try (var conn = DatabaseManager.getConnection();
+             var preparedStatement = conn.prepareStatement(insertStatement)) {
+            preparedStatement.executeQuery();
+        } catch (SQLException ex) {
+            throw new DataAccessException(String.format("Unable to read data: %s", ex.getMessage()));
+        }
     }
 
     private String encryptPassword(String password) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        String hashedPassword = encoder.encode(password);
-        return hashedPassword;
+        return encoder.encode(password);
     }
 
     private boolean verifyUsePassword(String storedPassword, String clearTextPassword) {
