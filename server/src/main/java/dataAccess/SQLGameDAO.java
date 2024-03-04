@@ -41,7 +41,7 @@ public class SQLGameDAO implements GameDAO{
     }
 
     public void clearGames() throws DataAccessException {
-        var insertStatement = "DROP table game";
+        var insertStatement = "DELETE FROM game";
         try (var conn = DatabaseManager.getConnection();
              var preparedStatement = conn.prepareStatement(insertStatement)) {
             preparedStatement.executeUpdate();

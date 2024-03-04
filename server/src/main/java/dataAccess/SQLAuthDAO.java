@@ -32,7 +32,7 @@ public class SQLAuthDAO implements AuthDAO{
     }
 
     public void clearAuth() throws DataAccessException {
-        var insertStatement = "DROP table auth";
+        var insertStatement = "DELETE FROM auth";
         try (var conn = DatabaseManager.getConnection();
              var preparedStatement = conn.prepareStatement(insertStatement)) {
             preparedStatement.executeUpdate();
