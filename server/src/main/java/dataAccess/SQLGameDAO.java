@@ -12,7 +12,20 @@ public class SQLGameDAO implements GameDAO{
     }
 
     public void createGame(GameData newGame, int gameID) throws DataAccessException {
-
+        var insertStatement = "INSERT INTO game (gameID, whiteUsername, blackUsername, gameName, game) VALUES (?, ?, ?, ?, ?)";
+        try (var conn = DatabaseManager.getConnection();
+             var preparedStatement = conn.prepareStatement(insertStatement)) {
+            // Set values for parameters
+            preparedStatement.setInt(1, gameID);
+            preparedStatement.setString(2, newGame.whiteUsername());
+            preparedStatement.setString(3, newGame.whiteUsername());
+            preparedStatement.setString(4, newGame.gameName());
+            preparedStatement.setString(5, null);
+            // Execute the query
+            preparedStatement.executeUpdate();
+        } catch (SQLException ex) {
+            throw new DataAccessException(String.format("Unable to insert data into users table: %s", ex.getMessage()));
+        }
     }
 
     public Set<GameData> listGames() throws DataAccessException {
@@ -28,7 +41,13 @@ public class SQLGameDAO implements GameDAO{
     }
 
     public void clearGames() throws DataAccessException {
-
+        var insertStatement = "DROP table game";
+        try (var conn = DatabaseManager.getConnection();
+             var preparedStatement = conn.prepareStatement(insertStatement)) {
+            preparedStatement.executeQuery();
+        } catch (SQLException ex) {
+            throw new DataAccessException(String.format("Unable to read data: %s", ex.getMessage()));
+        }
     }
 
     private final String[] createStatements = {
