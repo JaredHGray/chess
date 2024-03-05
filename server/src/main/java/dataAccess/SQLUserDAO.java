@@ -9,22 +9,26 @@ public class SQLUserDAO implements UserDAO{
     public SQLUserDAO() throws DataAccessException {
         configureDatabase();
     }
-    public void addUser(UserData registerUser) throws DataAccessException {
+    public boolean addUser(UserData registerUser) throws DataAccessException {
         String hashedPassword = encryptPassword(registerUser.password());
         var insertStatement = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
+        if(getUser(registerUser) == null){
+            try (var conn = DatabaseManager.getConnection();
+                 var preparedStatement = conn.prepareStatement(insertStatement)) {
 
-        try (var conn = DatabaseManager.getConnection();
-             var preparedStatement = conn.prepareStatement(insertStatement)) {
+                // Set values for parameters
+                preparedStatement.setString(1, registerUser.username());
+                preparedStatement.setString(2, hashedPassword);
+                preparedStatement.setString(3, registerUser.email());
 
-            // Set values for parameters
-            preparedStatement.setString(1, registerUser.username());
-            preparedStatement.setString(2, hashedPassword);
-            preparedStatement.setString(3, registerUser.email());
-
-            // Execute the query
-            preparedStatement.executeUpdate();
-        } catch (SQLException ex) {
-            throw new DataAccessException(String.format("Unable to insert data into users table: %s", ex.getMessage()));
+                // Execute the query
+                preparedStatement.executeUpdate();
+                return true;
+            } catch (SQLException ex) {
+                throw new DataAccessException(String.format("Unable to insert data into users table: %s", ex.getMessage()));
+            }
+        } else {
+            return false;
         }
     }
 

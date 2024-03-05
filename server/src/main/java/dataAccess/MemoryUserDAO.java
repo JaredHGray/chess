@@ -7,9 +7,13 @@ import java.util.Set;
 
 public class MemoryUserDAO implements UserDAO {
     Set<UserData> users = new HashSet<>();
-    public void addUser(UserData registerUser) throws DataAccessException {
-        registerUser = new UserData(registerUser.username(), registerUser.password(), registerUser.email());
-        users.add(registerUser);
+    public boolean addUser(UserData registerUser) throws DataAccessException {
+        if(getUser(registerUser) == null){
+            registerUser = new UserData(registerUser.username(), registerUser.password(), registerUser.email());
+            users.add(registerUser);
+            return true;
+        }
+        return false;
     }
 
     public UserData getUser(UserData registerUser) throws DataAccessException {
