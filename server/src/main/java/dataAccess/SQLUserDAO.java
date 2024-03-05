@@ -79,7 +79,7 @@ public class SQLUserDAO implements UserDAO{
 
     private boolean verifyUsePassword(String storedPassword, String clearTextPassword) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        return encoder.matches(storedPassword, clearTextPassword);
+        return encoder.matches(clearTextPassword, storedPassword);
     }
 
     private final String[] createStatements = {
