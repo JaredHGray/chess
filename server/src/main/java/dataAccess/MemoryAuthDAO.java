@@ -6,9 +6,13 @@ import java.util.Set;
 
 public class MemoryAuthDAO implements AuthDAO {
     Set<AuthData> auth = new HashSet<>();
-    public void createAuth(String username, String authToken) throws DataAccessException {
-        AuthData createToken = new AuthData(username, authToken);
-        auth.add(createToken);
+    public boolean createAuth(String username, String authToken) throws DataAccessException {
+        if(getUser(username) == null){
+            AuthData createToken = new AuthData(username, authToken);
+            auth.add(createToken);
+            return true;
+        }
+        return false;
     }
 
     public String getAuth(String authID) throws DataAccessException {

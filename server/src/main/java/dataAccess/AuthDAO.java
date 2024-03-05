@@ -1,12 +1,8 @@
 package dataAccess;
 
-import model.AuthData;
-
-import java.util.Set;
-
 public interface AuthDAO {
 
-    void createAuth(String username, String authToken) throws DataAccessException;
+    boolean createAuth(String username, String authToken) throws DataAccessException;
 
     String getAuth(String authID) throws DataAccessException;
 
