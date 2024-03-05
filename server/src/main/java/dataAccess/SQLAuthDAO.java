@@ -23,13 +23,13 @@ public class SQLAuthDAO implements AuthDAO{
     }
 
     public String getAuth(String authID) throws DataAccessException {
-        var insertStatement = "SELECT authToken FROM auth WHERE authToken=?";
+        var insertStatement = "SELECT username FROM auth WHERE authToken=?";
         try (var conn = DatabaseManager.getConnection();
              var preparedStatement = conn.prepareStatement(insertStatement)) {
             preparedStatement.setString(1, authID);
                 try (var rs = preparedStatement.executeQuery()) {
                     if (rs.next()) {
-                        return authID;
+                        return rs.getString("username");
                     }
                 }
         } catch (SQLException ex) {

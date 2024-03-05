@@ -59,7 +59,7 @@ public class SQLGameDAO implements GameDAO{
     }
 
     public GameData findGame(int gameID) throws DataAccessException {
-        var insertStatement = "SELECT gameID FROM game WHERE gameID=?";
+        var insertStatement = "SELECT gameID, whiteUsername, blackUsername, gameName, game FROM game WHERE gameID=?";
         try (var conn = DatabaseManager.getConnection();
              var preparedStatement = conn.prepareStatement(insertStatement)) {
             preparedStatement.setInt(1, gameID);
@@ -118,10 +118,10 @@ public class SQLGameDAO implements GameDAO{
             """
             CREATE TABLE IF NOT EXISTS game (
             `gameID` INT NOT NULL,
-            `whiteUsername` VARCHAR(255) NOT NULL,
-            `blackUsername` VARCHAR(255) NOT NULL,
+            `whiteUsername` VARCHAR(255),
+            `blackUsername` VARCHAR(255),
             `gameName` VARCHAR(255) NOT NULL,
-            `game` JSON NOT NULL,
+            `game` JSON,
             PRIMARY KEY (`gameID`)
             );
             """
