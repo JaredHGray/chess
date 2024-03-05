@@ -1,5 +1,4 @@
 package dataAccess;
-import model.AuthData;
 import model.GameData;
 
 import java.util.HashSet;
@@ -7,9 +6,10 @@ import java.util.Set;
 public class MemoryGameDAO implements GameDAO {
 
     Set<GameData> game = new HashSet<>();
-    public void createGame(GameData newGame, int gameID) throws DataAccessException {
+    public boolean createGame(GameData newGame, int gameID) throws DataAccessException {
         GameData createGame = new GameData(gameID, null, null, newGame.gameName(), null);
         game.add(createGame);
+        return false;
     }
 
     public Set<GameData> listGames() throws DataAccessException {
@@ -28,7 +28,7 @@ public class MemoryGameDAO implements GameDAO {
         return null;
     }
 
-    public void joinGame(int gameID, String user, String playerColor) throws DataAccessException {
+    public boolean joinGame(int gameID, String user, String playerColor) throws DataAccessException {
         if (!game.isEmpty()) {
             for (GameData findGame : game) {
                 if (findGame.gameID() == gameID) {
@@ -45,6 +45,7 @@ public class MemoryGameDAO implements GameDAO {
                 }
             }
         }
+        return false;
     }
 
     public void clearGames() throws DataAccessException {

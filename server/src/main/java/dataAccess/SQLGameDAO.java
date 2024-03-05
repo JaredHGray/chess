@@ -3,9 +3,7 @@ package dataAccess;
 import chess.ChessGame;
 import com.google.gson.Gson;
 import model.GameData;
-import model.UserData;
 
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 import java.sql.*;
@@ -16,22 +14,26 @@ public class SQLGameDAO implements GameDAO{
         configureDatabase();
     }
 
-    public void createGame(GameData newGame, int gameID) throws DataAccessException {
-        var insertStatement = "INSERT INTO game (gameID, whiteUsername, blackUsername, gameName, game) VALUES (?, ?, ?, ?, ?)";
-        try (var conn = DatabaseManager.getConnection();
-             var preparedStatement = conn.prepareStatement(insertStatement)) {
-            // Set values for parameters
-            preparedStatement.setInt(1, gameID);
-            preparedStatement.setString(2, newGame.whiteUsername());
-            preparedStatement.setString(3, newGame.blackUsername());
-            preparedStatement.setString(4, newGame.gameName());
-            //var registerUser = new Gson().toJson(game);
-            preparedStatement.setString(5, null);
-
-            preparedStatement.executeUpdate();
-        } catch (SQLException ex) {
-            throw new DataAccessException(String.format("Unable to insert data into users table: %s", ex.getMessage()));
+    public boolean createGame(GameData newGame, int gameID) throws DataAccessException {
+        if(findGame(gameID) == null){
+            var insertStatement = "INSERT INTO game (gameID, whiteUsername, blackUsername, gameName, game) VALUES (?, ?, ?, ?, ?)";
+            try (var conn = DatabaseManager.getConnection();
+                 var preparedStatement = conn.prepareStatement(insertStatement)) {
+                preparedStatement.setInt(1, gameID);
+                preparedStatement.setString(2, newGame.whiteUsername());
+                preparedStatement.setString(3, newGame.blackUsername());
+                preparedStatement.setString(4, newGame.gameName());
+                //var registerUser = new Gson().toJson(game);
+                preparedStatement.setString(5, null);
+                preparedStatement.executeUpdate();
+                return true;
+            } catch (SQLException ex) {
+                throw new DataAccessException(String.format("Unable to insert data into users table: %s", ex.getMessage()));
+            }
+        } else {
+            return false;
         }
+
     }
 
     public Set<GameData> listGames() throws DataAccessException {
@@ -80,28 +82,32 @@ public class SQLGameDAO implements GameDAO{
         return null;
     }
 
-    public void joinGame(int gameID, String user, String playerColor) throws DataAccessException {
-        var insertStatement = "SELECT gameID FROM game WHERE gameID=?";
-        try (var conn = DatabaseManager.getConnection();
-             var preparedStatement = conn.prepareStatement(insertStatement)) {
-            preparedStatement.setInt(1, gameID);
-            try (var rs = preparedStatement.executeQuery()) {
-                if (rs.next()) {
-                    String updateColumn = (playerColor.equals("WHITE")) ? "whiteUsername" : (playerColor.equals("BLACK") ? "blackUsername" : null);
+    public boolean joinGame(int gameID, String user, String playerColor) throws DataAccessException {
+        if(findGame(gameID) != null){
+            var insertStatement = "SELECT gameID FROM game WHERE gameID=?";
+            try (var conn = DatabaseManager.getConnection();
+                 var preparedStatement = conn.prepareStatement(insertStatement)) {
+                preparedStatement.setInt(1, gameID);
+                try (var rs = preparedStatement.executeQuery()) {
+                    if (rs.next()) {
+                        String updateColumn = (playerColor.equals("WHITE")) ? "whiteUsername" : (playerColor.equals("BLACK") ? "blackUsername" : null);
 
-                    if (updateColumn != null) {
-                        var updateStatement = String.format("UPDATE game SET %s=? WHERE gameID=?", updateColumn);
-                        try (var updatePreparedStatement = conn.prepareStatement(updateStatement)) {
-                            updatePreparedStatement.setString(1, user);
-                            updatePreparedStatement.setInt(2, gameID);
-                            updatePreparedStatement.executeUpdate();
+                        if (updateColumn != null) {
+                            var updateStatement = String.format("UPDATE game SET %s=? WHERE gameID=?", updateColumn);
+                            try (var updatePreparedStatement = conn.prepareStatement(updateStatement)) {
+                                updatePreparedStatement.setString(1, user);
+                                updatePreparedStatement.setInt(2, gameID);
+                                updatePreparedStatement.executeUpdate();
+                                return true;
+                            }
                         }
                     }
                 }
+            } catch (SQLException ex) {
+                throw new DataAccessException(String.format("Unable to read data: %s", ex.getMessage()));
             }
-        } catch (SQLException ex) {
-            throw new DataAccessException(String.format("Unable to read data: %s", ex.getMessage()));
         }
+        return false;
     }
 
     public void clearGames() throws DataAccessException {
