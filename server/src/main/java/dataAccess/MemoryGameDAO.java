@@ -36,10 +36,12 @@ public class MemoryGameDAO implements GameDAO {
                         GameData createGame = new GameData(findGame.gameID(), user, findGame.blackUsername(), findGame.gameName(), findGame.game());
                         game.remove(findGame);
                         game.add(createGame);
+                        return true;
                     } else if(playerColor.equals("BLACK")) {
                         GameData createGame = new GameData(findGame.gameID(), findGame.whiteUsername(), user, findGame.gameName(), findGame.game());
                         game.remove(findGame);
                         game.add(createGame);
+                        return true;
                     }
                     break;
                 }

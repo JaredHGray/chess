@@ -20,8 +20,9 @@ public class AuthDAOTests {
         authDAO.clearAuth();
         var newUser = new UserData("newUser", "abc123", "nu@gmail.com");
         String authToken = UUID.randomUUID().toString();
-        var newAuth = authDAO.createAuth(newUser.username(), authToken);
-        Assertions.assertTrue(newAuth, "User already has token");
+        authDAO.createAuth(newUser.username(), authToken);
+        var newAuth = authDAO.getAuth(authToken);
+        Assertions.assertNotNull(newAuth, "User already has token");
     }
 
     @Test
@@ -34,7 +35,7 @@ public class AuthDAOTests {
 
         var newAuth = authDAO.createAuth(newUser.username(), authToken);
         Assertions.assertTrue(newAuth, "User already has token");
-        authToken = UUID.randomUUID().toString();
+
         newAuth = authDAO.createAuth(newUser.username(), authToken);
         Assertions.assertFalse(newAuth, "Should Not have generated new token");
     }

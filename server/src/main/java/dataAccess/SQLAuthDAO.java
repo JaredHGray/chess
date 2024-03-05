@@ -10,7 +10,7 @@ public class SQLAuthDAO implements AuthDAO{
 
     public boolean createAuth(String username, String authToken) throws DataAccessException {
         var insertStatement = "INSERT INTO auth (username, authToken) VALUES (?, ?)";
-        if(getUser(username) == null){
+        if(!authToken.equals(getUser(username))){
             try (var conn = DatabaseManager.getConnection();
                  var preparedStatement = conn.prepareStatement(insertStatement)) {
                 preparedStatement.setString(1, username);
@@ -21,7 +21,7 @@ public class SQLAuthDAO implements AuthDAO{
             } catch (SQLException ex) {
                 throw new DataAccessException(String.format("Unable to insert data into users table: %s", ex.getMessage()));
             }
-        } else{
+        } else {
             return false;
         }
     }
@@ -85,7 +85,7 @@ public class SQLAuthDAO implements AuthDAO{
             CREATE TABLE IF NOT EXISTS auth (
             `username` VARCHAR(255) NOT NULL,
             `authToken` VARCHAR(255) NOT NULL,
-            PRIMARY KEY (`username`)
+            PRIMARY KEY (`authToken`)
             );
             """
     };
