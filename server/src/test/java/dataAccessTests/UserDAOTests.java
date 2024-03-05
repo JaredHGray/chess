@@ -17,6 +17,7 @@ public class UserDAOTests {
     @Order(1)
     @DisplayName("Normal User Registration")
     public void addUser() throws TestException, DataAccessException {
+        userDAO.clearUsers();
         var newUser = new UserData("newUser", "abc123", "nu@gmail.com");
         userDAO.addUser(newUser);
         var fetchedUser = userDAO.getUser(newUser);
@@ -28,6 +29,7 @@ public class UserDAOTests {
     @Order(2)
     @DisplayName("Re-Register User")
     public void addUserTwice() throws TestException, DataAccessException {
+        userDAO.clearUsers();
         var newUser = new UserData("newUser", "abc123", "nu@gmail.com");
         userDAO.addUser(newUser);
         var newUserAgain = userDAO.addUser(newUser);
@@ -37,6 +39,7 @@ public class UserDAOTests {
     @Order(3)
     @DisplayName("Find User")
     public void findUser() throws TestException, DataAccessException {
+        userDAO.clearUsers();
         var newUser = new UserData("newUser", "abc123", "nu@gmail.com");
         userDAO.addUser(newUser);
         var findUser = userDAO.getUser(newUser);
@@ -48,6 +51,7 @@ public class UserDAOTests {
     @Order(4)
     @DisplayName("Find Non-Existent User")
     public void findBadUser() throws TestException, DataAccessException {
+        userDAO.clearUsers();
         var newUser = new UserData("newUser", "abc123", "nu@gmail.com");
         userDAO.addUser(newUser);
         var findUser = userDAO.getUser(newUser);
@@ -61,6 +65,7 @@ public class UserDAOTests {
     @Order(5)
     @DisplayName("Login User")
     public void loginUser() throws TestException, DataAccessException {
+        userDAO.clearUsers();
         var newUser = new UserData("newUser", "abc123", "nu@gmail.com");
         userDAO.addUser(newUser);
         var findUser = userDAO.verifyUser(newUser);
@@ -73,6 +78,7 @@ public class UserDAOTests {
     @Order(6)
     @DisplayName("Invalid Login")
     public void invalidLogin() throws TestException, DataAccessException {
+        userDAO.clearUsers();
         var newUser = new UserData("newUser", "abc123", "nu@gmail.com");
         userDAO.addUser(newUser);
         var findUser = userDAO.verifyUser(newUser);

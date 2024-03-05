@@ -65,7 +65,7 @@ public class SQLAuthDAO implements AuthDAO{
     }
 
     public String getUser(String username) throws DataAccessException {
-        var insertStatement = "SELECT username FROM auth WHERE username=?";
+        var insertStatement = "SELECT authToken FROM auth WHERE username=?";
         try (var conn = DatabaseManager.getConnection();
              var preparedStatement = conn.prepareStatement(insertStatement)) {
             preparedStatement.setString(1, username);
@@ -83,9 +83,9 @@ public class SQLAuthDAO implements AuthDAO{
     private final String[] createStatements = {
             """
             CREATE TABLE IF NOT EXISTS auth (
-            `authToken` VARCHAR(255) NOT NULL,
             `username` VARCHAR(255) NOT NULL,
-            PRIMARY KEY (`authToken`)
+            `authToken` VARCHAR(255) NOT NULL,
+            PRIMARY KEY (`username`)
             );
             """
     };
