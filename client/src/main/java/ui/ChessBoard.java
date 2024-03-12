@@ -17,23 +17,21 @@ public class ChessBoard {
 
     public static void main(String[] args) {
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
-
         out.print(EscapeSequences.ERASE_SCREEN);
-        out.print(EMPTY);
         colHeaders(out);
         drawChessBoard(out);
-        out.print(EMPTY);
         colHeaders(out);
-
         out.print(EscapeSequences.SET_BG_COLOR_BLACK);
         out.print(EscapeSequences.SET_TEXT_COLOR_WHITE);
     }
 
     private static void colHeaders(PrintStream out) {
         setGray(out);
+        out.print(EMPTY);
         for (int boardCol = 0; boardCol < BOARD_SIZE_IN_SQUARES; ++boardCol) {
             printHeaderText(out, rowHeaders[boardCol]);
         }
+        out.print(EMPTY);
         setBlack(out);
         out.println();
     }
@@ -43,8 +41,6 @@ public class ChessBoard {
         out.print(EscapeSequences.SET_TEXT_COLOR_WHITE);
         out.print(EscapeSequences.SET_TEXT_BOLD);
         out.print(player);
-
-        setBlack(out);
     }
 
     private static void rowHeaders(PrintStream out) {
@@ -61,9 +57,7 @@ public class ChessBoard {
             printHeaderText(out, columnHeaders[boardRow]);
             drawRowOfSquares(out, boardRow);
             printHeaderText(out, columnHeaders[boardRow]);
-            if (boardRow < BOARD_SIZE_IN_SQUARES - 1) {
-                setBlack(out);
-            }
+            setBlack(out);
             out.println();
         }
     }
