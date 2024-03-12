@@ -5,8 +5,6 @@ import java.util.Random;
 
 public class ChessBoard {
     private static final int BOARD_SIZE_IN_SQUARES = 8;
-    private static final int SQUARE_SIZE_IN_CHARS = 3;
-    private static final int LINE_WIDTH_IN_CHARS = 1;
     private static final String EMPTY = "   ";
     private static final String X = " X ";
     private static final String O = " O ";
@@ -18,9 +16,7 @@ public class ChessBoard {
     public static void main(String[] args) {
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         out.print(EscapeSequences.ERASE_SCREEN);
-        colHeaders(out);
         drawChessBoard(out);
-        colHeaders(out);
         out.print(EscapeSequences.SET_BG_COLOR_BLACK);
         out.print(EscapeSequences.SET_TEXT_COLOR_WHITE);
     }
@@ -43,16 +39,8 @@ public class ChessBoard {
         out.print(player);
     }
 
-    private static void rowHeaders(PrintStream out) {
-        setGray(out);
-        out.print(EMPTY);
-        for (int boardCol = 0; boardCol < BOARD_SIZE_IN_SQUARES; ++boardCol) {
-            out.print(columnHeaders[boardCol]);
-        }
-        out.print(EMPTY);
-    }
-
     private static void drawChessBoard(PrintStream out) {
+        colHeaders(out);
         for (int boardRow = 0; boardRow < BOARD_SIZE_IN_SQUARES; ++boardRow) {
             printHeaderText(out, columnHeaders[boardRow]);
             drawRowOfSquares(out, boardRow);
@@ -60,6 +48,7 @@ public class ChessBoard {
             setBlack(out);
             out.println();
         }
+        colHeaders(out);
     }
 
     private static void drawRowOfSquares(PrintStream out, int rowNumber) {
