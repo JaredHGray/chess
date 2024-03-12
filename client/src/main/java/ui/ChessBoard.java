@@ -18,9 +18,9 @@ public class ChessBoard {
 
         out.print(EscapeSequences.ERASE_SCREEN);
 
-        //rowHeaders(out);
+        rowHeaders(out);
         drawChessBoard(out);
-       // rowHeaders(out);
+        rowHeaders(out);
 
         out.print(EscapeSequences.SET_BG_COLOR_BLACK);
         out.print(EscapeSequences.SET_TEXT_COLOR_WHITE);
@@ -30,25 +30,12 @@ public class ChessBoard {
 
         setGray(out);
 
-        String[] headers = { "a", "b", "c", "d", "e", "f", "g", "h" };
+        String[] headers = { " a ", " b ", " c ", " d ", " e ", " f ", " g ", " h " };
         for (int boardCol = 0; boardCol < BOARD_SIZE_IN_SQUARES; ++boardCol) {
-            drawHeader(out, headers[boardCol]);
-
-//            if (boardCol < BOARD_SIZE_IN_SQUARES - 1) {
-//                out.print(EMPTY.repeat(LINE_WIDTH_IN_CHARS));
-//            }
+            printHeaderText(out, headers[boardCol]);
         }
         setBlack(out);
         out.println();
-    }
-
-    private static void drawHeader(PrintStream out, String headerText) {
-        int prefixLength = SQUARE_SIZE_IN_CHARS / 2;
-        int suffixLength = SQUARE_SIZE_IN_CHARS - prefixLength - 1;
-
-        out.print(EMPTY.repeat(prefixLength));
-        printHeaderText(out, headerText);
-        //out.print(EMPTY);
     }
 
     private static void printHeaderText(PrintStream out, String player) {
@@ -57,15 +44,12 @@ public class ChessBoard {
         out.print(EscapeSequences.SET_TEXT_BOLD);
         out.print(player);
 
-        setGray(out);
+        setBlack(out);
     }
 
     private static void drawChessBoard(PrintStream out) {
-
         for (int boardRow = 0; boardRow < BOARD_SIZE_IN_SQUARES; ++boardRow) {
-
             drawRowOfSquares(out, boardRow);
-
             if (boardRow < BOARD_SIZE_IN_SQUARES - 1) {
                 setBlack(out);
             }
