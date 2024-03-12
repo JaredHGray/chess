@@ -10,10 +10,12 @@ public class ChessBoard {
     private static final String O = " O ";
     private static final String[] rowHeaders = { " a ", " b ", " c ", " d ", " e ", " f ", " g ", " h " };
     private static final String[] columnHeaders = { " 8 ", " 7 ", " 6 ", " 5 ", " 4 ", " 3 ", " 2 ", " 1 " };
+    private static String[][] chessboard;
     private static Random rand = new Random();
 
 
     public static void main(String[] args) {
+        initializeChessboard();
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         out.print(EscapeSequences.ERASE_SCREEN);
         drawChessBoard(out);
@@ -61,6 +63,23 @@ public class ChessBoard {
                 printPlayer(out, rand.nextBoolean() ? X : O);
                 setBlack(out);
             }
+    }
+
+    private static void initializeChessboard() {
+        chessboard = new String[BOARD_SIZE_IN_SQUARES][BOARD_SIZE_IN_SQUARES];
+        // Set up pawns
+        for (int col = 0; col < BOARD_SIZE_IN_SQUARES; col++) {
+            chessboard[1][col] = EscapeSequences.BLACK_PAWN; // Black pawns
+            chessboard[6][col] = EscapeSequences.WHITE_PAWN; // White pawns
+        }
+
+        String[] whitePieces = {EscapeSequences.WHITE_ROOK, EscapeSequences.WHITE_KNIGHT, EscapeSequences.WHITE_BISHOP, EscapeSequences.WHITE_KING, EscapeSequences.WHITE_QUEEN, EscapeSequences.WHITE_BISHOP, EscapeSequences.WHITE_KNIGHT, EscapeSequences.WHITE_ROOK};
+        String[] blackPieces = {EscapeSequences.BLACK_ROOK, EscapeSequences.BLACK_KNIGHT, EscapeSequences.BLACK_BISHOP, EscapeSequences.BLACK_KING, EscapeSequences.BLACK_QUEEN, EscapeSequences.BLACK_BISHOP, EscapeSequences.BLACK_KNIGHT, EscapeSequences.BLACK_ROOK};
+
+        for (int col = 0; col < BOARD_SIZE_IN_SQUARES; col++) {
+            chessboard[0][col] = blackPieces[col];
+            chessboard[7][col] = whitePieces[col];
+        }
     }
 
     private static void setWhite(PrintStream out) {
