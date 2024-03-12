@@ -16,8 +16,7 @@ public class ServerFacade {
 
     public UserData registerUser(UserData user) throws DataAccessException {
         var path = "/user";
-        UserData newUser = makeRequest("POST", path, user, UserData.class);
-        return new UserData(newUser.username(), newUser.);
+        return this.makeRequest("POST", path, user, UserData.class);
     }
 
     private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass) throws DataAccessException {
