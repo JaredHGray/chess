@@ -10,6 +10,8 @@ public class ChessBoard {
     private static final String EMPTY = "   ";
     private static final String X = " X ";
     private static final String O = " O ";
+    private static final String[] rowHeaders = { " a ", " b ", " c ", " d ", " e ", " f ", " g ", " h " };
+    private static final String[] columnHeaders = { " 8 ", " 7 ", " 6 ", " 5 ", " 4 ", " 3 ", " 2 ", " 1 " };
     private static Random rand = new Random();
 
 
@@ -17,9 +19,10 @@ public class ChessBoard {
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
 
         out.print(EscapeSequences.ERASE_SCREEN);
-
+        out.print(EMPTY);
         rowHeaders(out);
         drawChessBoard(out);
+        out.print(EMPTY);
         rowHeaders(out);
 
         out.print(EscapeSequences.SET_BG_COLOR_BLACK);
@@ -27,12 +30,9 @@ public class ChessBoard {
     }
 
     private static void rowHeaders(PrintStream out) {
-
         setGray(out);
-
-        String[] headers = { " a ", " b ", " c ", " d ", " e ", " f ", " g ", " h " };
         for (int boardCol = 0; boardCol < BOARD_SIZE_IN_SQUARES; ++boardCol) {
-            printHeaderText(out, headers[boardCol]);
+            printHeaderText(out, rowHeaders[boardCol]);
         }
         setBlack(out);
         out.println();
@@ -49,6 +49,7 @@ public class ChessBoard {
 
     private static void drawChessBoard(PrintStream out) {
         for (int boardRow = 0; boardRow < BOARD_SIZE_IN_SQUARES; ++boardRow) {
+            printHeaderText(out, columnHeaders[boardRow]);
             drawRowOfSquares(out, boardRow);
             if (boardRow < BOARD_SIZE_IN_SQUARES - 1) {
                 setBlack(out);
