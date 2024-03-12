@@ -20,16 +20,16 @@ public class ChessBoard {
 
         out.print(EscapeSequences.ERASE_SCREEN);
         out.print(EMPTY);
-        rowHeaders(out);
+        colHeaders(out);
         drawChessBoard(out);
         out.print(EMPTY);
-        rowHeaders(out);
+        colHeaders(out);
 
         out.print(EscapeSequences.SET_BG_COLOR_BLACK);
         out.print(EscapeSequences.SET_TEXT_COLOR_WHITE);
     }
 
-    private static void rowHeaders(PrintStream out) {
+    private static void colHeaders(PrintStream out) {
         setGray(out);
         for (int boardCol = 0; boardCol < BOARD_SIZE_IN_SQUARES; ++boardCol) {
             printHeaderText(out, rowHeaders[boardCol]);
@@ -47,13 +47,24 @@ public class ChessBoard {
         setBlack(out);
     }
 
+    private static void rowHeaders(PrintStream out) {
+        setGray(out);
+        out.print(EMPTY);
+        for (int boardCol = 0; boardCol < BOARD_SIZE_IN_SQUARES; ++boardCol) {
+            out.print(columnHeaders[boardCol]);
+        }
+        out.print(EMPTY);
+    }
+
     private static void drawChessBoard(PrintStream out) {
         for (int boardRow = 0; boardRow < BOARD_SIZE_IN_SQUARES; ++boardRow) {
             printHeaderText(out, columnHeaders[boardRow]);
             drawRowOfSquares(out, boardRow);
+            printHeaderText(out, columnHeaders[boardRow]);
             if (boardRow < BOARD_SIZE_IN_SQUARES - 1) {
                 setBlack(out);
             }
+            out.println();
         }
     }
 
@@ -67,21 +78,6 @@ public class ChessBoard {
                 printPlayer(out, rand.nextBoolean() ? X : O);
                 setBlack(out);
             }
-            out.println();
-    }
-
-    private static void drawVerticalLine(PrintStream out) {
-
-        int boardSizeInSpaces = BOARD_SIZE_IN_SQUARES * SQUARE_SIZE_IN_CHARS +
-                (BOARD_SIZE_IN_SQUARES - 1) * LINE_WIDTH_IN_CHARS;
-
-        for (int lineRow = 0; lineRow < LINE_WIDTH_IN_CHARS; ++lineRow) {
-            //setRed(out);
-            out.print(EMPTY.repeat(boardSizeInSpaces));
-
-            setBlack(out);
-            out.println();
-        }
     }
 
     private static void setWhite(PrintStream out) {
@@ -91,7 +87,7 @@ public class ChessBoard {
 
     private static void setGray(PrintStream out) {
         out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
-        out.print(EscapeSequences.SET_TEXT_COLOR_BLACK);
+        out.print(EscapeSequences.SET_TEXT_COLOR_WHITE);
     }
 
     private static void setBlack(PrintStream out) {
