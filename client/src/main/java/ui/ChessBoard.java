@@ -54,13 +54,19 @@ public class ChessBoard {
     }
 
     private static void drawRowOfSquares(PrintStream out, int rowNumber) {
+        String currentPiece;
             for (int boardCol = 0; boardCol < BOARD_SIZE_IN_SQUARES; boardCol++) {
                 if ((boardCol + rowNumber) % 2 == 0) {
                     setWhite(out);
                 } else {
                     setBlack(out);
                 }
-                printPlayer(out, rand.nextBoolean() ? X : O);
+                if(chessboard[rowNumber][boardCol] == null){
+                    currentPiece = EMPTY;
+                } else {
+                    currentPiece = chessboard[rowNumber][boardCol];
+                }
+                printStarterBoard(out, currentPiece, rowNumber);
                 setBlack(out);
             }
     }
@@ -97,8 +103,12 @@ public class ChessBoard {
         out.print(EscapeSequences.SET_TEXT_COLOR_BLACK);
     }
 
-    private static void printPlayer(PrintStream out, String player) {
-        out.print(EscapeSequences.SET_TEXT_COLOR_BLUE);
+    private static void printStarterBoard(PrintStream out, String player, int row) {
+        if(row > 3){
+            out.print(EscapeSequences.SET_TEXT_COLOR_RED);
+        } else {
+            out.print(EscapeSequences.SET_TEXT_COLOR_BLUE);
+        }
         out.print(player);
         setWhite(out);
     }
