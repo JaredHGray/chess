@@ -2,36 +2,57 @@ package ui;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Random;
+import java.util.Scanner;
 
 public class ChessBoard {
     private static final int BOARD_SIZE_IN_SQUARES = 8;
     private static final String EMPTY = "   ";
-    private static final String X = " X ";
-    private static final String O = " O ";
     private static final String[] rowHeaders = { " a ", " b ", " c ", " d ", " e ", " f ", " g ", " h " };
     private static final String[] columnHeaders = { " 8 ", " 7 ", " 6 ", " 5 ", " 4 ", " 3 ", " 2 ", " 1 " };
     private static String[][] chessboard;
-    private static Random rand = new Random();
-
 
     public static void main(String[] args) {
         initializeChessboard();
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         out.print(EscapeSequences.ERASE_SCREEN);
-        drawChessBoard(out);
+
+        // Get user input for perspective (assuming "w" for white and "b" for black)
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter perspective (w for white, b for black): ");
+        String perspective = scanner.nextLine();
+
+        if ("w".equalsIgnoreCase(perspective)) {
+            drawChessBoard(out, true);  // Print from white player perspective
+        } else if ("b".equalsIgnoreCase(perspective)) {
+            drawChessBoard(out, false);  // Print from black player perspective
+        } else {
+            System.out.println("Invalid input. Please enter 'w' or 'b'.");
+        }
+
         out.print(EscapeSequences.SET_BG_COLOR_BLACK);
         out.print(EscapeSequences.SET_TEXT_COLOR_WHITE);
     }
 
-    private static void colHeaders(PrintStream out) {
-        setGray(out);
-        out.print(EMPTY);
-        for (int boardCol = 0; boardCol < BOARD_SIZE_IN_SQUARES; ++boardCol) {
-            printHeaderText(out, rowHeaders[boardCol]);
+    private static void colHeaders(PrintStream out, boolean whitePerspective) {
+        if (!whitePerspective) {
+            setGray(out);
+            out.print(EMPTY);
+            for (int boardCol = 0; boardCol < BOARD_SIZE_IN_SQUARES; ++boardCol) {
+                printHeaderText(out, rowHeaders[boardCol]);
+            }
+            out.print(EMPTY);
+            setBlack(out);
+            out.println();
+        } else {
+            setGray(out);
+            out.print(EMPTY);
+            for (int boardCol = BOARD_SIZE_IN_SQUARES - 1; boardCol >= 0; --boardCol) {
+                printHeaderText(out, rowHeaders[boardCol]);
+            }
+            out.print(EMPTY);
+            setBlack(out);
+            out.println();
         }
-        out.print(EMPTY);
-        setBlack(out);
-        out.println();
     }
 
     private static void printHeaderText(PrintStream out, String player) {
@@ -41,16 +62,21 @@ public class ChessBoard {
         out.print(player);
     }
 
-    private static void drawChessBoard(PrintStream out) {
-        colHeaders(out);
-        for (int boardRow = 0; boardRow < BOARD_SIZE_IN_SQUARES; ++boardRow) {
+    private static void drawChessBoard(PrintStream out, boolean whitePerspective) {
+        colHeaders(out, whitePerspective);
+
+        for (int boardRow = whitePerspective ? BOARD_SIZE_IN_SQUARES - 1 : 0;
+             whitePerspective ? boardRow >= 0 : boardRow < BOARD_SIZE_IN_SQUARES;
+             boardRow += (whitePerspective ? -1 : 1)) {
+
             printHeaderText(out, columnHeaders[boardRow]);
             drawRowOfSquares(out, boardRow);
             printHeaderText(out, columnHeaders[boardRow]);
             setBlack(out);
             out.println();
         }
-        colHeaders(out);
+
+        colHeaders(out, whitePerspective);
     }
 
     private static void drawRowOfSquares(PrintStream out, int rowNumber) {
