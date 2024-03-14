@@ -114,10 +114,22 @@ public class ChessClient {
 
     private static void userHelp(PrintStream out) {
         out.println("Help menu option selected");
+        out.println("Help: You are lost and confused, in need of guidance on what to do");
+        out.println("Logout: Sign out of the chess server and return to the initial menu");
+        out.println("Create Game: Allows you to create a new chess game on the server");
+        out.println("List Games: Lists all current games on the server");
+        out.println("Join Game: Allows you to specify which chess game you want to join and what color you want to play");
+        out.println("Observe Game: Allows you to specify which chess game you want to observe");
+        out.println();
     }
 
     public static void initialHelp(PrintStream out) {
         out.println("Help menu option selected");
+        out.println("Help: You are lost and confused, in need of guidance on what to do");
+        out.println("Quit: No longer play the game of chess");
+        out.println("Login: Sign in with username and password to access your account");
+        out.println("Register: Sign up for a chess account with username, password, and email");
+        out.println();
     }
 
     public static void quit(PrintStream out) {
