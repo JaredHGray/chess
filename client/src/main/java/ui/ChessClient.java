@@ -90,29 +90,36 @@ public class ChessClient {
             default:
                 out.println("Invalid choice");
         }
+        if(choice != 2){loginMenu(out);}
     }
 
     private static void observeGame(PrintStream out) {
+        out.println();
         out.println("Observe Game option selected");
     }
 
     private static void joinGame(PrintStream out) {
+        out.println();
         out.println("Join Game option selected");
     }
 
     private static void listGames(PrintStream out) {
+        out.println();
         out.println("List Games option selected");
     }
 
     private static void createGame(PrintStream out) {
+        out.println();
         out.println("Create Game option selected");
     }
 
     private static void logout(PrintStream out) {
+        out.println();
         out.println("Logout option selected");
     }
 
     private static void userHelp(PrintStream out) {
+        out.println();
         out.println("Help menu option selected");
         out.println("Help: You are lost and confused, in need of guidance on what to do");
         out.println("Logout: Sign out of the chess server and return to the initial menu");
@@ -124,6 +131,7 @@ public class ChessClient {
     }
 
     public static void initialHelp(PrintStream out) {
+        out.println();
         out.println("Help menu option selected");
         out.println("Help: You are lost and confused, in need of guidance on what to do");
         out.println("Quit: No longer play the game of chess");
@@ -133,14 +141,24 @@ public class ChessClient {
     }
 
     public static void quit(PrintStream out) {
+        out.println();
         out.println("Quit menu option selected");
     }
 
     public static void login(PrintStream out) {
+        Scanner scanner = new Scanner(System.in);
+        out.println();
         out.println("Login menu option selected");
+        loginMenu(out); // Display the game menu
+        int gameChoice;
+        do {
+            gameChoice = scanner.nextInt();
+            executeGameChoice(gameChoice, out);
+        } while (gameChoice != 2);
     }
 
     public static void register(PrintStream out) {
+        out.println();
         out.println("Register menu option selected");
     }
 }
