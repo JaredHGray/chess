@@ -18,17 +18,17 @@ public class ChessClient {
     public static void main(String[] args) {
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         out.print(EscapeSequences.ERASE_SCREEN);
-        initialMenu(out);
         Scanner scanner = new Scanner(System.in);
-        int choice = scanner.nextInt();
-        executeInitialChoice(choice, out);
-        loginMenu(out);
-        choice = scanner.nextInt();
-        executeGameChoice(choice, out);
+        int choice;
+        out.println("Welcome to ♕ 240 Chess Server ♕");
+        do {
+            initialMenu(out);
+            choice = scanner.nextInt();
+            executeInitialChoice(choice, out);
+        } while (choice != 2);
     }
 
     private static void initialMenu(PrintStream out) {
-        out.println("Welcome to ♕ 240 Chess Server ♕");
         out.println("Enter your selection");
         out.println("1. Help");
         out.println("2. Quit");
