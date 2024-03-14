@@ -16,16 +16,53 @@ public class ServerFacade {
 
     public UserData registerUser(UserData user) throws DataAccessException {
         var path = "/user";
-        return this.makeRequest("POST", path, user, UserData.class);
+        return this.makeRequest("POST", path, user, UserData.class, null);
     }
 
-    private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass) throws DataAccessException {
+    public UserData loginUser(UserData user) throws DataAccessException {
+        var path = "/session";
+        return this.makeRequest("POST", path, user, UserData.class, null);
+    }
+
+    public void logoutUser(String authToken) throws DataAccessException {
+        var path = "/session";
+        this.makeRequest("DELETE", path, null, null, authToken);
+    }
+
+    public GameData[] listGames(String authToken) throws DataAccessException {
+        var path = "/game";
+        record listGameResponse(GameData[] game) {
+        }
+        var response = this.makeRequest("GET", path, null, listGameResponse.class, authToken);
+        return response.game();
+    }
+
+    public GameData makeGame(GameData game, String authToken) throws DataAccessException {
+        var path = "/game";
+        return this.makeRequest("POST", path, game, GameData.class, authToken);
+    }
+
+    public void joinGame(GameData game, String authToken) throws DataAccessException {
+        var path = "/game";
+        this.makeRequest("PUT", path, game, GameData.class, authToken);
+    }
+
+    public void clearDatabase() throws DataAccessException {
+        var path = "/db";
+        this.makeRequest("DELETE",path, null, null, null);
+    }
+
+    private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass, String header) throws DataAccessException {
         try {
             URL url = (new URI(serverUrl + path)).toURL();
             HttpURLConnection http = (HttpURLConnection) url.openConnection();
             http.setRequestMethod(method);
-            http.setDoOutput(true);
 
+            // Set authorization header
+            if (header != null && !header.isEmpty()) {
+                http.setRequestProperty("authorization", header);
+            }
+            http.setDoOutput(true);
             writeBody(request, http);
             http.connect();
             throwIfNotSuccessful(http);
@@ -34,6 +71,7 @@ public class ServerFacade {
             throw new DataAccessException(ex.getMessage());
         }
     }
+
 
     private static void writeBody(Object request, HttpURLConnection http) throws IOException {
         if (request != null) {
