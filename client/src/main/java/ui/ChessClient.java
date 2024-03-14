@@ -11,12 +11,12 @@ public class ChessClient {
     private final ServerFacade server;
     private final String serverUrl;
 
-    public ChessClient(ServerFacade server, String serverUrl) {
-        this.server = server;
+    public ChessClient(String serverUrl) {
         this.serverUrl = serverUrl;
+        server = new ServerFacade(serverUrl);
     }
 
-    public static void main(String[] args) {
+    public void run() {
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         out.print(EscapeSequences.ERASE_SCREEN);
         Scanner scanner = new Scanner(System.in);

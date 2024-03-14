@@ -40,7 +40,7 @@ public class ChessBoard {
                 printHeaderText(out, rowHeaders[boardCol]);
             }
             out.print(EMPTY);
-            setBlack(out);
+            resetBackground(out);
             out.println();
         } else {
             setGray(out);
@@ -49,7 +49,7 @@ public class ChessBoard {
                 printHeaderText(out, rowHeaders[boardCol]);
             }
             out.print(EMPTY);
-            setBlack(out);
+            resetBackground(out);
             out.println();
         }
     }
@@ -71,7 +71,7 @@ public class ChessBoard {
             printHeaderText(out, columnHeaders[boardRow]);
             drawRowOfSquares(out, boardRow);
             printHeaderText(out, columnHeaders[boardRow]);
-            setBlack(out);
+            resetBackground(out);
             out.println();
         }
 
@@ -92,7 +92,7 @@ public class ChessBoard {
                     currentPiece = chessboard[rowNumber][boardCol];
                 }
                 printStarterBoard(out, currentPiece, rowNumber);
-                setBlack(out);
+                resetBackground(out);
             }
     }
 
@@ -126,6 +126,11 @@ public class ChessBoard {
     private static void setBlack(PrintStream out) {
         out.print(EscapeSequences.SET_BG_COLOR_BLACK);
         out.print(EscapeSequences.SET_TEXT_COLOR_BLACK);
+    }
+
+    private static void resetBackground(PrintStream out) {
+        out.print(EscapeSequences.RESET_BG_COLOR);
+        out.print(EscapeSequences.RESET_TEXT_COLOR);
     }
 
     private static void printStarterBoard(PrintStream out, String player, int row) {
