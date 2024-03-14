@@ -3,17 +3,18 @@ package ui;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
+import server.ServerFacade;
 
 public class ChessClient {
 
-//    private String visitorName = null;
-//    private final ServerFacade server;
-//    private final String serverUrl;
-//
-//    public ChessClient(ServerFacade server, String serverUrl) {
-//        this.server = server;
-//        this.serverUrl = serverUrl;
-//    }
+    private String visitorName = null;
+    private final ServerFacade server;
+    private final String serverUrl;
+
+    public ChessClient(ServerFacade server, String serverUrl) {
+        this.server = server;
+        this.serverUrl = serverUrl;
+    }
 
     public static void main(String[] args) {
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
@@ -149,6 +150,12 @@ public class ChessClient {
         Scanner scanner = new Scanner(System.in);
         out.println();
         out.println("Login menu option selected");
+        out.print("Enter username: ");
+        String username = scanner.nextLine();
+        out.print("Enter password: ");
+        String password = scanner.nextLine();
+        out.println();
+
         loginMenu(out); // Display the game menu
         int gameChoice;
         do {
