@@ -158,7 +158,22 @@ public class ChessClient {
     }
 
     public static void register(PrintStream out) {
+        Scanner scanner = new Scanner(System.in);
         out.println();
         out.println("Register menu option selected");
+        out.print("Enter desired username: ");
+        String username = scanner.nextLine();
+        out.print("Enter desired password: ");
+        String password = scanner.nextLine();
+        out.print("Enter email address: ");
+        String email = scanner.nextLine();
+        out.println();
+
+        loginMenu(out);
+        int gameChoice;
+        do {
+            gameChoice = scanner.nextInt();
+            executeGameChoice(gameChoice, out);
+        } while (gameChoice != 2);
     }
 }
