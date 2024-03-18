@@ -85,8 +85,6 @@ public class ServerFacade {
 
     private void throwIfNotSuccessful(HttpURLConnection http) throws IOException, DataAccessException {
         int statusCode = http.getResponseCode();
-        String statusMessage = http.getResponseMessage();
-
         if (!isSuccessful(statusCode)) {
             String errorMessage = String.valueOf(statusCode);
             try (BufferedReader errorReader = new BufferedReader(new InputStreamReader(http.getErrorStream()))) {

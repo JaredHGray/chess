@@ -159,10 +159,6 @@ public class ChessClient {
         String password = scanner.nextLine();
         out.println();
 
-        if (username.isEmpty() || password.isEmpty()) {
-            System.out.println("Username and password cannot be empty.");
-            return;
-        }
         UserData newUser = new UserData(username, password, null);
         try {
             server.loginUser(newUser);
@@ -191,11 +187,6 @@ public class ChessClient {
         out.print("Enter email address: ");
         String email = scanner.nextLine();
         out.println();
-
-        if (username.isEmpty() || password.isEmpty() || email.isEmpty()) {
-            System.out.println("Username, password, and email cannot be empty.");
-            return;
-        }
 
         UserData newUser = new UserData(username, password, email);
         try {
