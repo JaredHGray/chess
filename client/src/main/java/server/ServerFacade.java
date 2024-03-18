@@ -23,9 +23,9 @@ public class ServerFacade {
         return this.makeRequest("POST", path, user, AuthData.class, null);
     }
 
-    public void loginUser(UserData user) throws DataAccessException {
+    public AuthData loginUser(UserData user) throws DataAccessException {
         var path = "/session";
-        this.makeRequest("POST", path, user, UserData.class, null);
+        return this.makeRequest("POST", path, user, AuthData.class, null);
     }
 
     public void logoutUser(String authToken) throws DataAccessException {

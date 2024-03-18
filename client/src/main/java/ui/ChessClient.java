@@ -72,7 +72,7 @@ public class ChessClient {
         out.print("Enter choice: ");
     }
 
-    private static void executeGameChoice(int choice, PrintStream out) {
+    private void executeGameChoice(int choice, PrintStream out) {
         switch (choice) {
             case 1:
                 userHelp(out);
@@ -118,9 +118,11 @@ public class ChessClient {
         out.println("Create Game option selected");
     }
 
-    private static void logout(PrintStream out) {
+    private void logout(PrintStream out) {
         out.println();
         out.println("Logout option selected");
+        registeredUsername = null;
+        authToken = null;
     }
 
     private static void userHelp(PrintStream out) {
@@ -145,9 +147,11 @@ public class ChessClient {
         out.println();
     }
 
-    public static void quit(PrintStream out) {
+    public void quit(PrintStream out) {
         out.println();
         out.println("Quit menu option selected");
+        registeredUsername = null;
+        authToken = null;
     }
 
     public void login(PrintStream out) {
@@ -162,8 +166,10 @@ public class ChessClient {
 
         UserData newUser = new UserData(username, password, null);
         try {
-            server.loginUser(newUser);
+            AuthData response = server.loginUser(newUser);
             System.out.println("Login successful");
+            registeredUsername = response.username();
+            authToken = response.authToken();
             loginMenu(out);
             int gameChoice;
             do {
