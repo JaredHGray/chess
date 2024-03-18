@@ -149,7 +149,7 @@ public class ChessClient {
         out.println("Quit menu option selected");
     }
 
-    public static void login(PrintStream out) {
+    public void login(PrintStream out) {
         Scanner scanner = new Scanner(System.in);
         out.println();
         out.println("Login menu option selected");
@@ -159,12 +159,25 @@ public class ChessClient {
         String password = scanner.nextLine();
         out.println();
 
-        loginMenu(out); // Display the game menu
-        int gameChoice;
-        do {
-            gameChoice = scanner.nextInt();
-            executeGameChoice(gameChoice, out);
-        } while (gameChoice != 2);
+        if (username.isEmpty() || password.isEmpty()) {
+            System.out.println("Username and password cannot be empty.");
+            return;
+        }
+        UserData newUser = new UserData(username, password, null);
+        try {
+            server.loginUser(newUser);
+            // Registration successful
+            System.out.println("Login successful");
+            loginMenu(out);
+            int gameChoice;
+            do {
+                gameChoice = scanner.nextInt();
+                executeGameChoice(gameChoice, out);
+            } while (gameChoice != 2);
+        } catch (DataAccessException e) {
+            // Registration failed
+            System.out.println("Login failed: " + e.getMessage());
+        }
     }
 
     public void register(PrintStream out) throws DataAccessException {
@@ -179,14 +192,12 @@ public class ChessClient {
         String email = scanner.nextLine();
         out.println();
 
-        // Validate user input
         if (username.isEmpty() || password.isEmpty() || email.isEmpty()) {
             System.out.println("Username, password, and email cannot be empty.");
-            return; // Exit registration process
+            return;
         }
 
         UserData newUser = new UserData(username, password, email);
-       // newUser = server.registerUser(newUser);
         try {
             server.registerUser(newUser);
             // Registration successful

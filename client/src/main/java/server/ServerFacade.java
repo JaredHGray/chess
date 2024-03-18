@@ -20,9 +20,9 @@ public class ServerFacade {
         this.makeRequest("POST", path, user, UserData.class, null);
     }
 
-    public UserData loginUser(UserData user) throws DataAccessException {
+    public void loginUser(UserData user) throws DataAccessException {
         var path = "/session";
-        return this.makeRequest("POST", path, user, UserData.class, null);
+        this.makeRequest("POST", path, user, UserData.class, null);
     }
 
     public void logoutUser(String authToken) throws DataAccessException {
@@ -88,7 +88,7 @@ public class ServerFacade {
         String statusMessage = http.getResponseMessage();
 
         if (!isSuccessful(statusCode)) {
-            String errorMessage = statusMessage;
+            String errorMessage = String.valueOf(statusCode);
             try (BufferedReader errorReader = new BufferedReader(new InputStreamReader(http.getErrorStream()))) {
                 StringBuilder errorResponse = new StringBuilder();
                 String line;
