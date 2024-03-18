@@ -8,7 +8,6 @@ import java.util.Map;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        // Specify the desired endpoint
         var serverUrl = "http://localhost:8080";
         if (args.length == 1) {
             serverUrl = args[0];

@@ -3,6 +3,9 @@ package ui;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
+
+import dataAccess.DataAccessException;
+import model.UserData;
 import server.ServerFacade;
 
 public class ChessClient {
@@ -16,7 +19,7 @@ public class ChessClient {
         server = new ServerFacade(serverUrl);
     }
 
-    public void run() {
+    public void run() throws DataAccessException {
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         out.print(EscapeSequences.ERASE_SCREEN);
         Scanner scanner = new Scanner(System.in);
@@ -38,7 +41,7 @@ public class ChessClient {
         out.print("Enter choice: ");
     }
 
-    private static void executeInitialChoice(int choice, PrintStream out) {
+    private void executeInitialChoice(int choice, PrintStream out) throws DataAccessException {
         switch (choice) {
             case 1:
                 initialHelp(out);
@@ -164,7 +167,7 @@ public class ChessClient {
         } while (gameChoice != 2);
     }
 
-    public static void register(PrintStream out) {
+    public void register(PrintStream out) throws DataAccessException {
         Scanner scanner = new Scanner(System.in);
         out.println();
         out.println("Register menu option selected");
@@ -175,6 +178,9 @@ public class ChessClient {
         out.print("Enter email address: ");
         String email = scanner.nextLine();
         out.println();
+
+        UserData newUser = new UserData(username, password, email);
+        newUser = server.registerUser(newUser);
 
         loginMenu(out);
         int gameChoice;
