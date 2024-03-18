@@ -13,20 +13,13 @@ public class ChessBoard {
     public void run(boolean whitePerspective) {
         initializeChessboard();
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
-        //out.print(EscapeSequences.ERASE_SCREEN);
-
-        // Get user input for perspective (assuming "w" for white and "b" for black)
-//        Scanner scanner = new Scanner(System.in);
-//        System.out.print("Enter perspective (w for white, b for black): ");
-//        String perspective = scanner.nextLine();
-
         if (whitePerspective) {
             drawChessBoard(out, true);  // Print from white player perspective
         } if (!whitePerspective) {
             drawChessBoard(out, false);  // Print from black player perspective
         }
-        out.print(EscapeSequences.SET_BG_COLOR_BLACK);
-        out.print(EscapeSequences.SET_TEXT_COLOR_WHITE);
+        out.print(EscapeSequences.RESET_BG_COLOR);
+        out.print(EscapeSequences.RESET_TEXT_COLOR);
     }
 
     private static void colHeaders(PrintStream out, boolean whitePerspective) {
