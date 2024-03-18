@@ -18,6 +18,7 @@ public class ChessClient {
 
     private GameData[] games = null;
     private final ServerFacade server;
+    ChessBoard printBoard = new ChessBoard();
 
     public ChessClient(String serverUrl) {
         server = new ServerFacade(serverUrl);
@@ -106,7 +107,7 @@ public class ChessClient {
         Scanner scanner = new Scanner(System.in);
         out.println();
         out.println("Observe Game option selected");
-        out.print("Enter number for the game to be joined: ");
+        out.print("Enter number for the game to be observed: ");
         int gameChoice = scanner.nextInt();
         scanner.nextLine();
         if (gameChoice < 1 || gameChoice > games.length) {
@@ -116,6 +117,9 @@ public class ChessClient {
         GameData chosenGame = games[gameChoice-1];
         try{
             server.joinGame(chosenGame.gameID(), null, authToken);
+            printBoard.run(true);
+            out.println();
+            printBoard.run(false);
             out.println(chosenGame.gameName() + " successfully joined as an observer");
         } catch (DataAccessException e) {
             System.out.println("Failure: " + e.getMessage());
@@ -139,6 +143,9 @@ public class ChessClient {
         GameData chosenGame = games[gameChoice-1];
         try{
             server.joinGame(chosenGame.gameID(), pieceColor.toUpperCase(), authToken);
+            printBoard.run(true);
+            out.println();
+            printBoard.run(false);
             out.println(chosenGame.gameName() + " successfully joined");
         } catch (DataAccessException e) {
             System.out.println("Failure: " + e.getMessage());

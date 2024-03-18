@@ -10,24 +10,21 @@ public class ChessBoard {
     private static final String[] columnHeaders = { " 8 ", " 7 ", " 6 ", " 5 ", " 4 ", " 3 ", " 2 ", " 1 " };
     private static String[][] chessboard;
 
-    public static void main(String[] args) {
+    public void run(boolean whitePerspective) {
         initializeChessboard();
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
-        out.print(EscapeSequences.ERASE_SCREEN);
+        //out.print(EscapeSequences.ERASE_SCREEN);
 
         // Get user input for perspective (assuming "w" for white and "b" for black)
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter perspective (w for white, b for black): ");
-        String perspective = scanner.nextLine();
+//        Scanner scanner = new Scanner(System.in);
+//        System.out.print("Enter perspective (w for white, b for black): ");
+//        String perspective = scanner.nextLine();
 
-        if ("w".equalsIgnoreCase(perspective)) {
+        if (whitePerspective) {
             drawChessBoard(out, true);  // Print from white player perspective
-        } else if ("b".equalsIgnoreCase(perspective)) {
+        } if (!whitePerspective) {
             drawChessBoard(out, false);  // Print from black player perspective
-        } else {
-            System.out.println("Invalid input. Please enter 'w' or 'b'.");
         }
-
         out.print(EscapeSequences.SET_BG_COLOR_BLACK);
         out.print(EscapeSequences.SET_TEXT_COLOR_WHITE);
     }
