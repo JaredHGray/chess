@@ -7,6 +7,8 @@ import model.*;
 
 import java.io.*;
 import java.net.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ServerFacade {
     private final String serverUrl;
@@ -32,10 +34,9 @@ public class ServerFacade {
 
     public GameData[] listGames(String authToken) throws DataAccessException {
         var path = "/game";
-        record listGameResponse(GameData[] game) {
-        }
-        var response = this.makeRequest("GET", path, null, listGameResponse.class, authToken);
-        return response.game();
+        record ListGamesResponse(GameData[] games) {}
+        ListGamesResponse response = this.makeRequest("GET", path, null, ListGamesResponse.class, authToken);
+        return response.games();
     }
 
     public void makeGame(GameData game, String authToken) throws DataAccessException {
@@ -43,9 +44,12 @@ public class ServerFacade {
         this.makeRequest("POST", path, game, GameData.class, authToken);
     }
 
-    public void joinGame(GameData game, String authToken) throws DataAccessException {
+    public void joinGame(int gameID, String playerColor, String authToken) throws DataAccessException {
         var path = "/game";
-        this.makeRequest("PUT", path, game, GameData.class, authToken);
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("gameID", gameID);
+        requestBody.put("playerColor", playerColor);
+        this.makeRequest("PUT", path, requestBody, GameData.class, authToken);
     }
 
     public void clearDatabase() throws DataAccessException {

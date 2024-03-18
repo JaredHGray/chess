@@ -15,13 +15,15 @@ public class ChessClient {
 
     private String registeredUsername = null;
     private String authToken = null;
+
+    private GameData[] games = null;
     private final ServerFacade server;
 
     public ChessClient(String serverUrl) {
         server = new ServerFacade(serverUrl);
     }
 
-    public void run() throws DataAccessException {
+    public void run() {
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         out.print(EscapeSequences.ERASE_SCREEN);
         Scanner scanner = new Scanner(System.in);
@@ -43,7 +45,7 @@ public class ChessClient {
         out.print("Enter choice: ");
     }
 
-    private void executeInitialChoice(int choice, PrintStream out) throws DataAccessException {
+    private void executeInitialChoice(int choice, PrintStream out) {
         switch (choice) {
             case 1:
                 initialHelp(out);
@@ -104,14 +106,38 @@ public class ChessClient {
         out.println("Observe Game option selected");
     }
 
-    private static void joinGame(PrintStream out) {
+    private void joinGame(PrintStream out) {
+        getGames();
+        Scanner scanner = new Scanner(System.in);
         out.println();
         out.println("Join Game option selected");
+        out.print("Enter number for the game to be joined: ");
+        int gameChoice = scanner.nextInt();
+        scanner.nextLine();
+        if (gameChoice < 1 || gameChoice > games.length) {
+            out.println("Invalid game number.");
+            return;
+        }
+        out.print("Enter desired piece color: ");
+        String pieceColor = scanner.nextLine();
+        GameData chosenGame = games[gameChoice-1];
+        try{
+            server.joinGame(chosenGame.gameID(), pieceColor.toUpperCase(), authToken);
+        } catch (DataAccessException e) {
+            System.out.println("Failure: " + e.getMessage());
+        }
     }
 
-    private static void listGames(PrintStream out) {
+    private void listGames(PrintStream out) {
         out.println();
         out.println("List Games option selected");
+        int count = 1;
+        getGames();
+        for (var game : games) {
+            out.println(count + " " + game.toString());
+            count++;
+        }
+        out.println();
     }
 
     private void createGame(PrintStream out) {
@@ -223,6 +249,14 @@ public class ChessClient {
             } while (gameChoice != 2);
         } catch (DataAccessException e) {
             System.out.println("Registration failed: " + e.getMessage());
+        }
+    }
+
+    private void getGames() {
+        try {
+            games = server.listGames(authToken);
+        } catch (DataAccessException e) {
+            System.out.println("Failure: " + e.getMessage());
         }
     }
 }
