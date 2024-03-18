@@ -179,14 +179,27 @@ public class ChessClient {
         String email = scanner.nextLine();
         out.println();
 
-        UserData newUser = new UserData(username, password, email);
-        newUser = server.registerUser(newUser);
+        // Validate user input
+        if (username.isEmpty() || password.isEmpty() || email.isEmpty()) {
+            System.out.println("Username, password, and email cannot be empty.");
+            return; // Exit registration process
+        }
 
-        loginMenu(out);
-        int gameChoice;
-        do {
-            gameChoice = scanner.nextInt();
-            executeGameChoice(gameChoice, out);
-        } while (gameChoice != 2);
+        UserData newUser = new UserData(username, password, email);
+       // newUser = server.registerUser(newUser);
+        try {
+            server.registerUser(newUser);
+            // Registration successful
+            System.out.println("Registration successful");
+            loginMenu(out);
+            int gameChoice;
+            do {
+                gameChoice = scanner.nextInt();
+                executeGameChoice(gameChoice, out);
+            } while (gameChoice != 2);
+        } catch (DataAccessException e) {
+            // Registration failed
+            System.out.println("Registration failed: " + e.getMessage());
+        }
     }
 }
