@@ -5,15 +5,14 @@ import dataAccess.UserDAO;
 import model.GameData;
 import model.AuthData;
 import dataAccess.GameDAO;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-import java.util.Random;
+
+import java.util.*;
 
 public class GameService {
 
     private final GameDAO gameDAO;
     private final AuthDAO authDAO;
+    Map<Integer, List<String>> gameObservers;
 
     public GameService(GameDAO gameDAO, AuthDAO authDAO){
         this.gameDAO = gameDAO;
@@ -54,6 +53,7 @@ public class GameService {
 
     public Map<String, Object> joinGame(int gameID, String playerColor, String authToken) throws DataAccessException{
         Map<String, Object> result = new HashMap<>();
+        gameObservers = new HashMap<>();
         GameData findGame = gameDAO.findGame(gameID);
         String user = authDAO.getAuth(authToken);
 
@@ -61,6 +61,9 @@ public class GameService {
             ResponseHelper.badRequest(result);
         } else if(user != null){
             if(playerColor == null || playerColor.isEmpty()){
+                List<String> player = new ArrayList<>();
+                player.add(user);
+                gameObservers.put(gameID, player);
                 ResponseHelper.successResult(result);
             } else if(findGame != null){
                 if((findGame.whiteUsername() != null && playerColor.equals("WHITE")) || (findGame.blackUsername() != null && playerColor.equals("BLACK"))){

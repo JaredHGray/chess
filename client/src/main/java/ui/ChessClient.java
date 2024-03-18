@@ -101,9 +101,25 @@ public class ChessClient {
         if(choice != 2){loginMenu(out);}
     }
 
-    private static void observeGame(PrintStream out) {
+    private void observeGame(PrintStream out) {
+        getGames();
+        Scanner scanner = new Scanner(System.in);
         out.println();
         out.println("Observe Game option selected");
+        out.print("Enter number for the game to be joined: ");
+        int gameChoice = scanner.nextInt();
+        scanner.nextLine();
+        if (gameChoice < 1 || gameChoice > games.length) {
+            out.println("Invalid game number.");
+            return;
+        }
+        GameData chosenGame = games[gameChoice-1];
+        try{
+            server.joinGame(chosenGame.gameID(), null, authToken);
+            out.println(chosenGame.gameName() + " successfully joined as an observer");
+        } catch (DataAccessException e) {
+            System.out.println("Failure: " + e.getMessage());
+        }
     }
 
     private void joinGame(PrintStream out) {
@@ -123,6 +139,7 @@ public class ChessClient {
         GameData chosenGame = games[gameChoice-1];
         try{
             server.joinGame(chosenGame.gameID(), pieceColor.toUpperCase(), authToken);
+            out.println(chosenGame.gameName() + " successfully joined");
         } catch (DataAccessException e) {
             System.out.println("Failure: " + e.getMessage());
         }
