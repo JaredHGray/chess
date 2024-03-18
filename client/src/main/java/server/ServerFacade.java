@@ -1,6 +1,7 @@
 package server;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import dataAccess.DataAccessException;
 import model.*;
 
@@ -14,9 +15,9 @@ public class ServerFacade {
         serverUrl = url;
     }
 
-    public UserData registerUser(UserData user) throws DataAccessException {
+    public void registerUser(UserData user) throws DataAccessException {
         var path = "/user";
-        return this.makeRequest("POST", path, user, UserData.class, null);
+        this.makeRequest("POST", path, user, UserData.class, null);
     }
 
     public UserData loginUser(UserData user) throws DataAccessException {
@@ -83,9 +84,25 @@ public class ServerFacade {
     }
 
     private void throwIfNotSuccessful(HttpURLConnection http) throws IOException, DataAccessException {
-        var status = http.getResponseCode();
-        if (!isSuccessful(status)) {
-            throw new DataAccessException("failure: " + status);
+        int statusCode = http.getResponseCode();
+        String statusMessage = http.getResponseMessage();
+
+        if (!isSuccessful(statusCode)) {
+            String errorMessage = statusMessage;
+            try (BufferedReader errorReader = new BufferedReader(new InputStreamReader(http.getErrorStream()))) {
+                StringBuilder errorResponse = new StringBuilder();
+                String line;
+                while ((line = errorReader.readLine()) != null) {
+                    errorResponse.append(line);
+                }
+                JsonObject errorJson = new Gson().fromJson(errorResponse.toString(), JsonObject.class);
+                if (errorJson != null && errorJson.has("message")) {
+                    errorMessage += "\n" + errorJson.get("message").getAsString() + "\n";
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            throw new DataAccessException(errorMessage);
         }
     }
 
