@@ -2,14 +2,11 @@ package server;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import dataAccess.DataAccessException;
 import model.*;
 
 import java.io.*;
 import java.net.*;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ServerFacade {
     private final String serverUrl;
@@ -41,9 +38,9 @@ public class ServerFacade {
         return response.game();
     }
 
-    public GameData makeGame(GameData game, String authToken) throws DataAccessException {
+    public void makeGame(GameData game, String authToken) throws DataAccessException {
         var path = "/game";
-        return this.makeRequest("POST", path, game, GameData.class, authToken);
+        this.makeRequest("POST", path, game, GameData.class, authToken);
     }
 
     public void joinGame(GameData game, String authToken) throws DataAccessException {

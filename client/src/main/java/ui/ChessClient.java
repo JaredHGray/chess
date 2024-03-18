@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 import dataAccess.DataAccessException;
 import model.AuthData;
+import model.GameData;
 import model.UserData;
 import server.ServerFacade;
 
@@ -113,9 +114,19 @@ public class ChessClient {
         out.println("List Games option selected");
     }
 
-    private static void createGame(PrintStream out) {
+    private void createGame(PrintStream out) {
+        Scanner scanner = new Scanner(System.in);
         out.println();
         out.println("Create Game option selected");
+        out.print("Enter game name: ");
+        String gameName = scanner.nextLine();
+        GameData gameInfo = new GameData(0, null, null, gameName, null);
+        try {
+            server.makeGame(gameInfo, authToken);
+            out.println("Game titled: " + gameName + " created successfully");
+        } catch (DataAccessException e) {
+            System.out.println("Game creation failed: " + e.getMessage());
+        }
     }
 
     private void logout(PrintStream out) {
