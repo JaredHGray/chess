@@ -2,11 +2,14 @@ package server;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import dataAccess.DataAccessException;
 import model.*;
 
 import java.io.*;
 import java.net.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ServerFacade {
     private final String serverUrl;
@@ -15,9 +18,9 @@ public class ServerFacade {
         serverUrl = url;
     }
 
-    public void registerUser(UserData user) throws DataAccessException {
+    public AuthData registerUser(UserData user) throws DataAccessException {
         var path = "/user";
-        this.makeRequest("POST", path, user, UserData.class, null);
+        return this.makeRequest("POST", path, user, AuthData.class, null);
     }
 
     public void loginUser(UserData user) throws DataAccessException {

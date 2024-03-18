@@ -2,20 +2,21 @@ package ui;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 import java.util.Scanner;
 
 import dataAccess.DataAccessException;
+import model.AuthData;
 import model.UserData;
 import server.ServerFacade;
 
 public class ChessClient {
 
-    private String visitorName = null;
+    private String registeredUsername = null;
+    private String authToken = null;
     private final ServerFacade server;
-    private final String serverUrl;
 
     public ChessClient(String serverUrl) {
-        this.serverUrl = serverUrl;
         server = new ServerFacade(serverUrl);
     }
 
@@ -162,7 +163,6 @@ public class ChessClient {
         UserData newUser = new UserData(username, password, null);
         try {
             server.loginUser(newUser);
-            // Registration successful
             System.out.println("Login successful");
             loginMenu(out);
             int gameChoice;
@@ -171,12 +171,11 @@ public class ChessClient {
                 executeGameChoice(gameChoice, out);
             } while (gameChoice != 2);
         } catch (DataAccessException e) {
-            // Registration failed
             System.out.println("Login failed: " + e.getMessage());
         }
     }
 
-    public void register(PrintStream out) throws DataAccessException {
+    public void register(PrintStream out) {
         Scanner scanner = new Scanner(System.in);
         out.println();
         out.println("Register menu option selected");
@@ -190,9 +189,10 @@ public class ChessClient {
 
         UserData newUser = new UserData(username, password, email);
         try {
-            server.registerUser(newUser);
-            // Registration successful
+            AuthData response = server.registerUser(newUser);
             System.out.println("Registration successful");
+            registeredUsername = response.username();
+            authToken = response.authToken();
             loginMenu(out);
             int gameChoice;
             do {
@@ -200,7 +200,6 @@ public class ChessClient {
                 executeGameChoice(gameChoice, out);
             } while (gameChoice != 2);
         } catch (DataAccessException e) {
-            // Registration failed
             System.out.println("Registration failed: " + e.getMessage());
         }
     }
