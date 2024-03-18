@@ -121,6 +121,11 @@ public class ChessClient {
     private void logout(PrintStream out) {
         out.println();
         out.println("Logout option selected");
+        try {
+            server.logoutUser(authToken);
+        } catch (DataAccessException e) {
+            System.out.println("Logout failed: " + e.getMessage());
+        }
         registeredUsername = null;
         authToken = null;
     }
