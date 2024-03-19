@@ -27,7 +27,7 @@ public class ServerFacadeTests {
     }
 
     @BeforeEach
-    void clearDatabases() throws DataAccessException {
+    void clearDatabases() throws Exception {
         facade.clearDatabase();
     }
 
@@ -61,6 +61,25 @@ public class ServerFacadeTests {
         UserData user = new UserData("player1", "password", null);
         Assertions.assertThrows(DataAccessException.class, () -> {
             facade.loginUser(user);
+        });
+    }
+
+    @Test
+    void logout() throws Exception {
+        UserData user = new UserData("player1", "password", "p1@email.com");
+        var authData = facade.registerUser(user);
+        facade.logoutUser(authData.authToken());
+        Assertions.assertThrows(DataAccessException.class, () -> {
+            facade.listGames(authData.authToken());
+        });
+    }
+
+    @Test
+    void logoutError() throws Exception {
+        UserData user = new UserData("player1", "password", "p1@email.com");
+        facade.registerUser(user);
+        Assertions.assertThrows(DataAccessException.class, () -> {
+            facade.logoutUser("1234-abc");
         });
     }
 }
