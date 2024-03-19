@@ -39,9 +39,9 @@ public class ServerFacade {
         return response.games();
     }
 
-    public void makeGame(GameData game, String authToken) throws DataAccessException {
+    public GameData makeGame(GameData game, String authToken) throws DataAccessException {
         var path = "/game";
-        this.makeRequest("POST", path, game, GameData.class, authToken);
+        return this.makeRequest("POST", path, game, GameData.class, authToken);
     }
 
     public void joinGame(int gameID, String playerColor, String authToken) throws DataAccessException {

@@ -7,6 +7,8 @@ import org.junit.jupiter.api.*;
 import server.Server;
 import server.ServerFacade;
 
+import java.util.Objects;
+
 
 public class ServerFacadeTests {
 
@@ -109,8 +111,8 @@ public class ServerFacadeTests {
         UserData user = new UserData("player1", "password", "p1@email.com");
         var authData = facade.registerUser(user);
         GameData newGame = new GameData(0, null, null, "TestGame", null);
-        facade.makeGame(newGame, authData.authToken());
-        Assertions.assertNotNull(facade.listGames(authData.authToken()));
+        var game = facade.makeGame(newGame, authData.authToken());
+        Assertions.assertTrue(game.gameID() > 0);
     }
 
     @Test
@@ -120,6 +122,30 @@ public class ServerFacadeTests {
         GameData newGame = new GameData(0, null, null, null, null);
         Assertions.assertThrows(DataAccessException.class, () -> {
             facade.makeGame(newGame, authData.authToken());
+        });
+    }
+
+    @Test
+    void joinGame() throws Exception {
+        UserData user = new UserData("player1", "password", "p1@email.com");
+        var authData = facade.registerUser(user);
+        GameData newGame = new GameData(0, null, null, "TestGame", null);
+        var game = facade.makeGame(newGame, authData.authToken());
+        facade.joinGame(game.gameID(), "WHITE", authData.authToken());
+        for(GameData search: facade.listGames(authData.authToken())){
+            Assertions.assertTrue(search.gameID() == game.gameID() && Objects.equals(search.whiteUsername(), authData.username()));
+        }
+    }
+
+    @Test
+    void joinGameError() throws Exception {
+        UserData user = new UserData("player1", "password", "p1@email.com");
+        var authData = facade.registerUser(user);
+        GameData newGame = new GameData(0, null, null, "TestGame", null);
+        var game = facade.makeGame(newGame, authData.authToken());
+        facade.joinGame(game.gameID(), "WHITE", authData.authToken());
+        Assertions.assertThrows(DataAccessException.class, () -> {
+            facade.joinGame(game.gameID(), "WHITE", authData.authToken());
         });
     }
 }
