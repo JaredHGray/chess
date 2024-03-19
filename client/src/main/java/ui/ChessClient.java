@@ -157,8 +157,10 @@ public class ChessClient {
         out.println("List Games option selected");
         int count = 1;
         getGames();
+        out.printf("%-5s %-20s %-15s %-15s\n", "ID", "Game Name", "White Player", "Black Player");
+        out.println("--------------------------------------------------------");
         for (var game : games) {
-            out.println(count + " " + game.toString());
+            out.printf("%-5d %-20s %-15s %-15s\n", count, game.gameName(), game.whiteUsername(), game.blackUsername());
             count++;
         }
         out.println();
