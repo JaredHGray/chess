@@ -54,7 +54,7 @@ public class ServerFacade {
 
     public void clearDatabase() throws DataAccessException {
         var path = "/db";
-        this.makeRequest("DELETE",path, null, null, null);
+        this.makeRequest("DELETE", path, null, null, null);
     }
 
     private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass, String header) throws DataAccessException {
