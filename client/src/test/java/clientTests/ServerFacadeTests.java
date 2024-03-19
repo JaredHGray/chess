@@ -103,4 +103,23 @@ public class ServerFacadeTests {
             facade.listGames("1234-abc");
         });
     }
+
+    @Test
+    void createGame() throws Exception {
+        UserData user = new UserData("player1", "password", "p1@email.com");
+        var authData = facade.registerUser(user);
+        GameData newGame = new GameData(0, null, null, "TestGame", null);
+        facade.makeGame(newGame, authData.authToken());
+        Assertions.assertNotNull(facade.listGames(authData.authToken()));
+    }
+
+    @Test
+    void createGameError() throws Exception {
+        UserData user = new UserData("player1", "password", "p1@email.com");
+        var authData = facade.registerUser(user);
+        GameData newGame = new GameData(0, null, null, null, null);
+        Assertions.assertThrows(DataAccessException.class, () -> {
+            facade.makeGame(newGame, authData.authToken());
+        });
+    }
 }
