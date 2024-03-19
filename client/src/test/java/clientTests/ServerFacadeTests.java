@@ -1,6 +1,6 @@
 package clientTests;
 
-import dataAccess.DataAccessException;
+import dataAccess.*;
 import model.GameData;
 import model.UserData;
 import org.junit.jupiter.api.*;
@@ -14,6 +14,12 @@ public class ServerFacadeTests {
 
     private static Server server;
     private static ServerFacade facade;
+    private final UserDAO userDAO = new SQLUserDAO();
+    private final GameDAO gameDAO = new SQLGameDAO();
+    private final AuthDAO authDAO = new SQLAuthDAO();
+
+    public ServerFacadeTests() throws DataAccessException {
+    }
 
     @BeforeAll
     public static void init() {
@@ -31,7 +37,9 @@ public class ServerFacadeTests {
 
     @BeforeEach
     void clearDatabases() throws Exception {
-        facade.clearDatabase();
+        userDAO.clearUsers();
+        gameDAO.clearGames();
+        authDAO.clearAuth();
     }
 
     @Test
