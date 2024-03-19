@@ -1,6 +1,7 @@
 package clientTests;
 
 import dataAccess.DataAccessException;
+import model.GameData;
 import model.UserData;
 import org.junit.jupiter.api.*;
 import server.Server;
@@ -80,6 +81,26 @@ public class ServerFacadeTests {
         facade.registerUser(user);
         Assertions.assertThrows(DataAccessException.class, () -> {
             facade.logoutUser("1234-abc");
+        });
+    }
+
+    @Test
+    void listGames() throws Exception {
+        UserData user = new UserData("player1", "password", "p1@email.com");
+        var authData = facade.registerUser(user);
+        GameData newGame = new GameData(0, null, null, "TestGame", null);
+        facade.makeGame(newGame, authData.authToken());
+        Assertions.assertNotNull(facade.listGames(authData.authToken()));
+    }
+
+    @Test
+    void listGamesError() throws Exception {
+        UserData user = new UserData("player1", "password", "p1@email.com");
+        var authData = facade.registerUser(user);
+        GameData newGame = new GameData(0, null, null, "TestGame", null);
+        facade.makeGame(newGame, authData.authToken());
+        Assertions.assertThrows(DataAccessException.class, () -> {
+            facade.listGames("1234-abc");
         });
     }
 }
