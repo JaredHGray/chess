@@ -2,7 +2,6 @@ package ui;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
 import java.util.Scanner;
 
 import dataAccess.DataAccessException;
