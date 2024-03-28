@@ -37,7 +37,6 @@ public class ChessClient {
     }
 
     private static void initialMenu(PrintStream out) {
-        out.println("Enter your selection");
         out.println("1. Help");
         out.println("2. Quit");
         out.println("3. Login");
@@ -65,7 +64,6 @@ public class ChessClient {
     }
 
     private static void loginMenu(PrintStream out){
-        out.println("Enter your selection");
         out.println("1. Help");
         out.println("2. Logout");
         out.println("3. Create Game");
@@ -99,6 +97,42 @@ public class ChessClient {
                 out.println("Invalid choice");
         }
         if(choice != 2){loginMenu(out);}
+    }
+
+    private static void gamePlayMenu(PrintStream out){
+        out.println("1. Help");
+        out.println("2. Redraw Chess Board");
+        out.println("3. Leave");
+        out.println("4. Make Move");
+        out.println("5. Resign");
+        out.println("6. Highlight Legal Choices");
+        out.print("Enter choice: ");
+    }
+
+    private void executeMoveChoice(int choice, PrintStream out) {
+        switch (choice) {
+            case 1:
+                gameHelp(out);
+                break;
+            case 2:
+                drawChessBoard(out);
+                break;
+            case 3:
+                leaveGame(out);
+                break;
+            case 4:
+                makeMove(out);
+                break;
+            case 5:
+                resignGame(out);
+                break;
+            case 6:
+                highlightChoices(out);
+                break;
+            default:
+                out.println("Invalid choice");
+        }
+        if(choice != 3 || choice != 5){gamePlayMenu(out);}
     }
 
     private void observeGame(PrintStream out) {
@@ -146,6 +180,10 @@ public class ChessClient {
             out.println();
             printBoard.run(false);
             out.println(chosenGame.gameName() + " successfully joined");
+            gamePlayMenu(out);
+            gameChoice = scanner.nextInt();
+            scanner.nextLine();
+            executeMoveChoice(gameChoice, out);
         } catch (DataAccessException e) {
             System.out.println("Failure: " + e.getMessage());
         }
