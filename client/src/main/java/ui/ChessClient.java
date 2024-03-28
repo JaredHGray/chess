@@ -252,6 +252,17 @@ public class ChessClient {
         out.println();
     }
 
+    public static void gameHelp(PrintStream out){
+        out.println();
+        out.println("Help menu option selected");
+        out.println("Redraw Chess Board: You are lost and confused, in need of guidance on what to do");
+        out.println("Leave: No longer play your current game of chess");
+        out.println("Make Move: Input a valid move on the chessboard");
+        out.println("Resign: Forfeit the game of chess you are currently playing");
+        out.println("Highlight Legal Moves: Input the location of a chess piece for which you want to highlight its legal moves");
+        out.println();
+    }
+
     public void quit(PrintStream out) {
         out.println();
         out.println("Quit menu option selected");
