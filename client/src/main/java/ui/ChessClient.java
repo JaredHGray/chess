@@ -138,6 +138,9 @@ public class ChessClient {
     private void drawChessBoard(PrintStream out){
         out.println();
         out.println("Redraw Chessboard option selected");
+        printBoard.run(true);
+        out.println();
+        printBoard.run(false);
     }
 
     private void leaveGame(PrintStream out){
