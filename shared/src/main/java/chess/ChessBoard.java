@@ -184,4 +184,8 @@ public class ChessBoard {
         //set previous position to null
         board[startPosition.getRow()-1][startPosition.getColumn()-1] = null;
     }
+
+    public ChessPiece[][] getChessboard(){
+        return board;
+    }
 }
