@@ -135,6 +135,31 @@ public class ChessClient {
         if(choice != 3 || choice != 5){gamePlayMenu(out);}
     }
 
+    private void drawChessBoard(PrintStream out){
+        out.println();
+        out.println("Redraw Chessboard option selected");
+    }
+
+    private void leaveGame(PrintStream out){
+        out.println();
+        out.println("Leave option selected");
+    }
+
+    private void makeMove(PrintStream out){
+        out.println();
+        out.println("Make Move option selected");
+    }
+
+    private void resignGame(PrintStream out){
+        out.println();
+        out.println("Resign option selected");
+    }
+
+    private void highlightChoices(PrintStream out){
+        out.println();
+        out.println("Highlight Legal Moves option selected");
+    }
+
     private void observeGame(PrintStream out) {
         getGames();
         Scanner scanner = new Scanner(System.in);
