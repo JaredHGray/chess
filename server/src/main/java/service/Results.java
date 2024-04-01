@@ -1,6 +1,8 @@
 package service;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import model.GameData;
 
@@ -41,7 +43,9 @@ public class Results {
         gameDataJson.addProperty("whiteUsername", gameData.whiteUsername());
         gameDataJson.addProperty("blackUsername", gameData.blackUsername());
         gameDataJson.addProperty("gameName", gameData.gameName());
-
+        Gson gson = new Gson();
+        JsonElement gameElement = gson.toJsonTree(gameData.game());
+        gameDataJson.add("game", gameElement);
         return gameDataJson;
     }
 

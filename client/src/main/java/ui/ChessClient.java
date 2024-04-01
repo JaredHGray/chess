@@ -134,15 +134,15 @@ public class ChessClient {
             default:
                 out.println("Invalid choice");
         }
-        if(choice != 3 || choice != 5){gamePlayMenu(out);}
+        if(choice != 3 && choice != 5){gamePlayMenu(out);}
     }
 
     private void drawChessBoard(PrintStream out){
         out.println();
         out.println("Redraw Chessboard option selected");
-        printBoard.run(true);
-        out.println();
-        printBoard.run(false);
+//        printBoard.run(true);
+//        out.println();
+//        printBoard.run(false);
     }
 
     private void leaveGame(PrintStream out){
@@ -180,9 +180,9 @@ public class ChessClient {
         GameData chosenGame = games[gameChoice-1];
         try{
             server.joinGame(chosenGame.gameID(), null, authToken);
-            printBoard.run(true);
-            out.println();
-            printBoard.run(false);
+//            printBoard.run(true);
+//            out.println();
+//            printBoard.run(false);
             out.println(chosenGame.gameName() + " successfully joined as an observer");
         } catch (DataAccessException e) {
             System.out.println("Failure: " + e.getMessage());
@@ -206,9 +206,9 @@ public class ChessClient {
         GameData chosenGame = games[gameChoice-1];
         try{
             server.joinGame(chosenGame.gameID(), pieceColor.toUpperCase(), authToken);
-            printBoard.run(true);
+            printBoard.run(true, chosenGame.game().getBoard());
             out.println();
-            printBoard.run(false);
+            printBoard.run(false, chosenGame.game().getBoard());
             out.println(chosenGame.gameName() + " successfully joined");
             gamePlayMenu(out);
             gameChoice = scanner.nextInt();
@@ -246,7 +246,7 @@ public class ChessClient {
         } catch (DataAccessException e) {
             System.out.println("Game creation failed: " + e.getMessage());
         }
-    } //create chessboard on the server-side, not the client side
+    }
 
     private void logout(PrintStream out) {
         out.println();
