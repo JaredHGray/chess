@@ -1,4 +1,5 @@
 package service;
+import chess.ChessGame;
 import dataAccess.AuthDAO;
 import dataAccess.DataAccessException;
 import dataAccess.UserDAO;
@@ -14,6 +15,8 @@ public class GameService {
     private final AuthDAO authDAO;
     Map<Integer, List<String>> gameObservers;
 
+    ChessGame chessBoard;
+
     public GameService(GameDAO gameDAO, AuthDAO authDAO){
         this.gameDAO = gameDAO;
         this.authDAO = authDAO;
@@ -27,7 +30,10 @@ public class GameService {
         if(newGame.gameName() == null || newGame.gameName().isEmpty() || authID == null || authID.isEmpty()){
             ResponseHelper.badRequest(result);
         } else if(username != null){
-            gameDAO.createGame(newGame, gameID);
+            chessBoard = new ChessGame();
+            chessBoard.getBoard().resetBoard();
+            GameData gameInfo = new GameData(gameID, newGame.blackUsername(), newGame.blackUsername(), newGame.gameName(), chessBoard);
+            gameDAO.createGame(gameInfo, gameID);
             result.put("gameID", gameID);
             Results successResult = new Results(result);
             result.put("code", 200);

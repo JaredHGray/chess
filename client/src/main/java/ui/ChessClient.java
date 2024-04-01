@@ -4,11 +4,13 @@ import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
+import chess.ChessGame;
 import dataAccess.DataAccessException;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
 import server.ServerFacade;
+//import chess.ChessBoard;
 
 public class ChessClient {
 
@@ -236,15 +238,15 @@ public class ChessClient {
         out.println();
         out.println("Create Game option selected");
         out.print("Enter game name: ");
-        String gameName = scanner.nextLine();
-        GameData gameInfo = new GameData(0, null, null, gameName, null);
         try {
+            String gameName = scanner.nextLine();
+            GameData gameInfo = new GameData(0, null, null, gameName, null);
             server.makeGame(gameInfo, authToken);
             out.println("Game titled: " + gameName + " created successfully");
         } catch (DataAccessException e) {
             System.out.println("Game creation failed: " + e.getMessage());
         }
-    }
+    } //create chessboard on the server-side, not the client side
 
     private void logout(PrintStream out) {
         out.println();
