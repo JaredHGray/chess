@@ -76,6 +76,7 @@ public class GameService {
                     ResponseHelper.takenError(result);
                 } else{
                     gameDAO.joinGame(gameID, user, playerColor);
+                    result.put("user", user);
                     ResponseHelper.successResult(result);
                 }
             }

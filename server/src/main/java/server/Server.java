@@ -1,12 +1,15 @@
 package server;
 
 import com.google.gson.JsonObject;
+import server.websockets.WebSocketHandler;
 import spark.*;
 import com.google.gson.Gson;
 import service.UserService;
 import service.GameService;
 import dataAccess.*;
 import model.*;
+
+import java.util.Map;
 
 public class Server {
 
@@ -15,6 +18,7 @@ public class Server {
     private final UserDAO userDAO;
     private final AuthDAO authDAO;
     private final GameDAO gameDAO;
+    private final WebSocketHandler webSocketHandler;
 
     public Server() {
         try{
@@ -26,13 +30,14 @@ public class Server {
         }
         this.userService = new UserService(userDAO, authDAO);
         this.gameService = new GameService(gameDAO, authDAO);
+        webSocketHandler = new WebSocketHandler();
     }
 
 
     public int run(int desiredPort) {
         Spark.port(desiredPort);
         Spark.staticFiles.location("web");
-
+        Spark.webSocket("/connect", webSocketHandler);
         // Register endpoints and handle exceptions here.
         createRoutes();
         Spark.awaitInitialization();
@@ -89,13 +94,13 @@ public class Server {
         var joinGame = new Gson().fromJson(req.body(), JsonObject.class);
         String authToken = req.headers("authorization");
         String playerColor = null;
-
         if (joinGame.has("playerColor")) { // Check if playerColor exists in the request
             playerColor = joinGame.getAsJsonPrimitive("playerColor").getAsString();
         }
         int gameID = joinGame.getAsJsonPrimitive("gameID").getAsInt();
         var findGame = gameService.joinGame(gameID, playerColor, authToken);
         res.status((Integer) findGame.get("code"));
+        webSocketHandler.joinGameMessage((String) findGame.get("user"), playerColor, authToken, gameID);
         return new Gson().toJson((JsonObject) findGame.get("data"));
     }
 
