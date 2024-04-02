@@ -211,9 +211,10 @@ public class ChessClient {
             printBoard.run(false, chosenGame.game().getBoard());
             out.println(chosenGame.gameName() + " successfully joined");
             gamePlayMenu(out);
-            gameChoice = scanner.nextInt();
-            scanner.nextLine();
-            executeMoveChoice(gameChoice, out);
+            do{
+                gameChoice = scanner.nextInt();
+                executeMoveChoice(gameChoice, out);
+            } while (gameChoice != 3 && gameChoice != 5);
         } catch (DataAccessException e) {
             System.out.println("Failure: " + e.getMessage());
         }
