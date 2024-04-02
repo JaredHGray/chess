@@ -21,6 +21,8 @@ public class ChessClient {
     private final ServerFacade server;
     ChessBoard printBoard = new ChessBoard();
 
+    private GameData chosenGame;
+
     public ChessClient(String serverUrl) {
         server = new ServerFacade(serverUrl);
     }
@@ -140,9 +142,9 @@ public class ChessClient {
     private void drawChessBoard(PrintStream out){
         out.println();
         out.println("Redraw Chessboard option selected");
-//        printBoard.run(true);
-//        out.println();
-//        printBoard.run(false);
+        printBoard.run(true, chosenGame.game().getBoard());
+        out.println();
+        printBoard.run(false, chosenGame.game().getBoard());
     }
 
     private void leaveGame(PrintStream out){
@@ -177,7 +179,7 @@ public class ChessClient {
             out.println("Invalid game number.");
             return;
         }
-        GameData chosenGame = games[gameChoice-1];
+        chosenGame = games[gameChoice-1];
         try{
             server.joinGame(chosenGame.gameID(), null, authToken);
             printBoard.run(true, chosenGame.game().getBoard());
@@ -203,7 +205,7 @@ public class ChessClient {
         }
         out.print("Enter desired piece color: ");
         String pieceColor = scanner.nextLine();
-        GameData chosenGame = games[gameChoice-1];
+        chosenGame = games[gameChoice-1];
         try{
             server.joinGame(chosenGame.gameID(), pieceColor.toUpperCase(), authToken);
             printBoard.run(true, chosenGame.game().getBoard());
