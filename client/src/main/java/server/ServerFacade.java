@@ -50,6 +50,7 @@ public class ServerFacade {
         requestBody.put("gameID", gameID);
         requestBody.put("playerColor", playerColor);
         this.makeRequest("PUT", path, requestBody, GameData.class, authToken);
+       // webSocketHandler.joinGameMessage((String) findGame.get("user"), playerColor, authToken, gameID); //communicator sends message to handler over internet
     }
 
 

@@ -1,6 +1,7 @@
 package webSocketMessages.userCommands;
 
 import chess.ChessGame;
+import com.google.gson.Gson;
 
 public class joinPlayerCommand extends UserGameCommand {
     private int gameID;
@@ -11,5 +12,9 @@ public class joinPlayerCommand extends UserGameCommand {
         this.gameID = gameID;
         this.playerColor = playerColor;
         commandType = CommandType.JOIN_PLAYER;
+    }
+
+    public String toString() {
+        return new Gson().toJson(this);
     }
 }

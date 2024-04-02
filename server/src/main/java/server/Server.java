@@ -100,7 +100,7 @@ public class Server {
         int gameID = joinGame.getAsJsonPrimitive("gameID").getAsInt();
         var findGame = gameService.joinGame(gameID, playerColor, authToken);
         res.status((Integer) findGame.get("code"));
-        webSocketHandler.joinGameMessage((String) findGame.get("user"), playerColor, authToken, gameID);
+        //webSocketHandler.joinGameMessage((String) findGame.get("user"), playerColor, authToken, gameID);
         return new Gson().toJson((JsonObject) findGame.get("data"));
     }
 
