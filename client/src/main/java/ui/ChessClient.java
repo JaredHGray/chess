@@ -180,9 +180,9 @@ public class ChessClient {
         GameData chosenGame = games[gameChoice-1];
         try{
             server.joinGame(chosenGame.gameID(), null, authToken);
-//            printBoard.run(true);
-//            out.println();
-//            printBoard.run(false);
+            printBoard.run(true, chosenGame.game().getBoard());
+            out.println();
+            printBoard.run(false, chosenGame.game().getBoard());
             out.println(chosenGame.gameName() + " successfully joined as an observer");
         } catch (DataAccessException e) {
             System.out.println("Failure: " + e.getMessage());
