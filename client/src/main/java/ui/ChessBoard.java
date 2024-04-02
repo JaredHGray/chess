@@ -1,10 +1,13 @@
 package ui;
+import chess.ChessGame;
 import chess.ChessPiece;
 import chess.ChessPosition;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
+
+import static chess.ChessPiece.PieceType.*;
 
 public class ChessBoard {
     private static final int BOARD_SIZE_IN_SQUARES = 8;
@@ -83,8 +86,8 @@ public class ChessBoard {
                 if(chessboard.getBoard()[rowNumber][boardCol] == null){
                     currentPiece = EMPTY;
                 } else {
-                    ChessPosition position = new ChessPosition(rowNumber, boardCol);
-                    currentPiece = chessboard.getPiece(position).toString();
+                    ChessPosition position = new ChessPosition(rowNumber+1, boardCol+1);
+                    currentPiece = discoverPiece(chessboard.getPiece(position).getPieceType(), chessboard.getPiece(position).getTeamColor());
                 }
                 printStarterBoard(out, currentPiece, rowNumber);
                 resetBackground(out);
@@ -136,5 +139,29 @@ public class ChessBoard {
         }
         out.print(player);
         setWhite(out);
+    }
+
+    private static String discoverPiece(ChessPiece.PieceType type, ChessGame.TeamColor color){
+        String piece = "";
+        if(color == ChessGame.TeamColor.WHITE){
+            piece = switch (type) {
+                case ROOK -> EscapeSequences.WHITE_ROOK;
+                case KNIGHT -> EscapeSequences.WHITE_KNIGHT;
+                case BISHOP -> EscapeSequences.WHITE_BISHOP;
+                case QUEEN -> EscapeSequences.WHITE_QUEEN;
+                case KING -> EscapeSequences.WHITE_KING;
+                case PAWN -> EscapeSequences.WHITE_PAWN;
+            };
+        } else{
+            piece = switch (type) {
+                case ROOK -> EscapeSequences.BLACK_ROOK;
+                case KNIGHT -> EscapeSequences.BLACK_KNIGHT;
+                case BISHOP -> EscapeSequences.BLACK_BISHOP;
+                case QUEEN -> EscapeSequences.BLACK_QUEEN;
+                case KING -> EscapeSequences.BLACK_KING;
+                case PAWN -> EscapeSequences.BLACK_PAWN;
+            };
+        }
+    return piece;
     }
 }
