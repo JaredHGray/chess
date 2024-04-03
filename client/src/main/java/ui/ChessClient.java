@@ -15,6 +15,8 @@ import webSocketMessages.serverMessages.LoadGameMessage;
 import webSocketMessages.serverMessages.notificationMessage;
 import websocket.NotificationHandler;
 import websocket.WebSocketFacade;
+
+import static java.lang.System.out;
 //import chess.ChessBoard;
 
 public class ChessClient {
@@ -29,8 +31,8 @@ public class ChessClient {
 
     private GameData chosenGame;
     private final NotificationHandler notificationHandler = notification->{
-        System.out.println("yellow");
-        System.out.println(notification);
+        out.println("yellow");
+        out.println(notification);
     };
     private WebSocketFacade ws;
 
@@ -379,7 +381,7 @@ public class ChessClient {
         try {
             games = server.listGames(authToken);
         } catch (DataAccessException e) {
-            System.out.println("Failure: " + e.getMessage());
+            out.println("Failure: " + e.getMessage());
         }
     }
 
@@ -393,20 +395,33 @@ public class ChessClient {
         }
     }
 
-    private static class ServerMessageHandler implements WebSocketFacade.ServerMessageListener {
+    private class ServerMessageHandler implements WebSocketFacade.ServerMessageListener {
         @Override
         public void onLoadGame(LoadGameMessage message) {
-            System.out.println("LOAD_GAME: " + message.getGame());
+            out.println("LOAD_GAME: " + message.getGame());
         }
 
         @Override
         public void onNotification(notificationMessage message) {
-            System.out.println("NOTIFICATION: " + message.getMessage());
+            Scanner scanner = new Scanner(System.in);
+            out.print(EscapeSequences.SET_TEXT_COLOR_BLUE);
+            out.println("NOTIFICATION: " + message.getMessage());
+            out.print(EscapeSequences.RESET_TEXT_COLOR);
+            out.println();
+            out.print("Enter choice: ");
+            int gameChoice = scanner.nextInt();
+            executeMoveChoice(gameChoice, out);
         }
 
         @Override
         public void onError(ErrorMessage message) {
-            System.out.println("ERROR: " + message.getErrorMessage());
+            Scanner scanner = new Scanner(System.in);
+            out.print(EscapeSequences.SET_TEXT_COLOR_RED);
+            out.println("ERROR: " + message.getErrorMessage());
+            out.print(EscapeSequences.RESET_TEXT_COLOR);
+            out.print("Enter choice: ");
+            int gameChoice = scanner.nextInt();
+            executeMoveChoice(gameChoice, out);
         }
     }
 }

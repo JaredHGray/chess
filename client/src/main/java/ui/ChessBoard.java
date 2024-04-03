@@ -71,7 +71,6 @@ public class ChessBoard {
             resetBackground(out);
             out.println();
         }
-
         colHeaders(out, whitePerspective);
     }
 
