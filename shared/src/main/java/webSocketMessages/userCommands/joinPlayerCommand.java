@@ -14,6 +14,18 @@ public class joinPlayerCommand extends UserGameCommand {
         commandType = CommandType.JOIN_PLAYER;
     }
 
+    public String getAuthToken(){
+        return getAuthString();
+    }
+
+    public ChessGame.TeamColor getPlayerColor(){
+        return playerColor;
+    }
+
+    public int getGameID(){
+        return gameID;
+    }
+
     public String toString() {
         return new Gson().toJson(this);
     }
