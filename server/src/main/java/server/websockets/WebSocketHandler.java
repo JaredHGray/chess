@@ -11,6 +11,7 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import spark.Spark;
 import webSocketMessages.serverMessages.ErrorMessage;
+import webSocketMessages.serverMessages.LoadGameMessage;
 import webSocketMessages.serverMessages.ServerMessage;
 import webSocketMessages.userCommands.*;
 
@@ -50,9 +51,13 @@ public class WebSocketHandler {
 
     private void handleUserCommand(Session session, UserGameCommand command) {
         // Validate command and process accordingly
-        // For simplicity, assume command is valid and send a dummy server message
-        ServerMessage serverMessage = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME);
-        sendServerMessage(session, serverMessage);
+        // For simplicity, assume command is valid and send a dummy load game message
+        LoadGameMessage loadGameMessage = new LoadGameMessage();
+
+        // Set the ChessGame object in the LoadGameMessage instance
+        // loadGameMessage.setGame(chessGame);
+
+        sendServerMessage(session, loadGameMessage);
     }
 
     private void sendServerMessage(Session session, ServerMessage message) {
