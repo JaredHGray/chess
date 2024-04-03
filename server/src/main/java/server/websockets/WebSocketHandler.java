@@ -13,17 +13,18 @@ import java.io.IOException;
 import java.util.Timer;
 @WebSocket
 public class WebSocketHandler {
+    //onMessage function is used for everything then reroute to everything else
     private final ConnectionManager connections = new ConnectionManager();
 
     public void joinGameMessage(String playerName, String playerColor, String auth, int gameID){
         ChessGame.TeamColor color = teamColor(playerColor);
-        try {
+       // try {
             var message = String.format("%s joined the game as the %s player", playerName, playerColor);
             var notification = new joinPlayerCommand(auth, gameID, color);
-            connections.broadcast("", notification);
-        } catch (Exception ex) {
-            throw new ResponseException(500, ex.getMessage());
-        }
+         //   connections.broadcast("", notification);
+//        } catch (Exception ex) {
+//            throw new DataAccessException(ex.getMessage());
+//        }
     }
 
     private ChessGame.TeamColor teamColor(String playerColor){

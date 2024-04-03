@@ -10,3 +10,5 @@ public class Main {
         new ChessClient(serverUrl).run();
     }
 }
+
+//use a lamda for notificationHandler - define a method and pass in a notificationHandler

@@ -10,20 +10,29 @@ import model.AuthData;
 import model.GameData;
 import model.UserData;
 import server.ServerFacade;
+import websocket.NotificationHandler;
+import websocket.WebSocketFacade;
 //import chess.ChessBoard;
 
 public class ChessClient {
 
     private String registeredUsername = null;
     private String authToken = null;
+    private final String serverUrl;
 
     private GameData[] games = null;
     private final ServerFacade server;
     ChessBoard printBoard = new ChessBoard();
 
     private GameData chosenGame;
+    private final NotificationHandler notificationHandler = notification->{
+        System.out.println("yellow");
+        System.out.println(notification);
+    };
+    private WebSocketFacade ws;
 
     public ChessClient(String serverUrl) {
+        this.serverUrl = serverUrl;
         server = new ServerFacade(serverUrl);
     }
 
@@ -321,6 +330,7 @@ public class ChessClient {
             authToken = response.authToken();
             loginMenu(out);
             int gameChoice;
+            ws = new WebSocketFacade(serverUrl, notificationHandler);
             do {
                 gameChoice = scanner.nextInt();
                 executeGameChoice(gameChoice, out);
@@ -350,6 +360,7 @@ public class ChessClient {
             authToken = response.authToken();
             loginMenu(out);
             int gameChoice;
+            ws = new WebSocketFacade(serverUrl, notificationHandler);
             do {
                 gameChoice = scanner.nextInt();
                 executeGameChoice(gameChoice, out);
