@@ -29,7 +29,7 @@ public class WebSocketHandler {
     private GameDAO gameDAO;
 
     @OnWebSocketMessage
-    public void onMessage(String message, Session session) throws DataAccessException {
+    public void onMessage(Session session, String message) throws DataAccessException {
         UserGameCommand action = new Gson().fromJson(message, UserGameCommand.class);
         this.session = session;
         switch (action.getCommandType()){
@@ -64,6 +64,7 @@ public class WebSocketHandler {
 
     private void broadcast(String message) {
         for (Session sessionCheck : connections.values()) {
+            //if(sessionCheck)
             sendMessage(sessionCheck, message);
         }
     }
