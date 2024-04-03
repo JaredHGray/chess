@@ -224,8 +224,8 @@ public class ChessClient {
             out.println();
             printBoard.run(false, chosenGame.game().getBoard());
             out.println(chosenGame.gameName() + " successfully joined");
-            gamePlayMenu(out);
             ws.joinPlayerSocket(chosenGame.gameID(), teamColor(pieceColor), authToken);
+            gamePlayMenu(out);
             do{
                 gameChoice = scanner.nextInt();
                 executeMoveChoice(gameChoice, out);
@@ -396,17 +396,17 @@ public class ChessClient {
     private static class ServerMessageHandler implements WebSocketFacade.ServerMessageListener {
         @Override
         public void onLoadGame(LoadGameMessage message) {
-            System.out.println("Received LOAD_GAME message: " + message);
+            System.out.println("LOAD_GAME: " + message.getGame());
         }
 
         @Override
         public void onNotification(notificationMessage message) {
-            System.out.println("Received NOTIFICATION message: " + message);
+            System.out.println("NOTIFICATION: " + message.getMessage());
         }
 
         @Override
         public void onError(ErrorMessage message) {
-            System.out.println("Received ERROR message: " + message);
+            System.out.println("ERROR: " + message.getErrorMessage());
         }
     }
 }

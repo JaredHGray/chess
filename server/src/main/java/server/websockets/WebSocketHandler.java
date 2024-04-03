@@ -1,6 +1,7 @@
 package server.websockets;
 import chess.ChessGame;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import dataAccess.*;
 import model.GameData;
 import org.eclipse.jetty.websocket.api.RemoteEndpoint;
@@ -10,6 +11,7 @@ import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import webSocketMessages.serverMessages.ErrorMessage;
 import webSocketMessages.serverMessages.LoadGameMessage;
 import webSocketMessages.serverMessages.ServerMessage;
+import webSocketMessages.serverMessages.notificationMessage;
 import webSocketMessages.userCommands.*;
 
 
@@ -57,7 +59,7 @@ public class WebSocketHandler {
                 if((playerColor == ChessGame.TeamColor.WHITE && Objects.equals(gameData.whiteUsername(), user)) || (playerColor == ChessGame.TeamColor.BLACK && Objects.equals(gameData.blackUsername(), user))){
                     connections.put(user, session);
                     var message = String.format("%s joined the game as the %s player", user, playerColor);
-                    broadcast(message);
+                    broadcast(message, ServerMessage.ServerMessageType.NOTIFICATION);
                 }else{
                     sendErrorMessage("Username does not match username associated with game");
                 }
@@ -69,21 +71,28 @@ public class WebSocketHandler {
         }
     }
 
-    private void broadcast(String message) {
+    private void broadcast(String message, ServerMessage.ServerMessageType messageType) {
         for (Session sessionCheck : connections.values()) {
-            //if(sessionCheck)
-            sendMessage(sessionCheck, message);
+            if(sessionCheck == session){
+                sendMessage(sessionCheck, message, messageType);
+            }
         }
     }
 
     private void sendErrorMessage(String errorMessage) {
         ServerMessage error = new ErrorMessage(errorMessage);
-        sendMessage(session, new Gson().toJson(error));
+        sendMessage(session, new Gson().toJson(error), ServerMessage.ServerMessageType.ERROR);
     }
 
-    private void sendMessage(Session session, String message) {
+    private void sendMessage(Session session, String message, ServerMessage.ServerMessageType messageType) {
         try {
-            session.getRemote().sendString(message);
+            notificationMessage notificationMessage = new notificationMessage(message);
+//            JsonObject jsonMessage = new JsonObject();
+//            jsonMessage.addProperty("type", messageType.toString());
+//            jsonMessage.addProperty("content", message);
+//            session.getRemote().sendString(jsonMessage.toString());
+              String notification = new Gson().toJson(notificationMessage);
+              session.getRemote().sendString(notification);
         } catch (IOException e) {
             e.printStackTrace();
         }

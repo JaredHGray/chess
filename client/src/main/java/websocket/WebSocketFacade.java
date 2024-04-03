@@ -1,6 +1,7 @@
 package websocket;
 import chess.ChessGame;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import dataAccess.DataAccessException;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
@@ -39,7 +40,9 @@ public class WebSocketFacade extends Endpoint {
     private void handleMessage(String message) {
         try {
             ServerMessage serverMessage = new Gson().fromJson(message, ServerMessage.class);
-
+//            JsonObject jsonMessage = new Gson().fromJson(message, JsonObject.class);
+//            String messageType = jsonMessage.get("type").getAsString();
+//            String content = jsonMessage.get("content").getAsString();
             switch (serverMessage.getServerMessageType()) {
                 case LOAD_GAME:
                     LoadGameMessage loadGameMessage = new Gson().fromJson(message, LoadGameMessage.class);
