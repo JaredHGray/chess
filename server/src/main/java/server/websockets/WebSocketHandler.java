@@ -1,9 +1,7 @@
 package server.websockets;
 import chess.ChessGame;
 import com.google.gson.Gson;
-import dataAccess.AuthDAO;
-import dataAccess.DataAccessException;
-import dataAccess.GameDAO;
+import dataAccess.*;
 import model.GameData;
 import org.eclipse.jetty.websocket.api.RemoteEndpoint;
 import org.eclipse.jetty.websocket.api.Session;
@@ -27,6 +25,15 @@ public class WebSocketHandler {
 
     private AuthDAO authDAO;
     private GameDAO gameDAO;
+
+    public WebSocketHandler(){
+        try{
+            authDAO = new SQLAuthDAO();
+            gameDAO = new SQLGameDAO();
+        }catch (Exception e){
+            throw new RuntimeException(e);
+        }
+    }
 
     @OnWebSocketMessage
     public void onMessage(Session session, String message) throws DataAccessException {
