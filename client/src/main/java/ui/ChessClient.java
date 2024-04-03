@@ -10,6 +10,9 @@ import model.AuthData;
 import model.GameData;
 import model.UserData;
 import server.ServerFacade;
+import webSocketMessages.serverMessages.ErrorMessage;
+import webSocketMessages.serverMessages.LoadGameMessage;
+import webSocketMessages.serverMessages.notificationMessage;
 import websocket.NotificationHandler;
 import websocket.WebSocketFacade;
 //import chess.ChessBoard;
@@ -222,6 +225,7 @@ public class ChessClient {
             printBoard.run(false, chosenGame.game().getBoard());
             out.println(chosenGame.gameName() + " successfully joined");
             gamePlayMenu(out);
+            ws.joinPlayerSocket(chosenGame.gameID(), teamColor(pieceColor), authToken);
             do{
                 gameChoice = scanner.nextInt();
                 executeMoveChoice(gameChoice, out);
@@ -330,7 +334,8 @@ public class ChessClient {
             authToken = response.authToken();
             loginMenu(out);
             int gameChoice;
-            ws = new WebSocketFacade(serverUrl, notificationHandler);
+            ws = new WebSocketFacade(serverUrl);
+            ws.setMessageListener(new ServerMessageHandler());
             do {
                 gameChoice = scanner.nextInt();
                 executeGameChoice(gameChoice, out);
@@ -360,7 +365,7 @@ public class ChessClient {
             authToken = response.authToken();
             loginMenu(out);
             int gameChoice;
-            ws = new WebSocketFacade(serverUrl, notificationHandler);
+            ws = new WebSocketFacade(serverUrl);
             do {
                 gameChoice = scanner.nextInt();
                 executeGameChoice(gameChoice, out);
@@ -375,6 +380,33 @@ public class ChessClient {
             games = server.listGames(authToken);
         } catch (DataAccessException e) {
             System.out.println("Failure: " + e.getMessage());
+        }
+    }
+
+    private ChessGame.TeamColor teamColor(String playerColor){
+        if(playerColor.equalsIgnoreCase("white")){
+            return ChessGame.TeamColor.WHITE;
+        }else if(playerColor.equalsIgnoreCase("black")){
+            return ChessGame.TeamColor.BLACK;
+        }else{
+            return null;
+        }
+    }
+
+    private static class ServerMessageHandler implements WebSocketFacade.ServerMessageListener {
+        @Override
+        public void onLoadGame(LoadGameMessage message) {
+            System.out.println("Received LOAD_GAME message: " + message);
+        }
+
+        @Override
+        public void onNotification(notificationMessage message) {
+            System.out.println("Received NOTIFICATION message: " + message);
+        }
+
+        @Override
+        public void onError(ErrorMessage message) {
+            System.out.println("Received ERROR message: " + message);
         }
     }
 }
