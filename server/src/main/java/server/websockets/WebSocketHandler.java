@@ -60,7 +60,7 @@ public class WebSocketHandler {
         int gameID = action.getGameID();
         String authToken = action.getAuthToken();
         String user = authDAO.getAuth(authToken);
-        if(!user.isEmpty()){
+        if(user != null && !user.isEmpty()){
             GameData gameData = gameDAO.findGame(gameID);
             if(gameData != null){
                 if((playerColor == ChessGame.TeamColor.WHITE && Objects.equals(gameData.whiteUsername(), user)) || (playerColor == ChessGame.TeamColor.BLACK && Objects.equals(gameData.blackUsername(), user))){
