@@ -61,7 +61,7 @@ public class WebSocketHandler {
                 if((playerColor == ChessGame.TeamColor.WHITE && Objects.equals(gameData.whiteUsername(), user)) || (playerColor == ChessGame.TeamColor.BLACK && Objects.equals(gameData.blackUsername(), user))){
                     connections.put(authToken, session);
                     LoadGameMessage loadGameMessage = new LoadGameMessage(gameData.game());
-                    sendMessage(new Gson().toJson(loadGameMessage));
+                    sendMessage(new Gson().toJson(loadGameMessage), session);
                     var message = String.format("%s joined the game as the %s player", user, playerColor);
                     broadcast(message);
                 }else{
@@ -84,7 +84,7 @@ public class WebSocketHandler {
             if(gameData != null){
                     connections.put(authToken, session);
                     LoadGameMessage loadGameMessage = new LoadGameMessage(gameData.game());
-                    sendMessage(new Gson().toJson(loadGameMessage));
+                    sendMessage(new Gson().toJson(loadGameMessage), session);
                     var message = String.format("%s joined the game as an observer", user);
                     broadcast(message);
 
@@ -101,19 +101,19 @@ public class WebSocketHandler {
             if(!session.equals(sessionCheck)){
                 notificationMessage notificationMessage = new notificationMessage(message);
                 String notification = new Gson().toJson(notificationMessage);
-                sendMessage(notification);
+                sendMessage(notification, sessionCheck);
             }
         }
     }
 
     private void sendErrorMessage(String errorMessage) {
         ServerMessage error = new ErrorMessage(errorMessage);
-        sendMessage(new Gson().toJson(error));
+        sendMessage(new Gson().toJson(error), session);
     }
 
-    private void sendMessage(String message) {
+    private void sendMessage(String message, Session sendSession) {
         try {
-              session.getRemote().sendString(message);
+              sendSession.getRemote().sendString(message);
         } catch (IOException e) {
             e.printStackTrace();
         }
