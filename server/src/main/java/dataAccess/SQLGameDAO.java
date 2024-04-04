@@ -111,6 +111,34 @@ public class SQLGameDAO implements GameDAO{
         return false;
     }
 
+    public boolean updateGame(int gameID, ChessGame game) throws DataAccessException {
+        if(findGame(gameID) != null){
+            var insertStatement = "SELECT gameID FROM game WHERE gameID=?";
+            try (var conn = DatabaseManager.getConnection();
+                 var preparedStatement = conn.prepareStatement(insertStatement)) {
+                preparedStatement.setInt(1, gameID);
+                try (var rs = preparedStatement.executeQuery()) {
+                    if (rs.next()) {
+                        if (game != null) {
+                            var updateStatement = String.format("UPDATE game SET %s=? WHERE gameID=?", "game");
+                            try (var updatePreparedStatement = conn.prepareStatement(updateStatement)) {
+                                Gson gson = new Gson();
+                                String gameJson = gson.toJson(game);
+                                updatePreparedStatement.setString(1, gameJson);
+                                updatePreparedStatement.setInt(2, gameID);
+                                updatePreparedStatement.executeUpdate();
+                                return true;
+                            }
+                        }
+                    }
+                }
+            } catch (SQLException ex) {
+                throw new DataAccessException(String.format("Unable to read data: %s", ex.getMessage()));
+            }
+        }
+        return false;
+    }
+
     public void clearGames() throws DataAccessException {
         var insertStatement = "DELETE FROM game";
         try (var conn = DatabaseManager.getConnection();
