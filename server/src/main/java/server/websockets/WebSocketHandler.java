@@ -163,12 +163,11 @@ public class WebSocketHandler {
 
     private void loadBroadcast(int gameID, ChessGame game){
         List<String> tokens = gameUsersMap.get(gameID);
-        for(String storedAuth : tokens) {
-            for (String sessionAuth : connections.keySet()) {
-                if (storedAuth.equals(sessionAuth)) {
-                    LoadGameMessage loadGameMessage = new LoadGameMessage(game);
-                    sendMessage(new Gson().toJson(loadGameMessage), session);
-                }
+        for (String storedAuth : tokens) {
+            if (connections.containsKey(storedAuth)) {
+                Session session = connections.get(storedAuth);
+                LoadGameMessage loadGameMessage = new LoadGameMessage(game);
+                sendMessage(new Gson().toJson(loadGameMessage), session);
             }
         }
     }

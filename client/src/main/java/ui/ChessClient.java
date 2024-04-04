@@ -175,9 +175,9 @@ public class ChessClient {
         Scanner scanner = new Scanner(System.in);
         out.println();
         out.println("Make Move option selected");
-        out.println("Enter coordinates of piece to move(ex: 'a2'):");
+        out.print("Enter coordinates of piece to move(ex: 'a2'):");
         String piece = scanner.nextLine();
-        out.println("Enter coordinates of destination(ex: 'c4'):");
+        out.print("Enter coordinates of destination(ex: 'c4'):");
         String dest = scanner.nextLine();
         ChessPosition startPosition = getPosition(piece);
         ChessPosition endPosition = getPosition(dest);
@@ -418,8 +418,8 @@ public class ChessClient {
     private ChessPosition getPosition(String position){
         String letters = "abcdefgh";
         char fileChar = position.charAt(0);
-        int row = letters.indexOf(fileChar) + 1;
-        int col = Integer.parseInt(position.substring(1));
+        int col = letters.indexOf(fileChar) + 1;
+        int row = Integer.parseInt(position.substring(1));
         return new ChessPosition(row, col);
     }
 
