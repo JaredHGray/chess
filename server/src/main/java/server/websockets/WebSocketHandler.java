@@ -16,13 +16,16 @@ import webSocketMessages.userCommands.*;
 
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @WebSocket
 public class WebSocketHandler {
     //onMessage function is used for everything then reroute to everything else
     public final ConcurrentHashMap<String, Session> connections = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Integer, List<String>> gameUsersMap = new ConcurrentHashMap<>();
     private Session session;
 
     private AuthDAO authDAO;
@@ -60,10 +63,11 @@ public class WebSocketHandler {
             if(gameData != null){
                 if((playerColor == ChessGame.TeamColor.WHITE && Objects.equals(gameData.whiteUsername(), user)) || (playerColor == ChessGame.TeamColor.BLACK && Objects.equals(gameData.blackUsername(), user))){
                     connections.put(authToken, session);
+                    gameUsersMap.computeIfAbsent(gameID, k -> new CopyOnWriteArrayList<>()).add(authToken);
                     LoadGameMessage loadGameMessage = new LoadGameMessage(gameData.game());
                     sendMessage(new Gson().toJson(loadGameMessage), session);
                     var message = String.format("%s joined the game as the %s player", user, playerColor);
-                    broadcast(message);
+                    broadcast(message, gameID, authToken);
                 }else{
                     sendErrorMessage("Username does not match username associated with game");
                 }
@@ -83,11 +87,11 @@ public class WebSocketHandler {
             GameData gameData = gameDAO.findGame(gameID);
             if(gameData != null){
                     connections.put(authToken, session);
+                    gameUsersMap.computeIfAbsent(gameID, k -> new CopyOnWriteArrayList<>()).add(authToken);
                     LoadGameMessage loadGameMessage = new LoadGameMessage(gameData.game());
                     sendMessage(new Gson().toJson(loadGameMessage), session);
                     var message = String.format("%s joined the game as an observer", user);
-                    broadcast(message);
-
+                    broadcast(message, gameID, authToken);
             }else{
                 sendErrorMessage("invalid gameID");
             }
@@ -96,12 +100,17 @@ public class WebSocketHandler {
         }
     }
 
-    private void broadcast(String message) {
-        for (Session sessionCheck : connections.values()) {
-            if(!session.equals(sessionCheck)){
-                notificationMessage notificationMessage = new notificationMessage(message);
-                String notification = new Gson().toJson(notificationMessage);
-                sendMessage(notification, sessionCheck);
+    private void broadcast(String message, int gameID, String currentAuth) {
+        List<String> tokens = gameUsersMap.get(gameID);
+        for(String storedAuth : tokens) {
+            if (!storedAuth.equals(currentAuth)) {
+                for (String sessionAuth : connections.keySet()) {
+                    if (storedAuth.equals(sessionAuth)) {
+                        notificationMessage notificationMessage = new notificationMessage(message);
+                        String notification = new Gson().toJson(notificationMessage);
+                        sendMessage(notification, connections.get(sessionAuth));
+                    }
+                }
             }
         }
     }
