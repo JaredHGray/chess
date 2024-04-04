@@ -169,8 +169,13 @@ public class ChessClient {
     }
 
     private void makeMove(PrintStream out){
+        Scanner scanner = new Scanner(System.in);
         out.println();
         out.println("Make Move option selected");
+        out.println("Enter coordinates of piece to move(ex: 'a2'):");
+        String piece = scanner.nextLine();
+        out.println("Enter coordinates of destination(ex: 'c4'):");
+        String dest = scanner.nextLine();
     }
 
     private void resignGame(PrintStream out){

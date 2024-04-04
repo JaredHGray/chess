@@ -1,5 +1,6 @@
 package websocket;
 import chess.ChessGame;
+import chess.ChessMove;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
@@ -68,9 +69,19 @@ public class WebSocketFacade extends Endpoint {
         sendUserCommand(observerCommand);
     }
 
+    public void makeMoveSocket(String authToken, int gameID, ChessMove move){
+        makeMoveCommand moveCommand = new makeMoveCommand(authToken, gameID, move);
+        sendUserCommand(moveCommand);
+    }
+
     public void leaveGameSocket(int gameID, String authToken){
         leaveCommand leaveCommand = new leaveCommand(authToken, gameID);
         sendUserCommand(leaveCommand);
+    }
+
+    public void resignGameSocket(String authToken, int gameID){
+        resignCommand resignCommand = new resignCommand(authToken, gameID);
+        sendUserCommand(resignCommand);
     }
 
     private void sendUserCommand(UserGameCommand command) {
