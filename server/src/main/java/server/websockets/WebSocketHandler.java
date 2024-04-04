@@ -111,10 +111,10 @@ public class WebSocketHandler {
         if(user != null && !user.isEmpty()){
             GameData gameData = gameDAO.findGame(gameID);
             if(gameData != null){
-                if(gameData.whiteUsername().equals(user)){
+                if(gameData.whiteUsername() != null && gameData.whiteUsername().equals(user)){
                     gameDAO.joinGame(gameID, null, "WHITE");
                     removeUserFromGame(gameID, authToken);
-                }else if(gameData.blackUsername().equals(user)){
+                }else if(gameData.blackUsername() != null && gameData.blackUsername().equals(user)){
                     gameDAO.joinGame(gameID, null, "BLACK");
                 }
                 removeUserFromGame(gameID,authToken);
