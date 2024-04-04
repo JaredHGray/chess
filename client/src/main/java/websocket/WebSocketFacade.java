@@ -63,6 +63,11 @@ public class WebSocketFacade extends Endpoint {
         sendUserCommand(joinPlayerCommand);
     }
 
+    public void observePlayerSocket(int gameID, String authToken){
+        joinObserverCommand observerCommand = new joinObserverCommand(authToken, gameID);
+        sendUserCommand(observerCommand);
+    }
+
     private void sendUserCommand(UserGameCommand command) {
         try {
             String jsonCommand = new Gson().toJson(command);

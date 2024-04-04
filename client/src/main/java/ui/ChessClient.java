@@ -201,6 +201,12 @@ public class ChessClient {
             out.println();
             printBoard.run(false, chosenGame.game().getBoard());
             out.println(chosenGame.gameName() + " successfully joined as an observer");
+            ws.observePlayerSocket(chosenGame.gameID(), authToken);
+            gamePlayMenu(out);
+            do{
+                gameChoice = scanner.nextInt();
+                executeMoveChoice(gameChoice, out);
+            } while (gameChoice != 3 && gameChoice != 5);
         } catch (DataAccessException e) {
             System.out.println("Failure: " + e.getMessage());
         }

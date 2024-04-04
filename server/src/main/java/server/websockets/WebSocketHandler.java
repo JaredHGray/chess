@@ -45,6 +45,8 @@ public class WebSocketHandler {
             case JOIN_PLAYER:
                 joinPlayer(new Gson().fromJson(message, joinPlayerCommand.class));
                 break;
+            case JOIN_OBSERVER:
+                observePlayer(new Gson().fromJson(message, joinObserverCommand.class));
         }
     }
 
@@ -57,11 +59,9 @@ public class WebSocketHandler {
             GameData gameData = gameDAO.findGame(gameID);
             if(gameData != null){
                 if((playerColor == ChessGame.TeamColor.WHITE && Objects.equals(gameData.whiteUsername(), user)) || (playerColor == ChessGame.TeamColor.BLACK && Objects.equals(gameData.blackUsername(), user))){
-                    connections.put(user, session);
-
+                    connections.put(authToken, session);
                     LoadGameMessage loadGameMessage = new LoadGameMessage(gameData.game());
                     sendMessage(new Gson().toJson(loadGameMessage));
-
                     var message = String.format("%s joined the game as the %s player", user, playerColor);
                     broadcast(message);
                 }else{
@@ -75,9 +75,30 @@ public class WebSocketHandler {
         }
     }
 
+    private void observePlayer(joinObserverCommand action) throws DataAccessException {
+        int gameID = action.getGameID();
+        String authToken = action.getAuthToken();
+        String user = authDAO.getAuth(authToken);
+        if(!user.isEmpty()){
+            GameData gameData = gameDAO.findGame(gameID);
+            if(gameData != null){
+                    connections.put(authToken, session);
+                    LoadGameMessage loadGameMessage = new LoadGameMessage(gameData.game());
+                    sendMessage(new Gson().toJson(loadGameMessage));
+                    var message = String.format("%s joined the game as an observer", user);
+                    broadcast(message);
+
+            }else{
+                sendErrorMessage("invalid gameID");
+            }
+        } else{
+            sendErrorMessage("invalid authToken");
+        }
+    }
+
     private void broadcast(String message) {
         for (Session sessionCheck : connections.values()) {
-            if(sessionCheck == session){
+            if(!session.equals(sessionCheck)){
                 notificationMessage notificationMessage = new notificationMessage(message);
                 String notification = new Gson().toJson(notificationMessage);
                 sendMessage(notification);

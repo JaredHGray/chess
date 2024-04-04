@@ -8,4 +8,12 @@ public class joinObserverCommand extends UserGameCommand {
         this.gameID = gameID;
         commandType = CommandType.JOIN_OBSERVER;
     }
+
+    public String getAuthToken(){
+        return getAuthString();
+    }
+
+    public int getGameID(){
+        return gameID;
+    }
 }
