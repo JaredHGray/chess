@@ -85,7 +85,7 @@ public class WebSocketHandler {
         int gameID = action.getGameID();
         String authToken = action.getAuthToken();
         String user = authDAO.getAuth(authToken);
-        if(!user.isEmpty()){
+        if(user != null && !user.isEmpty()){
             GameData gameData = gameDAO.findGame(gameID);
             if(gameData != null){
                     connections.put(authToken, session);
@@ -106,7 +106,7 @@ public class WebSocketHandler {
         int gameID = action.getGameID();
         String authToken = action.getAuth();
         String user = authDAO.getAuth(authToken);
-        if(!user.isEmpty()){
+        if(user != null && !user.isEmpty()){
             GameData gameData = gameDAO.findGame(gameID);
             if(gameData != null){
                 if(gameData.whiteUsername().equals(user)){
