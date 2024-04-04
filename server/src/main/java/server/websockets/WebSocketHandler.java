@@ -50,6 +50,8 @@ public class WebSocketHandler {
                 break;
             case JOIN_OBSERVER:
                 observePlayer(new Gson().fromJson(message, joinObserverCommand.class));
+            case LEAVE:
+                leaveGame(new Gson().fromJson(message, leaveCommand.class));
         }
     }
 
@@ -97,6 +99,36 @@ public class WebSocketHandler {
             }
         } else{
             sendErrorMessage("invalid authToken");
+        }
+    }
+
+    private void leaveGame(leaveCommand action) throws DataAccessException {
+        int gameID = action.getGameID();
+        String authToken = action.getAuth();
+        String user = authDAO.getAuth(authToken);
+        if(!user.isEmpty()){
+            GameData gameData = gameDAO.findGame(gameID);
+            if(gameData != null){
+                if(gameData.whiteUsername().equals(user)){
+                    gameDAO.joinGame(gameID, null, "WHITE");
+                    removeUserFromGame(gameID, authToken);
+                }else if(gameData.blackUsername().equals(user)){
+                    gameDAO.joinGame(gameID, null, "BLACK");
+                }
+                removeUserFromGame(gameID,authToken);
+                var message = String.format("%s left the game", user);
+                broadcast(message, gameID, authToken);
+            }else{
+                sendErrorMessage("invalid gameID");
+            }
+        } else{
+            sendErrorMessage("invalid authToken");
+        }
+    }
+
+    private void removeUserFromGame(int gameID, String authToken){
+        if(gameUsersMap.get(gameID) != null){
+            gameUsersMap.get(gameID).remove(authToken);
         }
     }
 

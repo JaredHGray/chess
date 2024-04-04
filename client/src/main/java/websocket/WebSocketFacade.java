@@ -68,6 +68,11 @@ public class WebSocketFacade extends Endpoint {
         sendUserCommand(observerCommand);
     }
 
+    public void leaveGameSocket(int gameID, String authToken){
+        leaveCommand leaveCommand = new leaveCommand(authToken, gameID);
+        sendUserCommand(leaveCommand);
+    }
+
     private void sendUserCommand(UserGameCommand command) {
         try {
             String jsonCommand = new Gson().toJson(command);
@@ -86,7 +91,7 @@ public class WebSocketFacade extends Endpoint {
     }
 
     @ClientEndpoint
-    public static interface ServerMessageListener {
+    public interface ServerMessageListener {
         void onLoadGame(LoadGameMessage message);
         void onNotification(notificationMessage message);
         void onError(ErrorMessage message);
