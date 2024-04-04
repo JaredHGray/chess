@@ -50,8 +50,10 @@ public class WebSocketHandler {
                 break;
             case JOIN_OBSERVER:
                 observePlayer(new Gson().fromJson(message, joinObserverCommand.class));
+                break;
             case LEAVE:
                 leaveGame(new Gson().fromJson(message, leaveCommand.class));
+                break;
         }
     }
 
