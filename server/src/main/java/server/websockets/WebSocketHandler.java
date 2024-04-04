@@ -54,6 +54,9 @@ public class WebSocketHandler {
             case LEAVE:
                 leaveGame(new Gson().fromJson(message, leaveCommand.class));
                 break;
+            case MAKE_MOVE:
+                makeMove(new Gson().fromJson(message, makeMoveCommand.class));
+                break;
         }
     }
 
@@ -121,6 +124,22 @@ public class WebSocketHandler {
                 var message = String.format("%s left the game", user);
                 broadcast(message, gameID, authToken);
             }else{
+                sendErrorMessage("invalid gameID");
+            }
+        } else{
+            sendErrorMessage("invalid authToken");
+        }
+    }
+
+    public void makeMove(makeMoveCommand action) throws DataAccessException {
+        int gameID = action.getGameID();
+        String authToken = action.getAuth();
+        String user = authDAO.getAuth(authToken);
+        if(user != null && !user.isEmpty()){
+            GameData gameData = gameDAO.findGame(gameID);
+            if(gameData != null){
+
+            } else{
                 sendErrorMessage("invalid gameID");
             }
         } else{

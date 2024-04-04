@@ -2,9 +2,12 @@ package ui;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 import java.util.Scanner;
 
 import chess.ChessGame;
+import chess.ChessMove;
+import chess.ChessPosition;
 import dataAccess.DataAccessException;
 import model.AuthData;
 import model.GameData;
@@ -55,7 +58,7 @@ public class ChessClient {
         } while (choice != 2);
     }
 
-    private static void initialMenu(PrintStream out) {
+    private void initialMenu(PrintStream out) {
         out.println("1. Help");
         out.println("2. Quit");
         out.println("3. Login");
@@ -82,7 +85,7 @@ public class ChessClient {
         }
     }
 
-    private static void loginMenu(PrintStream out){
+    private void loginMenu(PrintStream out){
         out.println("1. Help");
         out.println("2. Logout");
         out.println("3. Create Game");
@@ -118,7 +121,7 @@ public class ChessClient {
         if(choice != 2){loginMenu(out);}
     }
 
-    private static void gamePlayMenu(PrintStream out){
+    private void gamePlayMenu(PrintStream out){
         out.println("1. Help");
         out.println("2. Redraw Chess Board");
         out.println("3. Leave");
@@ -176,6 +179,10 @@ public class ChessClient {
         String piece = scanner.nextLine();
         out.println("Enter coordinates of destination(ex: 'c4'):");
         String dest = scanner.nextLine();
+        ChessPosition startPosition = getPosition(piece);
+        ChessPosition endPosition = getPosition(dest);
+        ChessMove move = new ChessMove(startPosition, endPosition, null);
+        ws.makeMoveSocket(authToken, chosenGame.gameID(), move);
     }
 
     private void resignGame(PrintStream out){
@@ -291,7 +298,7 @@ public class ChessClient {
         authToken = null;
     }
 
-    private static void userHelp(PrintStream out) {
+    private void userHelp(PrintStream out) {
         out.println();
         out.println("Help menu option selected");
         out.println("Help: You are lost and confused, in need of guidance on what to do");
@@ -303,7 +310,7 @@ public class ChessClient {
         out.println();
     }
 
-    public static void initialHelp(PrintStream out) {
+    public void initialHelp(PrintStream out) {
         out.println();
         out.println("Help menu option selected");
         out.println("Help: You are lost and confused, in need of guidance on what to do");
@@ -313,7 +320,7 @@ public class ChessClient {
         out.println();
     }
 
-    public static void gameHelp(PrintStream out){
+    public void gameHelp(PrintStream out){
         out.println();
         out.println("Help menu option selected");
         out.println("Redraw Chess Board: You are lost and confused, in need of guidance on what to do");
@@ -406,6 +413,14 @@ public class ChessClient {
         }else{
             return null;
         }
+    }
+
+    private ChessPosition getPosition(String position){
+        String letters = "abcdefgh";
+        char fileChar = position.charAt(0);
+        int row = letters.indexOf(fileChar) + 1;
+        int col = Integer.parseInt(position.substring(1));
+        return new ChessPosition(row, col);
     }
 
     private class ServerMessageHandler implements WebSocketFacade.ServerMessageListener {
