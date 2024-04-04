@@ -80,8 +80,9 @@ public class ChessGame {
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
         Collection<ChessMove> allValid = new HashSet<>();
-        TeamColor teamPiece = gameBoard.getPiece(startPosition).getTeamColor();
-        if(gameBoard.getPiece(startPosition) != null){
+        ChessPiece piece = gameBoard.getPiece(startPosition);
+        if(piece != null){
+            TeamColor teamPiece = piece.getTeamColor();
                 for(ChessMove move : gameBoard.getPiece(startPosition).pieceMoves(gameBoard, startPosition)){
                     testBoard = new ChessBoard(gameBoard);
                     testBoard.movePiece(move.getStartPosition(), move.getEndPosition(), testBoard.getPiece(move.getStartPosition()));

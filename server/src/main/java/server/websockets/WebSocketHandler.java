@@ -1,5 +1,6 @@
 package server.websockets;
 import chess.ChessGame;
+import chess.InvalidMoveException;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import dataAccess.*;
@@ -31,6 +32,7 @@ public class WebSocketHandler {
     private AuthDAO authDAO;
     private GameDAO gameDAO;
 
+
     public WebSocketHandler(){
         try{
             authDAO = new SQLAuthDAO();
@@ -41,7 +43,7 @@ public class WebSocketHandler {
     }
 
     @OnWebSocketMessage
-    public void onMessage(Session session, String message) throws DataAccessException {
+    public void onMessage(Session session, String message) throws DataAccessException, InvalidMoveException {
         UserGameCommand action = new Gson().fromJson(message, UserGameCommand.class);
         this.session = session;
         switch (action.getCommandType()){
@@ -131,14 +133,14 @@ public class WebSocketHandler {
         }
     }
 
-    public void makeMove(makeMoveCommand action) throws DataAccessException {
+    public void makeMove(makeMoveCommand action) throws DataAccessException, InvalidMoveException {
         int gameID = action.getGameID();
         String authToken = action.getAuth();
         String user = authDAO.getAuth(authToken);
         if(user != null && !user.isEmpty()){
             GameData gameData = gameDAO.findGame(gameID);
             if(gameData != null){
-
+                gameData.game().makeMove(action.getMove());
             } else{
                 sendErrorMessage("invalid gameID");
             }
