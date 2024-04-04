@@ -415,6 +415,7 @@ public class ChessClient {
         public void onNotification(notificationMessage message) {
             Scanner scanner = new Scanner(System.in);
             out.print(EscapeSequences.SET_TEXT_COLOR_BLUE);
+            out.println();
             out.println("NOTIFICATION: " + message.getMessage());
             out.print(EscapeSequences.RESET_TEXT_COLOR);
             out.println();
@@ -427,6 +428,7 @@ public class ChessClient {
         public void onError(ErrorMessage message) {
             Scanner scanner = new Scanner(System.in);
             out.print(EscapeSequences.SET_TEXT_COLOR_RED);
+            out.println();
             out.println("ERROR: " + message.getErrorMessage());
             out.print(EscapeSequences.RESET_TEXT_COLOR);
             out.print("Enter choice: ");

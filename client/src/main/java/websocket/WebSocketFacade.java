@@ -94,3 +94,6 @@ public class WebSocketFacade extends Endpoint {
 }
 
 //would it be smarter to just draw chessboard after ws or keep it during http and also ws
+//what should an observer see as  menu options?
+//only works 1/2 the time??
+//only sends to 1/2 thr players? steps thru correctly but doesnt actually connect?
