@@ -1,4 +1,5 @@
 package dataAccess;
+import chess.ChessGame;
 import model.GameData;
 
 import java.util.HashSet;
@@ -49,6 +50,8 @@ public class MemoryGameDAO implements GameDAO {
         }
         return false;
     }
+
+    public void updateGame(int gameID, ChessGame game) throws DataAccessException {}
 
     public void clearGames() throws DataAccessException {
         game.clear();

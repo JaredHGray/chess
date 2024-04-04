@@ -111,7 +111,7 @@ public class SQLGameDAO implements GameDAO{
         return false;
     }
 
-    public boolean updateGame(int gameID, ChessGame game) throws DataAccessException {
+    public void updateGame(int gameID, ChessGame game) throws DataAccessException {
         if(findGame(gameID) != null){
             var insertStatement = "SELECT gameID FROM game WHERE gameID=?";
             try (var conn = DatabaseManager.getConnection();
@@ -127,7 +127,6 @@ public class SQLGameDAO implements GameDAO{
                                 updatePreparedStatement.setString(1, gameJson);
                                 updatePreparedStatement.setInt(2, gameID);
                                 updatePreparedStatement.executeUpdate();
-                                return true;
                             }
                         }
                     }
@@ -136,7 +135,6 @@ public class SQLGameDAO implements GameDAO{
                 throw new DataAccessException(String.format("Unable to read data: %s", ex.getMessage()));
             }
         }
-        return false;
     }
 
     public void clearGames() throws DataAccessException {

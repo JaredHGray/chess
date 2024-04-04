@@ -141,6 +141,7 @@ public class WebSocketHandler {
             GameData gameData = gameDAO.findGame(gameID);
             if(gameData != null){
                 gameData.game().makeMove(action.getMove());
+                gameDAO.updateGame(gameID, gameData.game());
             } else{
                 sendErrorMessage("invalid gameID");
             }
