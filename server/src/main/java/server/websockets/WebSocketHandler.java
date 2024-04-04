@@ -1,5 +1,6 @@
 package server.websockets;
 import chess.ChessGame;
+import chess.ChessPiece;
 import chess.InvalidMoveException;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -140,8 +141,12 @@ public class WebSocketHandler {
         if(user != null && !user.isEmpty()){
             GameData gameData = gameDAO.findGame(gameID);
             if(gameData != null){
+                ChessPiece.PieceType pieceType = gameData.game().getBoard().getPiece(action.getMove().getStartPosition()).getPieceType();
                 gameData.game().makeMove(action.getMove());
                 gameDAO.updateGame(gameID, gameData.game());
+                loadBroadcast(gameID, gameData.game());
+                var message = String.format("%s moved the %s piece from %s to %s", user, pieceType, action.getMove().getStartPosition(), action.getMove().getEndPosition());
+                broadcast(message, gameID, authToken);
             } else{
                 sendErrorMessage("invalid gameID");
             }
@@ -153,6 +158,18 @@ public class WebSocketHandler {
     private void removeUserFromGame(int gameID, String authToken){
         if(gameUsersMap.get(gameID) != null){
             gameUsersMap.get(gameID).remove(authToken);
+        }
+    }
+
+    private void loadBroadcast(int gameID, ChessGame game){
+        List<String> tokens = gameUsersMap.get(gameID);
+        for(String storedAuth : tokens) {
+            for (String sessionAuth : connections.keySet()) {
+                if (storedAuth.equals(sessionAuth)) {
+                    LoadGameMessage loadGameMessage = new LoadGameMessage(game);
+                    sendMessage(new Gson().toJson(loadGameMessage), session);
+                }
+            }
         }
     }
 
