@@ -93,9 +93,4 @@ public class WebSocketFacade extends Endpoint {
     }
 }
 
-//speaks with the websocket stuff in the server
-//have methods for each of the 5 functions, do i need an onmessage for each one? like the example addMessagehandler or is that something else?
-//or each with a session.sendMessage
-//matching session and string for both onmessage?
-//do i need to make a websokcet server that i have to turn on? so the server in the diagrams is referring to different things?
-//
+//would it be smarter to just draw chessboard after ws or keep it during http and also ws

@@ -406,6 +406,9 @@ public class ChessClient {
         @Override
         public void onLoadGame(LoadGameMessage message) {
             webSocketGame = message.getGame();
+            printBoard.run(true, webSocketGame.getBoard());
+            out.println();
+            printBoard.run(false, webSocketGame.getBoard());
         }
 
         @Override
