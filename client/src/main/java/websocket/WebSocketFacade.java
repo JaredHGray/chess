@@ -23,7 +23,6 @@ public class WebSocketFacade extends Endpoint {
 
             WebSocketContainer container = ContainerProvider.getWebSocketContainer();
             this.session = container.connectToServer(this, socketURI); //weird crap, this is a get request to be
-            //session.sendMessage something....
 
             //set message handler
             this.session.addMessageHandler(new MessageHandler.Whole<String>() {
@@ -40,9 +39,6 @@ public class WebSocketFacade extends Endpoint {
     private void handleMessage(String message) {
         try {
             ServerMessage serverMessage = new Gson().fromJson(message, ServerMessage.class);
-//            JsonObject jsonMessage = new Gson().fromJson(message, JsonObject.class);
-//            String messageType = jsonMessage.get("type").getAsString();
-//            String content = jsonMessage.get("content").getAsString();
             switch (serverMessage.getServerMessageType()) {
                 case LOAD_GAME:
                     LoadGameMessage loadGameMessage = new Gson().fromJson(message, LoadGameMessage.class);

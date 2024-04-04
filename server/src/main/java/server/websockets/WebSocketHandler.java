@@ -58,8 +58,12 @@ public class WebSocketHandler {
             if(gameData != null){
                 if((playerColor == ChessGame.TeamColor.WHITE && Objects.equals(gameData.whiteUsername(), user)) || (playerColor == ChessGame.TeamColor.BLACK && Objects.equals(gameData.blackUsername(), user))){
                     connections.put(user, session);
+
+                    LoadGameMessage loadGameMessage = new LoadGameMessage(gameData.game());
+                    sendMessage(new Gson().toJson(loadGameMessage));
+
                     var message = String.format("%s joined the game as the %s player", user, playerColor);
-                    broadcast(message, ServerMessage.ServerMessageType.NOTIFICATION);
+                    broadcast(message);
                 }else{
                     sendErrorMessage("Username does not match username associated with game");
                 }
@@ -71,28 +75,24 @@ public class WebSocketHandler {
         }
     }
 
-    private void broadcast(String message, ServerMessage.ServerMessageType messageType) {
+    private void broadcast(String message) {
         for (Session sessionCheck : connections.values()) {
             if(sessionCheck == session){
-                sendMessage(sessionCheck, message, messageType);
+                notificationMessage notificationMessage = new notificationMessage(message);
+                String notification = new Gson().toJson(notificationMessage);
+                sendMessage(notification);
             }
         }
     }
 
     private void sendErrorMessage(String errorMessage) {
         ServerMessage error = new ErrorMessage(errorMessage);
-        sendMessage(session, new Gson().toJson(error), ServerMessage.ServerMessageType.ERROR);
+        sendMessage(new Gson().toJson(error));
     }
 
-    private void sendMessage(Session session, String message, ServerMessage.ServerMessageType messageType) {
+    private void sendMessage(String message) {
         try {
-            notificationMessage notificationMessage = new notificationMessage(message);
-//            JsonObject jsonMessage = new JsonObject();
-//            jsonMessage.addProperty("type", messageType.toString());
-//            jsonMessage.addProperty("content", message);
-//            session.getRemote().sendString(jsonMessage.toString());
-              String notification = new Gson().toJson(notificationMessage);
-              session.getRemote().sendString(notification);
+              session.getRemote().sendString(message);
         } catch (IOException e) {
             e.printStackTrace();
         }

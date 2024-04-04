@@ -28,8 +28,9 @@ public class ChessClient {
     private GameData[] games = null;
     private final ServerFacade server;
     ChessBoard printBoard = new ChessBoard();
-
     private GameData chosenGame;
+
+    ChessGame webSocketGame;
     private final NotificationHandler notificationHandler = notification->{
         out.println("yellow");
         out.println(notification);
@@ -398,7 +399,7 @@ public class ChessClient {
     private class ServerMessageHandler implements WebSocketFacade.ServerMessageListener {
         @Override
         public void onLoadGame(LoadGameMessage message) {
-            out.println("LOAD_GAME: " + message.getGame());
+            webSocketGame = message.getGame();
         }
 
         @Override
