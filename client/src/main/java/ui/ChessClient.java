@@ -165,6 +165,7 @@ public class ChessClient {
     private void leaveGame(PrintStream out){
         out.println();
         out.println("Leave option selected");
+        ws.leaveGameSocket(chosenGame.gameID(), authToken);
     }
 
     private void makeMove(PrintStream out){
