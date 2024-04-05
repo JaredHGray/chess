@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 import chess.ChessGame;
 import chess.ChessMove;
+import chess.ChessPiece;
 import chess.ChessPosition;
 import dataAccess.DataAccessException;
 import model.AuthData;
@@ -181,8 +182,36 @@ public class ChessClient {
         String dest = scanner.nextLine();
         ChessPosition startPosition = getPosition(piece);
         ChessPosition endPosition = getPosition(dest);
-        ChessMove move = new ChessMove(startPosition, endPosition, null);
+
+        ChessPiece startPiece = webSocketGame.getBoard().getPiece(startPosition);
+        ChessMove move;
+        if(isPromotionMove(startPiece, endPosition)){
+            out.print("Enter desired promotion piece type(ex: 'Q' for Queen):");
+            String type = scanner.nextLine();
+            ChessPiece.PieceType promotion = getPromotionPieceType(type);
+            move = new ChessMove(startPosition, endPosition, promotion);
+        } else {
+            move = new ChessMove(startPosition, endPosition, null);
+        }
         ws.makeMoveSocket(authToken, chosenGame.gameID(), move);
+    }
+
+    private boolean isPromotionMove(ChessPiece pieceAtStart, ChessPosition endPosition) {
+        if (pieceAtStart.getPieceType() == ChessPiece.PieceType.PAWN) {
+            return ((pieceAtStart.getTeamColor() == ChessGame.TeamColor.WHITE && endPosition.getRow() == 8) ||
+                    (pieceAtStart.getTeamColor() == ChessGame.TeamColor.BLACK && endPosition.getRow() == 1));
+        }
+        return false;
+    }
+
+    private ChessPiece.PieceType getPromotionPieceType(String promotionPiece) {
+        return switch (promotionPiece.toUpperCase()) {
+            case "Q" -> ChessPiece.PieceType.QUEEN;
+            case "R" -> ChessPiece.PieceType.ROOK;
+            case "B" -> ChessPiece.PieceType.BISHOP;
+            case "N" -> ChessPiece.PieceType.KNIGHT;
+            default -> ChessPiece.PieceType.QUEEN;
+        };
     }
 
     private void resignGame(PrintStream out){

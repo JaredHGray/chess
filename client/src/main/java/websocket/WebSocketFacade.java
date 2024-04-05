@@ -114,6 +114,8 @@ public class WebSocketFacade extends Endpoint {
 //only works 1/2 the time??
 //only sends to 1/2 thr players? steps thru correctly but doesnt actually connect?
 //make check to make sure user making calls is actually part of game and not observer = resign, makemove, redraw board
-//do try catch to get everything
+
 //figure out the promotion piece on client
 //use turn variable for choosing who is up
+
+//what happens after checkmate or stalemate?
