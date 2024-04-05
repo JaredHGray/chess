@@ -139,40 +139,63 @@ public class WebSocketHandler {
         int gameID = action.getGameID();
         String authToken = action.getAuth();
         String user = authDAO.getAuth(authToken);
-        if(user != null && !user.isEmpty()){
-            GameData gameData = gameDAO.findGame(gameID);
-            if(gameData != null) {
-                ChessPiece.PieceType pieceType = gameData.game().getBoard().getPiece(action.getMove().getStartPosition()).getPieceType();
-                ChessGame.TeamColor turnColor = gameData.game().getTeamTurn();
-                if ((turnColor == ChessGame.TeamColor.WHITE && gameData.whiteUsername().equals(user)) || (turnColor == ChessGame.TeamColor.BLACK && gameData.blackUsername().equals(user))) {
-                    if(gameData.game().getBoard().getPiece(action.getMove().getStartPosition()).getTeamColor() == turnColor) {
-                        try {
-                            gameData.game().makeMove(action.getMove());
-                            if (turnColor == ChessGame.TeamColor.WHITE) {
-                                gameData.game().setTeamTurn(ChessGame.TeamColor.BLACK);
-                            } else {
-                                gameData.game().setTeamTurn(ChessGame.TeamColor.WHITE);
-                            }
-                        } catch (InvalidMoveException e) {
-                            sendErrorMessage("Invalid move: The chess piece cannot move to the specified position.");
-                            return;
-                        }
-                        gameDAO.updateGame(gameID, gameData.game());
-                        loadBroadcast(gameID, gameData.game());
-                        var message = String.format("%s moved the %s piece from %s to %s", user, pieceType, action.getMove().getStartPosition(), action.getMove().getEndPosition());
-                        broadcast(message, gameID, authToken);
-                    } else{
-                        sendErrorMessage("invalid move: not your piece");
-                    }
-                } else {
-                    sendErrorMessage("unauthorized to make move, not your turn");
-                }
-            } else{
-                sendErrorMessage("invalid gameID");
-            }
-        } else{
-            sendErrorMessage("invalid authToken");
+        if (user == null || user.isEmpty()) {
+            sendErrorMessage("Invalid authToken");
+            return;
         }
+
+        GameData gameData = gameDAO.findGame(gameID);
+        if (gameData == null) {
+            sendErrorMessage("Invalid gameID");
+            return;
+        }
+
+        ChessGame game = gameData.game();
+        ChessGame.TeamColor turnColor = game.getTeamTurn();
+        if(turnColor == null){
+            sendErrorMessage("This game is over");
+            return;
+        }
+
+        if(gameData.game().isInCheck(turnColor)){
+            gameData.game().setTeamTurn(null);
+            sendErrorMessage("You are in stalemate, you have no legal moves");
+            return;
+        }
+        ChessPiece.PieceType pieceType = game.getBoard().getPiece(action.getMove().getStartPosition()).getPieceType();
+        String playerTurn = (turnColor == ChessGame.TeamColor.WHITE) ? gameData.whiteUsername() : gameData.blackUsername();
+        ChessGame.TeamColor checkColor = (turnColor == ChessGame.TeamColor.WHITE) ? ChessGame.TeamColor.BLACK : ChessGame.TeamColor.WHITE;
+        if(!playerTurn.equals(user)){
+            sendErrorMessage("Unauthorized to make move, not your turn");
+            return;
+        }
+
+        if(gameData.game().getBoard().getPiece(action.getMove().getStartPosition()).getTeamColor() != turnColor) {
+            sendErrorMessage("Invalid move: Not your piece");
+            return;
+        }
+
+        try{
+            gameData.game().makeMove(action.getMove());
+        } catch (InvalidMoveException e) {
+            sendErrorMessage("Invalid move: The chess piece cannot move to the specified position.");
+            return;
+        }
+
+        if(gameData.game().isInCheckmate(checkColor)){
+            gameData.game().setTeamTurn(null);
+            gameDAO.updateGame(gameID, gameData.game());
+            sendErrorMessage("Checkmate! " + turnColor + " player wins!");
+            var message = String.format("Checkmate! " + turnColor + " player wins!");
+            broadcast(message, gameID, authToken);
+            return;
+        }
+
+        gameData.game().setTeamTurn(checkColor);
+        gameDAO.updateGame(gameID, gameData.game());
+        loadBroadcast(gameID, gameData.game());
+        var message = String.format("%s moved the %s piece from %s to %s", user, pieceType, action.getMove().getStartPosition(), action.getMove().getEndPosition());
+        broadcast(message, gameID, authToken);
     }
 
     private void removeUserFromGame(int gameID, String authToken){
@@ -196,13 +219,13 @@ public class WebSocketHandler {
         List<String> tokens = gameUsersMap.get(gameID);
         for(String storedAuth : tokens) {
             if (!storedAuth.equals(currentAuth)) {
-                for (String sessionAuth : connections.keySet()) {
-                    if (storedAuth.equals(sessionAuth)) {
+//                for (String sessionAuth : connections.keySet()) {
+//                    if (storedAuth.equals(sessionAuth)) {
                         notificationMessage notificationMessage = new notificationMessage(message);
                         String notification = new Gson().toJson(notificationMessage);
-                        sendMessage(notification, connections.get(sessionAuth));
-                    }
-                }
+                        sendMessage(notification, connections.get(storedAuth));
+//                    }
+//                }
             }
         }
     }
