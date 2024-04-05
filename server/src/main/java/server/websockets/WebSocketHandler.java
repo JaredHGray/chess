@@ -118,30 +118,34 @@ public class WebSocketHandler {
         int gameID = action.getGameID();
         String authToken = action.getAuth();
         String user = authDAO.getAuth(authToken);
-        if(user != null && !user.isEmpty()){
-            GameData gameData = gameDAO.findGame(gameID);
-            if(gameData != null){
-                if(gameData.whiteUsername() != null && gameData.whiteUsername().equals(user)){
-                    gameDAO.joinGame(gameID, null, "WHITE");
-                    removeUserFromGame(gameID, authToken);
-                }else if(gameData.blackUsername() != null && gameData.blackUsername().equals(user)){
-                    gameDAO.joinGame(gameID, null, "BLACK");
-                }
-                removeUserFromGame(gameID,authToken);
-                var message = String.format("%s left the game", user);
-                broadcast(message, gameID, authToken);
-            }else{
-                sendErrorMessage("invalid gameID");
-            }
-        } else{
-            sendErrorMessage("invalid authToken");
+
+        if (user == null || user.isEmpty()) {
+            sendErrorMessage("Invalid authToken");
+            return;
         }
+
+        GameData gameData = gameDAO.findGame(gameID);
+        if (gameData == null) {
+            sendErrorMessage("Invalid gameID");
+            return;
+        }
+
+        if(gameData.whiteUsername() != null && gameData.whiteUsername().equals(user)){
+            gameDAO.joinGame(gameID, null, "WHITE");
+        }else if(gameData.blackUsername() != null && gameData.blackUsername().equals(user)){
+            gameDAO.joinGame(gameID, null, "BLACK");
+        }
+        removeUserFromGame(gameID,authToken);
+        var message = String.format("%s left the game", user);
+        broadcast(message, gameID, authToken);
     }
 
     private void resignGame(resignCommand action) throws DataAccessException {
         int gameID = action.getGameID();
         String authToken = action.getAuth();
         String user = authDAO.getAuth(authToken);
+
+
     }
 
     public void makeMove(makeMoveCommand action) throws DataAccessException {
