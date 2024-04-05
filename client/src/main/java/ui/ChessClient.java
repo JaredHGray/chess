@@ -33,7 +33,7 @@ public class ChessClient {
     private final ServerFacade server;
     ChessBoard printBoard = new ChessBoard();
     private GameData chosenGame;
-
+    private ChessGame.TeamColor playerColor;
     ChessGame webSocketGame;
     private final NotificationHandler notificationHandler = notification->{
         out.println("yellow");
@@ -221,8 +221,15 @@ public class ChessClient {
     }
 
     private void highlightChoices(PrintStream out){
+        Scanner scanner = new Scanner(System.in);
         out.println();
         out.println("Highlight Legal Moves option selected");
+        out.print("Enter piece to highlight(ex: 'a2'):");
+        String piece = scanner.nextLine();
+        ChessPosition startPosition = getPosition(piece);
+        Collection<ChessMove> validMoves = webSocketGame.validMoves(startPosition);
+        boolean white = playerColor == ChessGame.TeamColor.WHITE;
+        printBoard.highlightMoves(white, webSocketGame.getBoard(), validMoves);
     }
 
     private void observeGame(PrintStream out) {
@@ -269,6 +276,7 @@ public class ChessClient {
         }
         out.print("Enter desired piece color: ");
         String pieceColor = scanner.nextLine();
+        playerColor = teamColor(pieceColor);
         chosenGame = games[gameChoice-1];
         try{
             server.joinGame(chosenGame.gameID(), pieceColor.toUpperCase(), authToken);
@@ -276,7 +284,7 @@ public class ChessClient {
             out.println();
             printBoard.run(false, chosenGame.game().getBoard());
             out.println(chosenGame.gameName() + " successfully joined");
-            ws.joinPlayerSocket(chosenGame.gameID(), teamColor(pieceColor), authToken);
+            ws.joinPlayerSocket(chosenGame.gameID(), playerColor, authToken);
             gamePlayMenu(out);
             do{
                 gameChoice = scanner.nextInt();

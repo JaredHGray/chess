@@ -1,10 +1,12 @@
 package ui;
 import chess.ChessGame;
+import chess.ChessMove;
 import chess.ChessPiece;
 import chess.ChessPosition;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 import java.util.Scanner;
 
 import static chess.ChessPiece.PieceType.*;
@@ -18,6 +20,18 @@ public class ChessBoard {
 
     public void run(boolean whitePerspective, chess.ChessBoard board) {
         //initializeChessboard();
+        chessboard = board;
+        var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+        if (whitePerspective) {
+            drawChessBoard(out, true);  // Print from white player perspective
+        } if (!whitePerspective) {
+            drawChessBoard(out, false);  // Print from black player perspective
+        }
+        out.print(EscapeSequences.RESET_BG_COLOR);
+        out.print(EscapeSequences.RESET_TEXT_COLOR);
+    }
+
+    public void highlightMoves(boolean whitePerspective, chess.ChessBoard board, Collection<ChessMove> validMoves) {
         chessboard = board;
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         if (whitePerspective) {
