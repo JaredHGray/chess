@@ -169,11 +169,11 @@ public class WebSocketHandler {
             return;
         }
 
-        String playerTurn = (turnColor == ChessGame.TeamColor.WHITE) ? gameData.whiteUsername() : gameData.blackUsername();
-        if(!playerTurn.equals(user)){
-            sendErrorMessage("Unauthorized to resign");
-            return;
-        }
+//        String playerTurn = (turnColor == ChessGame.TeamColor.WHITE) ? gameData.whiteUsername() : gameData.blackUsername();
+//        if(!playerTurn.equals(user)){
+//            sendErrorMessage("Unauthorized to resign");
+//            return;
+//        }
 
         gameData.game().setTeamTurn(null);
         gameDAO.updateGame(gameID, gameData.game());
@@ -206,6 +206,7 @@ public class WebSocketHandler {
 
         if(gameData.game().isInCheck(turnColor)){
             gameData.game().setTeamTurn(null);
+            gameDAO.updateGame(gameID, gameData.game());
             sendErrorMessage("You are in stalemate, you have no legal moves");
             return;
         }

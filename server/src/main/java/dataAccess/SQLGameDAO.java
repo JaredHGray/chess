@@ -2,6 +2,7 @@ package dataAccess;
 
 import chess.ChessGame;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import model.GameData;
 
 import java.util.HashSet;
@@ -23,7 +24,7 @@ public class SQLGameDAO implements GameDAO{
                 preparedStatement.setString(2, newGame.whiteUsername());
                 preparedStatement.setString(3, newGame.blackUsername());
                 preparedStatement.setString(4, newGame.gameName());
-                Gson gson = new Gson();
+                Gson gson = new GsonBuilder().serializeNulls().create();
                 String gameJson = gson.toJson(newGame.game());
                 preparedStatement.setString(5, gameJson);
                 preparedStatement.executeUpdate();
@@ -120,9 +121,9 @@ public class SQLGameDAO implements GameDAO{
                 try (var rs = preparedStatement.executeQuery()) {
                     if (rs.next()) {
                         if (game != null) {
-                            var updateStatement = String.format("UPDATE game SET %s=? WHERE gameID=?", "game");
+                            var updateStatement = "UPDATE game SET game=? WHERE gameID=?";
                             try (var updatePreparedStatement = conn.prepareStatement(updateStatement)) {
-                                Gson gson = new Gson();
+                                Gson gson = new GsonBuilder().serializeNulls().create();
                                 String gameJson = gson.toJson(game);
                                 updatePreparedStatement.setString(1, gameJson);
                                 updatePreparedStatement.setInt(2, gameID);
