@@ -9,7 +9,7 @@ public class joinObserverCommand extends UserGameCommand {
         commandType = CommandType.JOIN_OBSERVER;
     }
 
-    public String getAuthToken(){
+    public String getAuth(){
         return getAuthString();
     }
 

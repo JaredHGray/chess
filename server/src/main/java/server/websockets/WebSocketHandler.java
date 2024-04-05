@@ -72,46 +72,52 @@ public class WebSocketHandler {
         int gameID = action.getGameID();
         String authToken = action.getAuthToken();
         String user = authDAO.getAuth(authToken);
-        if(user != null && !user.isEmpty()){
-            GameData gameData = gameDAO.findGame(gameID);
-            if(gameData != null){
-                if((playerColor == ChessGame.TeamColor.WHITE && Objects.equals(gameData.whiteUsername(), user)) || (playerColor == ChessGame.TeamColor.BLACK && Objects.equals(gameData.blackUsername(), user))){
-                    connections.put(authToken, session);
-                    gameUsersMap.computeIfAbsent(gameID, k -> new CopyOnWriteArrayList<>()).add(authToken);
-                    LoadGameMessage loadGameMessage = new LoadGameMessage(gameData.game());
-                    sendMessage(new Gson().toJson(loadGameMessage), session);
-                    var message = String.format("%s joined the game as the %s player", user, playerColor);
-                    broadcast(message, gameID, authToken);
-                }else{
-                    sendErrorMessage("Username does not match username associated with game");
-                }
-            }else{
-                sendErrorMessage("invalid gameID");
-            }
-        } else{
-            sendErrorMessage("invalid authToken");
+
+        if (user == null || user.isEmpty()) {
+            sendErrorMessage("Invalid authToken");
+            return;
+        }
+
+        GameData gameData = gameDAO.findGame(gameID);
+        if (gameData == null) {
+            sendErrorMessage("Invalid gameID");
+            return;
+        }
+
+        if((playerColor == ChessGame.TeamColor.WHITE && Objects.equals(gameData.whiteUsername(), user)) || (playerColor == ChessGame.TeamColor.BLACK && Objects.equals(gameData.blackUsername(), user))){
+            connections.put(authToken, session);
+            gameUsersMap.computeIfAbsent(gameID, k -> new CopyOnWriteArrayList<>()).add(authToken);
+            LoadGameMessage loadGameMessage = new LoadGameMessage(gameData.game());
+            sendMessage(new Gson().toJson(loadGameMessage), session);
+            var message = String.format("%s joined the game as the %s player", user, playerColor);
+            broadcast(message, gameID, authToken);
+        }else{
+            sendErrorMessage("Username does not match username associated with game");
         }
     }
 
     private void observePlayer(joinObserverCommand action) throws DataAccessException {
         int gameID = action.getGameID();
-        String authToken = action.getAuthToken();
+        String authToken = action.getAuth();
         String user = authDAO.getAuth(authToken);
-        if(user != null && !user.isEmpty()){
-            GameData gameData = gameDAO.findGame(gameID);
-            if(gameData != null){
-                    connections.put(authToken, session);
-                    gameUsersMap.computeIfAbsent(gameID, k -> new CopyOnWriteArrayList<>()).add(authToken);
-                    LoadGameMessage loadGameMessage = new LoadGameMessage(gameData.game());
-                    sendMessage(new Gson().toJson(loadGameMessage), session);
-                    var message = String.format("%s joined the game as an observer", user);
-                    broadcast(message, gameID, authToken);
-            }else{
-                sendErrorMessage("invalid gameID");
-            }
-        } else{
-            sendErrorMessage("invalid authToken");
+
+        if (user == null || user.isEmpty()) {
+            sendErrorMessage("Invalid authToken");
+            return;
         }
+
+        GameData gameData = gameDAO.findGame(gameID);
+        if (gameData == null) {
+            sendErrorMessage("Invalid gameID");
+            return;
+        }
+
+        connections.put(authToken, session);
+        gameUsersMap.computeIfAbsent(gameID, k -> new CopyOnWriteArrayList<>()).add(authToken);
+        LoadGameMessage loadGameMessage = new LoadGameMessage(gameData.game());
+        sendMessage(new Gson().toJson(loadGameMessage), session);
+        var message = String.format("%s joined the game as an observer", user);
+        broadcast(message, gameID, authToken);
     }
 
     private void leaveGame(leaveCommand action) throws DataAccessException {
