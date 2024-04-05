@@ -169,7 +169,7 @@ public class WebSocketHandler {
             return;
         }
 
-        if(!user.equals(gameData.whiteUsername()) || !user.equals(gameData.blackUsername())){
+        if(!user.equals(gameData.whiteUsername()) && !user.equals(gameData.blackUsername())){
             sendErrorMessage("Unauthorized to resign");
             return;
         }
