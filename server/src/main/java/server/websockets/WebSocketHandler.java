@@ -169,11 +169,10 @@ public class WebSocketHandler {
             return;
         }
 
-//        String playerTurn = (turnColor == ChessGame.TeamColor.WHITE) ? gameData.whiteUsername() : gameData.blackUsername();
-//        if(!playerTurn.equals(user)){
-//            sendErrorMessage("Unauthorized to resign");
-//            return;
-//        }
+        if(!user.equals(gameData.whiteUsername()) || !user.equals(gameData.blackUsername())){
+            sendErrorMessage("Unauthorized to resign");
+            return;
+        }
 
         gameData.game().setTeamTurn(null);
         gameDAO.updateGame(gameID, gameData.game());
