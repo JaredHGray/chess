@@ -151,7 +151,35 @@ public class WebSocketHandler {
         String authToken = action.getAuth();
         String user = authDAO.getAuth(authToken);
 
+        if (user == null || user.isEmpty()) {
+            sendErrorMessage("Invalid authToken");
+            return;
+        }
 
+        GameData gameData = gameDAO.findGame(gameID);
+        if (gameData == null) {
+            sendErrorMessage("Invalid gameID");
+            return;
+        }
+
+        ChessGame game = gameData.game();
+        ChessGame.TeamColor turnColor = game.getTeamTurn();
+        if(turnColor == null){
+            sendErrorMessage("Your opponent has already resigned");
+            return;
+        }
+
+        String playerTurn = (turnColor == ChessGame.TeamColor.WHITE) ? gameData.whiteUsername() : gameData.blackUsername();
+        if(!playerTurn.equals(user)){
+            sendErrorMessage("Unauthorized to resign");
+            return;
+        }
+
+        gameData.game().setTeamTurn(null);
+        gameDAO.updateGame(gameID, gameData.game());
+        notifyCurrentClient("You resigned! Your opponent wins");
+        var message = String.format(turnColor + " resigned from " + gameData.gameName());
+        broadcast(message, gameID, authToken);
     }
 
     public void makeMove(makeMoveCommand action) throws DataAccessException {
@@ -204,7 +232,7 @@ public class WebSocketHandler {
         if(gameData.game().isInCheckmate(checkColor)){
             gameData.game().setTeamTurn(null);
             gameDAO.updateGame(gameID, gameData.game());
-            sendErrorMessage("Checkmate! " + turnColor + " player wins!");
+            notifyCurrentClient("Checkmate! " + turnColor + " player wins!");
             var message = String.format("Checkmate! " + turnColor + " player wins!");
             broadcast(message, gameID, authToken);
             return;
@@ -249,6 +277,10 @@ public class WebSocketHandler {
         }
     }
 
+    private void notifyCurrentClient(String message){
+        notificationMessage notificationMessage = new notificationMessage(message);
+        sendMessage(new Gson().toJson(notificationMessage), session);
+    }
     private void sendErrorMessage(String errorMessage) {
         ServerMessage error = new ErrorMessage(errorMessage);
         sendMessage(new Gson().toJson(error), session);
