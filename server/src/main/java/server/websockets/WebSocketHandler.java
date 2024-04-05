@@ -18,6 +18,7 @@ import webSocketMessages.userCommands.*;
 
 
 import java.io.IOException;
+import java.time.temporal.Temporal;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -140,20 +141,30 @@ public class WebSocketHandler {
         String user = authDAO.getAuth(authToken);
         if(user != null && !user.isEmpty()){
             GameData gameData = gameDAO.findGame(gameID);
-            if(gameData != null){
+            if(gameData != null) {
                 ChessPiece.PieceType pieceType = gameData.game().getBoard().getPiece(action.getMove().getStartPosition()).getPieceType();
-                try {
-                    gameData.game().makeMove(action.getMove());
-                } catch (InvalidMoveException e) {
-                    sendErrorMessage("Invalid move: The chess piece cannot move to the specified position.");
-                    return;
+                ChessGame.TeamColor turnColor = gameData.game().getTeamTurn();
+                if ((turnColor == ChessGame.TeamColor.WHITE && gameData.whiteUsername().equals(user)) || (turnColor == ChessGame.TeamColor.BLACK && gameData.blackUsername().equals(user))) {
+                    try {
+                        gameData.game().makeMove(action.getMove());
+                        if (turnColor == ChessGame.TeamColor.WHITE) {
+                            gameData.game().setTeamTurn(ChessGame.TeamColor.BLACK);
+                        } else {
+                            gameData.game().setTeamTurn(ChessGame.TeamColor.WHITE);
+                        }
+                    } catch (InvalidMoveException e) {
+                        sendErrorMessage("Invalid move: The chess piece cannot move to the specified position.");
+                        return;
+                    }
+                    gameDAO.updateGame(gameID, gameData.game());
+                    loadBroadcast(gameID, gameData.game());
+                    var message = String.format("%s moved the %s piece from %s to %s", user, pieceType, action.getMove().getStartPosition(), action.getMove().getEndPosition());
+                    broadcast(message, gameID, authToken);
+                } else {
+                    sendErrorMessage("invalid gameID");
                 }
-                gameDAO.updateGame(gameID, gameData.game());
-                loadBroadcast(gameID, gameData.game());
-                var message = String.format("%s moved the %s piece from %s to %s", user, pieceType, action.getMove().getStartPosition(), action.getMove().getEndPosition());
-                broadcast(message, gameID, authToken);
             } else{
-                sendErrorMessage("invalid gameID");
+                sendErrorMessage("unauthorized to make move, not your turn");
             }
         } else{
             sendErrorMessage("invalid authToken");
