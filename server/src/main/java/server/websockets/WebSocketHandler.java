@@ -134,7 +134,7 @@ public class WebSocketHandler {
         }
     }
 
-    public void makeMove(makeMoveCommand action) throws DataAccessException, InvalidMoveException {
+    public void makeMove(makeMoveCommand action) throws DataAccessException {
         int gameID = action.getGameID();
         String authToken = action.getAuth();
         String user = authDAO.getAuth(authToken);
@@ -142,7 +142,12 @@ public class WebSocketHandler {
             GameData gameData = gameDAO.findGame(gameID);
             if(gameData != null){
                 ChessPiece.PieceType pieceType = gameData.game().getBoard().getPiece(action.getMove().getStartPosition()).getPieceType();
-                gameData.game().makeMove(action.getMove());
+                try {
+                    gameData.game().makeMove(action.getMove());
+                } catch (InvalidMoveException e) {
+                    sendErrorMessage("Invalid move: The chess piece cannot move to the specified position.");
+                    return;
+                }
                 gameDAO.updateGame(gameID, gameData.game());
                 loadBroadcast(gameID, gameData.game());
                 var message = String.format("%s moved the %s piece from %s to %s", user, pieceType, action.getMove().getStartPosition(), action.getMove().getEndPosition());
