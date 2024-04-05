@@ -145,26 +145,30 @@ public class WebSocketHandler {
                 ChessPiece.PieceType pieceType = gameData.game().getBoard().getPiece(action.getMove().getStartPosition()).getPieceType();
                 ChessGame.TeamColor turnColor = gameData.game().getTeamTurn();
                 if ((turnColor == ChessGame.TeamColor.WHITE && gameData.whiteUsername().equals(user)) || (turnColor == ChessGame.TeamColor.BLACK && gameData.blackUsername().equals(user))) {
-                    try {
-                        gameData.game().makeMove(action.getMove());
-                        if (turnColor == ChessGame.TeamColor.WHITE) {
-                            gameData.game().setTeamTurn(ChessGame.TeamColor.BLACK);
-                        } else {
-                            gameData.game().setTeamTurn(ChessGame.TeamColor.WHITE);
+                    if(gameData.game().getBoard().getPiece(action.getMove().getStartPosition()).getTeamColor() == turnColor) {
+                        try {
+                            gameData.game().makeMove(action.getMove());
+                            if (turnColor == ChessGame.TeamColor.WHITE) {
+                                gameData.game().setTeamTurn(ChessGame.TeamColor.BLACK);
+                            } else {
+                                gameData.game().setTeamTurn(ChessGame.TeamColor.WHITE);
+                            }
+                        } catch (InvalidMoveException e) {
+                            sendErrorMessage("Invalid move: The chess piece cannot move to the specified position.");
+                            return;
                         }
-                    } catch (InvalidMoveException e) {
-                        sendErrorMessage("Invalid move: The chess piece cannot move to the specified position.");
-                        return;
+                        gameDAO.updateGame(gameID, gameData.game());
+                        loadBroadcast(gameID, gameData.game());
+                        var message = String.format("%s moved the %s piece from %s to %s", user, pieceType, action.getMove().getStartPosition(), action.getMove().getEndPosition());
+                        broadcast(message, gameID, authToken);
+                    } else{
+                        sendErrorMessage("invalid move: not your piece");
                     }
-                    gameDAO.updateGame(gameID, gameData.game());
-                    loadBroadcast(gameID, gameData.game());
-                    var message = String.format("%s moved the %s piece from %s to %s", user, pieceType, action.getMove().getStartPosition(), action.getMove().getEndPosition());
-                    broadcast(message, gameID, authToken);
                 } else {
-                    sendErrorMessage("invalid gameID");
+                    sendErrorMessage("unauthorized to make move, not your turn");
                 }
             } else{
-                sendErrorMessage("unauthorized to make move, not your turn");
+                sendErrorMessage("invalid gameID");
             }
         } else{
             sendErrorMessage("invalid authToken");
