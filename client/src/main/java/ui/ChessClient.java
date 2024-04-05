@@ -229,7 +229,7 @@ public class ChessClient {
         ChessPosition startPosition = getPosition(piece);
         Collection<ChessMove> validMoves = webSocketGame.validMoves(startPosition);
         boolean white = playerColor == ChessGame.TeamColor.WHITE;
-        printBoard.highlightMoves(white, webSocketGame.getBoard(), validMoves);
+        printBoard.highlightMoves(white, webSocketGame.getBoard(), validMoves, startPosition);
     }
 
     private void observeGame(PrintStream out) {

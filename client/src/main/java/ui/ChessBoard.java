@@ -23,21 +23,21 @@ public class ChessBoard {
         chessboard = board;
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         if (whitePerspective) {
-            drawChessBoard(out, true);  // Print from white player perspective
+            drawChessBoard(out, true, null, null);  // Print from white player perspective
         } if (!whitePerspective) {
-            drawChessBoard(out, false);  // Print from black player perspective
+            drawChessBoard(out, false, null, null);  // Print from black player perspective
         }
         out.print(EscapeSequences.RESET_BG_COLOR);
         out.print(EscapeSequences.RESET_TEXT_COLOR);
     }
 
-    public void highlightMoves(boolean whitePerspective, chess.ChessBoard board, Collection<ChessMove> validMoves) {
+    public void highlightMoves(boolean whitePerspective, chess.ChessBoard board, Collection<ChessMove> validMoves, ChessPosition chosenPiece) {
         chessboard = board;
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         if (whitePerspective) {
-            drawChessBoard(out, true);  // Print from white player perspective
+            drawChessBoard(out, true, validMoves, chosenPiece);  // Print from white player perspective
         } if (!whitePerspective) {
-            drawChessBoard(out, false);  // Print from black player perspective
+            drawChessBoard(out, false, validMoves, chosenPiece);  // Print from black player perspective
         }
         out.print(EscapeSequences.RESET_BG_COLOR);
         out.print(EscapeSequences.RESET_TEXT_COLOR);
@@ -72,7 +72,7 @@ public class ChessBoard {
         out.print(player);
     }
 
-    private static void drawChessBoard(PrintStream out, boolean whitePerspective) {
+    private static void drawChessBoard(PrintStream out, boolean whitePerspective, Collection<ChessMove> validMoves, ChessPosition chosenPiece) {
         colHeaders(out, whitePerspective);
 
         for (int boardRow = whitePerspective ? BOARD_SIZE_IN_SQUARES - 1 : 0;
@@ -80,7 +80,7 @@ public class ChessBoard {
              boardRow += (whitePerspective ? -1 : 1)) {
 
             printHeaderText(out, columnHeaders[boardRow]);
-            drawRowOfSquares(out, boardRow);
+            drawRowOfSquares(out, boardRow, validMoves, chosenPiece);
             printHeaderText(out, columnHeaders[boardRow]);
             resetBackground(out);
             out.println();
@@ -88,19 +88,31 @@ public class ChessBoard {
         colHeaders(out, whitePerspective);
     }
 
-    private static void drawRowOfSquares(PrintStream out, int rowNumber) {
+    private static void drawRowOfSquares(PrintStream out, int rowNumber, Collection<ChessMove> validMoves, ChessPosition chosenPiece) {
         String currentPiece;
             for (int boardCol = 0; boardCol < BOARD_SIZE_IN_SQUARES; boardCol++) {
+                ChessPosition currentPosition = new ChessPosition(rowNumber + 1, boardCol + 1);
                 if ((boardCol + rowNumber) % 2 == 0) {
                     setWhite(out);
                 } else {
                     setBlack(out);
                 }
-                if(chessboard.getBoard()[rowNumber][boardCol] == null){
+
+                if (chosenPiece != null && chosenPiece.equals(currentPosition)) {
+                    // Highlight chosen piece in yellow
+                    out.print(EscapeSequences.SET_BG_COLOR_YELLOW);
+                    out.print(EscapeSequences.SET_TEXT_COLOR_BLACK);
+                    currentPiece = discoverPiece(chessboard.getPiece(currentPosition).getPieceType(), chessboard.getPiece(currentPosition).getTeamColor());
+                } else if (validMoves != null && validMoves.contains(currentPosition)) {
+                    // Highlight available moves in green
+                    out.print(EscapeSequences.SET_BG_COLOR_GREEN);
+                    out.print(EscapeSequences.SET_TEXT_COLOR_BLACK);
+                    currentPiece = discoverPiece(chessboard.getPiece(currentPosition).getPieceType(), chessboard.getPiece(currentPosition).getTeamColor());
+                } else if(chessboard.getBoard()[rowNumber][boardCol] == null){
                     currentPiece = EMPTY;
                 } else {
-                    ChessPosition position = new ChessPosition(rowNumber+1, boardCol+1);
-                    currentPiece = discoverPiece(chessboard.getPiece(position).getPieceType(), chessboard.getPiece(position).getTeamColor());
+                    //ChessPosition position = new ChessPosition(rowNumber+1, boardCol+1);
+                    currentPiece = discoverPiece(chessboard.getPiece(currentPosition).getPieceType(), chessboard.getPiece(currentPosition).getTeamColor());
                 }
                 printStarterBoard(out, currentPiece, rowNumber);
                 resetBackground(out);
