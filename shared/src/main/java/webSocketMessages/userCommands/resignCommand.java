@@ -7,4 +7,12 @@ public class resignCommand extends UserGameCommand{
         this.gameID = gameID;
         commandType = CommandType.RESIGN;
     }
+
+    public String getAuth(){
+        return getAuthString();
+    }
+
+    public int getGameID(){
+        return gameID;
+    }
 }

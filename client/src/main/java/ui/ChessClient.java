@@ -217,6 +217,7 @@ public class ChessClient {
     private void resignGame(PrintStream out){
         out.println();
         out.println("Resign option selected");
+        ws.resignGameSocket(authToken, chosenGame.gameID());
     }
 
     private void highlightChoices(PrintStream out){

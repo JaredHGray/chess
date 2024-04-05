@@ -61,6 +61,9 @@ public class WebSocketHandler {
             case MAKE_MOVE:
                 makeMove(new Gson().fromJson(message, makeMoveCommand.class));
                 break;
+            case RESIGN:
+                resignGame(new Gson().fromJson(message, resignCommand.class));
+                break;
         }
     }
 
@@ -133,6 +136,12 @@ public class WebSocketHandler {
         } else{
             sendErrorMessage("invalid authToken");
         }
+    }
+
+    private void resignGame(resignCommand action) throws DataAccessException {
+        int gameID = action.getGameID();
+        String authToken = action.getAuth();
+        String user = authDAO.getAuth(authToken);
     }
 
     public void makeMove(makeMoveCommand action) throws DataAccessException {
