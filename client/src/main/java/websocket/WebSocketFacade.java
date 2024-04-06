@@ -14,7 +14,7 @@ import java.net.URISyntaxException;
 public class WebSocketFacade extends Endpoint {
     Session session;
     private ServerMessageListener messageListener;
-    public WebSocketFacade(String url) throws DataAccessException {
+    public WebSocketFacade(String url) {
         try {
             url = url.replace("http", "ws");
             URI socketURI = new URI(url + "/connect");
@@ -30,7 +30,7 @@ public class WebSocketFacade extends Endpoint {
                 }
             });
         } catch (DeploymentException | IOException | URISyntaxException ex) {
-            throw new DataAccessException(ex.getMessage());
+            throw new RuntimeException("Connection error", ex);
         }
     }
 
