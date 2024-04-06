@@ -2,7 +2,6 @@ package server;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import dataAccess.DataAccessException;
 import model.*;
 
 import java.io.*;
@@ -17,44 +16,70 @@ public class ServerFacade {
         serverUrl = url;
     }
 
-    public AuthData registerUser(UserData user) throws DataAccessException {
-        var path = "/user";
-        return this.makeRequest("POST", path, user, AuthData.class, null);
+    public AuthData registerUser(UserData user) {
+        try {
+            var path = "/user";
+            return this.makeRequest("POST", path, user, AuthData.class, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
-    public AuthData loginUser(UserData user) throws DataAccessException {
-        var path = "/session";
-        return this.makeRequest("POST", path, user, AuthData.class, null);
+    public AuthData loginUser(UserData user) {
+        try {
+            var path = "/session";
+            return this.makeRequest("POST", path, user, AuthData.class, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
-    public void logoutUser(String authToken) throws DataAccessException {
-        var path = "/session";
-        this.makeRequest("DELETE", path, null, null, authToken);
+    public void logoutUser(String authToken) {
+        try {
+            var path = "/session";
+            this.makeRequest("DELETE", path, null, null, authToken);
+        } catch (Exception e) {e.printStackTrace();}
     }
 
-    public GameData[] listGames(String authToken) throws DataAccessException {
-        var path = "/game";
-        record ListGamesResponse(GameData[] games) {}
-        ListGamesResponse response = this.makeRequest("GET", path, null, ListGamesResponse.class, authToken);
-        return response.games();
+    public GameData[] listGames(String authToken) {
+        try {
+            var path = "/game";
+            record ListGamesResponse(GameData[] games) {
+            }
+            ListGamesResponse response = this.makeRequest("GET", path, null, ListGamesResponse.class, authToken);
+            return response.games();
+        } catch (Exception e) {
+        e.printStackTrace();
+        return null;
+        }
     }
 
-    public GameData makeGame(GameData game, String authToken) throws DataAccessException {
-        var path = "/game";
-        return this.makeRequest("POST", path, game, GameData.class, authToken);
+    public GameData makeGame(GameData game, String authToken) {
+        try {
+            var path = "/game";
+            return this.makeRequest("POST", path, game, GameData.class, authToken);
+        } catch (Exception e) {
+        e.printStackTrace();
+        return null;
+        }
     }
 
-    public void joinGame(int gameID, String playerColor, String authToken) throws DataAccessException {
-        var path = "/game";
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("gameID", gameID);
-        requestBody.put("playerColor", playerColor);
-        this.makeRequest("PUT", path, requestBody, GameData.class, authToken);
-       // webSocketHandler.joinGameMessage((String) findGame.get("user"), playerColor, authToken, gameID); //communicator sends message to handler over internet
+    public void joinGame(int gameID, String playerColor, String authToken) {
+        try {
+            var path = "/game";
+            Map<String, Object> requestBody = new HashMap<>();
+            requestBody.put("gameID", gameID);
+            requestBody.put("playerColor", playerColor);
+            this.makeRequest("PUT", path, requestBody, GameData.class, authToken);
+        } catch (Exception e) {
+        e.printStackTrace();
+        }
     }
 
 
-    private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass, String header) throws DataAccessException {
+    private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass, String header) {
         try {
             URL url = (new URI(serverUrl + path)).toURL();
             HttpURLConnection http = (HttpURLConnection) url.openConnection();
@@ -70,7 +95,8 @@ public class ServerFacade {
             throwIfNotSuccessful(http);
             return readBody(http, responseClass);
         } catch (Exception ex) {
-            throw new DataAccessException(ex.getMessage());
+            ex.printStackTrace();
+            return null;
         }
     }
 
@@ -84,7 +110,7 @@ public class ServerFacade {
         }
     }
 
-    private void throwIfNotSuccessful(HttpURLConnection http) throws IOException, DataAccessException {
+    private void throwIfNotSuccessful(HttpURLConnection http) throws IOException {
         int statusCode = http.getResponseCode();
         if (!isSuccessful(statusCode)) {
             String errorMessage = String.valueOf(statusCode);
@@ -101,7 +127,7 @@ public class ServerFacade {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            throw new DataAccessException(errorMessage);
+            throw new RuntimeException(errorMessage);
         }
     }
 
