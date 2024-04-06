@@ -16,7 +16,6 @@ public class ChessBoard {
     private static chess.ChessBoard chessboard;
 
     public void run(boolean whitePerspective, chess.ChessBoard board) {
-        //initializeChessboard();
         chessboard = board;
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         if (whitePerspective) {
@@ -162,7 +161,7 @@ public class ChessBoard {
     }
 
     private static String discoverPiece(ChessPiece.PieceType type, ChessGame.TeamColor color){
-        String piece = "";
+        String piece;
         if(color == ChessGame.TeamColor.WHITE){
             piece = switch (type) {
                 case ROOK -> EscapeSequences.WHITE_ROOK;
