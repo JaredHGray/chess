@@ -61,7 +61,7 @@ public class WebSocketFacade extends Endpoint {
     }
 
     public void observePlayerSocket(int gameID, String authToken){
-        joinObserverCommand observerCommand = new joinObserverCommand(authToken, gameID);
+        JoinObserverCommand observerCommand = new JoinObserverCommand(authToken, gameID);
         sendUserCommand(observerCommand);
     }
 

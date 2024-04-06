@@ -50,7 +50,7 @@ public class WebSocketHandler {
                 joinPlayer(new Gson().fromJson(message, joinPlayerCommand.class));
                 break;
             case JOIN_OBSERVER:
-                observePlayer(new Gson().fromJson(message, joinObserverCommand.class));
+                observePlayer(new Gson().fromJson(message, JoinObserverCommand.class));
                 break;
             case LEAVE:
                 leaveGame(new Gson().fromJson(message, leaveCommand.class));
@@ -93,7 +93,7 @@ public class WebSocketHandler {
         }
     }
 
-    private void observePlayer(joinObserverCommand action) throws DataAccessException {
+    private void observePlayer(JoinObserverCommand action) throws DataAccessException {
         int gameID = action.getGameID();
         String authToken = action.getAuth();
         String user = authDAO.getAuth(authToken);
@@ -263,13 +263,9 @@ public class WebSocketHandler {
         List<String> tokens = gameUsersMap.get(gameID);
         for(String storedAuth : tokens) {
             if (!storedAuth.equals(currentAuth)) {
-//                for (String sessionAuth : connections.keySet()) {
-//                    if (storedAuth.equals(sessionAuth)) {
-                        NotificationMessage notificationMessage = new NotificationMessage(message);
-                        String notification = new Gson().toJson(notificationMessage);
-                        sendMessage(notification, connections.get(storedAuth));
-//                    }
-//                }
+                NotificationMessage notificationMessage = new NotificationMessage(message);
+                String notification = new Gson().toJson(notificationMessage);
+                sendMessage(notification, connections.get(storedAuth));
             }
         }
     }
