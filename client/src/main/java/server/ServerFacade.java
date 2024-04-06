@@ -11,7 +11,6 @@ import java.util.Map;
 
 public class ServerFacade {
     private final String serverUrl;
-
     public ServerFacade(String url) {
         serverUrl = url;
     }
@@ -143,7 +142,6 @@ public class ServerFacade {
         }
         return response;
     }
-
 
     private boolean isSuccessful(int status) {
         return status / 100 == 2;

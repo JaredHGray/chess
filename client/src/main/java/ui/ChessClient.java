@@ -9,7 +9,6 @@ import chess.ChessGame;
 import chess.ChessMove;
 import chess.ChessPiece;
 import chess.ChessPosition;
-import dataAccess.DataAccessException;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
@@ -18,9 +17,7 @@ import webSocketMessages.serverMessages.ErrorMessage;
 import webSocketMessages.serverMessages.LoadGameMessage;
 import webSocketMessages.serverMessages.notificationMessage;
 import websocket.WebSocketFacade;
-
 import static java.lang.System.out;
-//import chess.ChessBoard;
 
 public class ChessClient {
 
@@ -252,7 +249,7 @@ public class ChessClient {
                 gameChoice = scanner.nextInt();
                 executeMoveChoice(gameChoice, out);
             } while (gameChoice != 3 && gameChoice != 5);
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             System.out.println("Failure: " + e.getMessage());
         }
     }
@@ -285,7 +282,7 @@ public class ChessClient {
                 gameChoice = scanner.nextInt();
                 executeMoveChoice(gameChoice, out);
             } while (gameChoice != 3 && gameChoice != 5);
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             System.out.println("Failure: " + e.getMessage());
         }
     }
@@ -314,7 +311,7 @@ public class ChessClient {
             GameData gameInfo = new GameData(0, null, null, gameName, null);
             server.makeGame(gameInfo, authToken);
             out.println("Game titled: " + gameName + " created successfully");
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             System.out.println("Game creation failed: " + e.getMessage());
         }
     }
@@ -324,7 +321,7 @@ public class ChessClient {
         out.println("Logout option selected");
         try {
             server.logoutUser(authToken);
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             System.out.println("Logout failed: " + e.getMessage());
         }
         registeredUsername = null;
@@ -395,7 +392,7 @@ public class ChessClient {
                 gameChoice = scanner.nextInt();
                 executeGameChoice(gameChoice, out);
             } while (gameChoice != 2);
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             System.out.println("Login failed: " + e.getMessage());
         }
     }
@@ -425,7 +422,7 @@ public class ChessClient {
                 gameChoice = scanner.nextInt();
                 executeGameChoice(gameChoice, out);
             } while (gameChoice != 2);
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             System.out.println("Registration failed: " + e.getMessage());
         }
     }
@@ -433,7 +430,7 @@ public class ChessClient {
     private void getGames() {
         try {
             games = server.listGames(authToken);
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             out.println("Failure: " + e.getMessage());
         }
     }
