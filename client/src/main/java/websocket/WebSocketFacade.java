@@ -3,7 +3,6 @@ import chess.ChessGame;
 import chess.ChessMove;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import dataAccess.DataAccessException;
 import webSocketMessages.userCommands.*;
 import webSocketMessages.serverMessages.*;
 
