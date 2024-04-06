@@ -42,7 +42,7 @@ public class WebSocketFacade extends Endpoint {
                     messageListener.onLoadGame(loadGameMessage);
                     break;
                 case NOTIFICATION:
-                    notificationMessage notificationMessage = new Gson().fromJson(message, notificationMessage.class);
+                    NotificationMessage notificationMessage = new Gson().fromJson(message, NotificationMessage.class);
                     messageListener.onNotification(notificationMessage);
                     break;
                 case ERROR:
@@ -100,7 +100,7 @@ public class WebSocketFacade extends Endpoint {
     @ClientEndpoint
     public interface ServerMessageListener {
         void onLoadGame(LoadGameMessage message);
-        void onNotification(notificationMessage message);
+        void onNotification(NotificationMessage message);
         void onError(ErrorMessage message);
     }
 }

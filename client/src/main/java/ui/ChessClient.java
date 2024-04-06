@@ -15,7 +15,7 @@ import model.UserData;
 import server.ServerFacade;
 import webSocketMessages.serverMessages.ErrorMessage;
 import webSocketMessages.serverMessages.LoadGameMessage;
-import webSocketMessages.serverMessages.notificationMessage;
+import webSocketMessages.serverMessages.NotificationMessage;
 import websocket.WebSocketFacade;
 import static java.lang.System.out;
 
@@ -463,7 +463,7 @@ public class ChessClient {
         }
 
         @Override
-        public void onNotification(notificationMessage message) {
+        public void onNotification(NotificationMessage message) {
             Scanner scanner = new Scanner(System.in);
             out.print(EscapeSequences.SET_TEXT_COLOR_BLUE);
             out.println();

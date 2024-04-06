@@ -10,8 +10,8 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import webSocketMessages.serverMessages.ErrorMessage;
 import webSocketMessages.serverMessages.LoadGameMessage;
+import webSocketMessages.serverMessages.NotificationMessage;
 import webSocketMessages.serverMessages.ServerMessage;
-import webSocketMessages.serverMessages.notificationMessage;
 import webSocketMessages.userCommands.*;
 
 
@@ -265,7 +265,7 @@ public class WebSocketHandler {
             if (!storedAuth.equals(currentAuth)) {
 //                for (String sessionAuth : connections.keySet()) {
 //                    if (storedAuth.equals(sessionAuth)) {
-                        notificationMessage notificationMessage = new notificationMessage(message);
+                        NotificationMessage notificationMessage = new NotificationMessage(message);
                         String notification = new Gson().toJson(notificationMessage);
                         sendMessage(notification, connections.get(storedAuth));
 //                    }
@@ -275,7 +275,7 @@ public class WebSocketHandler {
     }
 
     private void notifyCurrentClient(String message){
-        notificationMessage notificationMessage = new notificationMessage(message);
+        NotificationMessage notificationMessage = new NotificationMessage(message);
         sendMessage(new Gson().toJson(notificationMessage), session);
     }
     private void sendErrorMessage(String errorMessage) {
