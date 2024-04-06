@@ -96,18 +96,5 @@ public class SQLUserDAO implements UserDAO{
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         return encoder.matches(clearTextPassword, storedPassword);
     }
-
-    //    private void configureDatabase() throws DataAccessException {
-//        DatabaseManager.createDatabase();
-//        try (var conn = DatabaseManager.getConnection()) {
-//            for (var statement : createStatements) {
-//                try (var preparedStatement = conn.prepareStatement(statement)) {
-//                    preparedStatement.executeUpdate();
-//                }
-//            }
-//        } catch (SQLException ex) {
-//            throw new DataAccessException(String.format("Unable to configure database: %s", ex.getMessage()));
-//        }
-//    }
 }
 
