@@ -17,7 +17,6 @@ import server.ServerFacade;
 import webSocketMessages.serverMessages.ErrorMessage;
 import webSocketMessages.serverMessages.LoadGameMessage;
 import webSocketMessages.serverMessages.notificationMessage;
-import websocket.NotificationHandler;
 import websocket.WebSocketFacade;
 
 import static java.lang.System.out;
@@ -35,10 +34,6 @@ public class ChessClient {
     private GameData chosenGame;
     private ChessGame.TeamColor playerColor;
     ChessGame webSocketGame;
-    private final NotificationHandler notificationHandler = notification->{
-        out.println("yellow");
-        out.println(notification);
-    };
     private WebSocketFacade ws;
 
     public ChessClient(String serverUrl) {
