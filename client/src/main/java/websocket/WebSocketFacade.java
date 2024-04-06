@@ -2,11 +2,8 @@ package websocket;
 import chess.ChessGame;
 import chess.ChessMove;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import dataAccess.DataAccessException;
-import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
-import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import webSocketMessages.userCommands.*;
 import webSocketMessages.serverMessages.*;
 

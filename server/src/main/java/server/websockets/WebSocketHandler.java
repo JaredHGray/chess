@@ -3,10 +3,8 @@ import chess.ChessGame;
 import chess.ChessPiece;
 import chess.InvalidMoveException;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import dataAccess.*;
 import model.GameData;
-import org.eclipse.jetty.websocket.api.RemoteEndpoint;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
@@ -18,7 +16,6 @@ import webSocketMessages.userCommands.*;
 
 
 import java.io.IOException;
-import java.time.temporal.Temporal;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
