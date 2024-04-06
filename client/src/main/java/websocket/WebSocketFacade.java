@@ -76,7 +76,7 @@ public class WebSocketFacade extends Endpoint {
     }
 
     public void resignGameSocket(String authToken, int gameID){
-        resignCommand resignCommand = new resignCommand(authToken, gameID);
+        ResignCommand resignCommand = new ResignCommand(authToken, gameID);
         sendUserCommand(resignCommand);
     }
 
