@@ -76,7 +76,7 @@ public class ChessBoard {
              boardRow += (whitePerspective ? -1 : 1)) {
 
             printHeaderText(out, columnHeaders[boardRow]);
-            drawRowOfSquares(out, boardRow, validMoves, chosenPiece);
+            drawRowOfSquares(out, whitePerspective, boardRow, validMoves, chosenPiece);
             printHeaderText(out, columnHeaders[boardRow]);
             resetBackground(out);
             out.println();
@@ -84,10 +84,15 @@ public class ChessBoard {
         colHeaders(out, whitePerspective);
     }
 
-    private static void drawRowOfSquares(PrintStream out, int rowNumber, Collection<ChessMove> validMoves, ChessPosition chosenPiece) {
+    private static void drawRowOfSquares(PrintStream out,boolean whitePerspective, int rowNumber, Collection<ChessMove> validMoves, ChessPosition chosenPiece) {
         String currentPiece;
             for (int boardCol = 0; boardCol < BOARD_SIZE_IN_SQUARES; boardCol++) {
-                ChessPosition currentPosition = new ChessPosition(rowNumber + 1, boardCol + 1);
+                ChessPosition currentPosition;
+                if (whitePerspective) {
+                    currentPosition = new ChessPosition(rowNumber + 1, boardCol + 1);
+                } else {
+                    currentPosition = new ChessPosition(BOARD_SIZE_IN_SQUARES - rowNumber, boardCol + 1);
+                }
                 if ((boardCol + rowNumber) % 2 == 0) {
                     setWhite(out);
                 } else {
