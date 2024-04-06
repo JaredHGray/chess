@@ -3,11 +3,11 @@ package webSocketMessages.userCommands;
 import chess.ChessGame;
 import com.google.gson.Gson;
 
-public class joinPlayerCommand extends UserGameCommand {
-    private int gameID;
-    private ChessGame.TeamColor playerColor;
+public class JoinPlayerCommand extends UserGameCommand {
+    private final int gameID;
+    private final ChessGame.TeamColor playerColor;
 
-    public joinPlayerCommand(String authToken, int gameID, ChessGame.TeamColor playerColor) {
+    public JoinPlayerCommand(String authToken, int gameID, ChessGame.TeamColor playerColor) {
         super(authToken);
         this.gameID = gameID;
         this.playerColor = playerColor;

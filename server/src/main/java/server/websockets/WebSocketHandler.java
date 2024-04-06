@@ -47,7 +47,7 @@ public class WebSocketHandler {
         this.session = session;
         switch (action.getCommandType()){
             case JOIN_PLAYER:
-                joinPlayer(new Gson().fromJson(message, joinPlayerCommand.class));
+                joinPlayer(new Gson().fromJson(message, JoinPlayerCommand.class));
                 break;
             case JOIN_OBSERVER:
                 observePlayer(new Gson().fromJson(message, JoinObserverCommand.class));
@@ -64,7 +64,7 @@ public class WebSocketHandler {
         }
     }
 
-    private void joinPlayer(joinPlayerCommand action) throws DataAccessException {
+    private void joinPlayer(JoinPlayerCommand action) throws DataAccessException {
         var playerColor = action.getPlayerColor();
         int gameID = action.getGameID();
         String authToken = action.getAuthToken();

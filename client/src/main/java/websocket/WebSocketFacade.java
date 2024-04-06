@@ -56,7 +56,7 @@ public class WebSocketFacade extends Endpoint {
     }
 
     public void joinPlayerSocket(int gameID, ChessGame.TeamColor playerColor, String authToken) {
-        joinPlayerCommand joinPlayerCommand = new joinPlayerCommand(authToken, gameID, playerColor);
+        JoinPlayerCommand joinPlayerCommand = new JoinPlayerCommand(authToken, gameID, playerColor);
         sendUserCommand(joinPlayerCommand);
     }
 
