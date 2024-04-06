@@ -66,7 +66,7 @@ public class WebSocketFacade extends Endpoint {
     }
 
     public void makeMoveSocket(String authToken, int gameID, ChessMove move){
-        makeMoveCommand moveCommand = new makeMoveCommand(authToken, gameID, move);
+        MakeMoveCommand moveCommand = new MakeMoveCommand(authToken, gameID, move);
         sendUserCommand(moveCommand);
     }
 

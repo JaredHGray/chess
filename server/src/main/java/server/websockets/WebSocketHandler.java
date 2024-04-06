@@ -56,7 +56,7 @@ public class WebSocketHandler {
                 leaveGame(new Gson().fromJson(message, LeaveCommand.class));
                 break;
             case MAKE_MOVE:
-                makeMove(new Gson().fromJson(message, makeMoveCommand.class));
+                makeMove(new Gson().fromJson(message, MakeMoveCommand.class));
                 break;
             case RESIGN:
                 resignGame(new Gson().fromJson(message, resignCommand.class));
@@ -178,7 +178,7 @@ public class WebSocketHandler {
         broadcast(message, gameID, authToken);
     }
 
-    public void makeMove(makeMoveCommand action) throws DataAccessException {
+    public void makeMove(MakeMoveCommand action) throws DataAccessException {
         int gameID = action.getGameID();
         String authToken = action.getAuth();
         String user = authDAO.getAuth(authToken);
