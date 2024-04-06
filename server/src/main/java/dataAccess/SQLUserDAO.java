@@ -3,11 +3,22 @@ package dataAccess;
 import model.UserData;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import java.sql.*;
+import static dataAccess.ConfigureDatabase.configureDatabase;
 
 public class SQLUserDAO implements UserDAO{
 
     public SQLUserDAO() throws DataAccessException {
-        configureDatabase();
+        String[] createStatements = {
+                """
+            CREATE TABLE IF NOT EXISTS  users (
+              `username` VARCHAR(255) NOT NULL,
+              `password` VARCHAR(255) NOT NULL,
+              `email` VARCHAR(255) NOT NULL,
+              PRIMARY KEY (`username`)
+            );
+            """
+        };
+        configureDatabase(createStatements);
     }
     public boolean addUser(UserData registerUser) throws DataAccessException {
         String hashedPassword = encryptPassword(registerUser.password());
@@ -86,28 +97,17 @@ public class SQLUserDAO implements UserDAO{
         return encoder.matches(clearTextPassword, storedPassword);
     }
 
-    private final String[] createStatements = {
-            """
-            CREATE TABLE IF NOT EXISTS  users (
-              `username` VARCHAR(255) NOT NULL,
-              `password` VARCHAR(255) NOT NULL,
-              `email` VARCHAR(255) NOT NULL,
-              PRIMARY KEY (`username`)
-            );
-            """
-    };
-
-    private void configureDatabase() throws DataAccessException {
-        DatabaseManager.createDatabase();
-        try (var conn = DatabaseManager.getConnection()) {
-            for (var statement : createStatements) {
-                try (var preparedStatement = conn.prepareStatement(statement)) {
-                    preparedStatement.executeUpdate();
-                }
-            }
-        } catch (SQLException ex) {
-            throw new DataAccessException(String.format("Unable to configure database: %s", ex.getMessage()));
-        }
-    }
+    //    private void configureDatabase() throws DataAccessException {
+//        DatabaseManager.createDatabase();
+//        try (var conn = DatabaseManager.getConnection()) {
+//            for (var statement : createStatements) {
+//                try (var preparedStatement = conn.prepareStatement(statement)) {
+//                    preparedStatement.executeUpdate();
+//                }
+//            }
+//        } catch (SQLException ex) {
+//            throw new DataAccessException(String.format("Unable to configure database: %s", ex.getMessage()));
+//        }
+//    }
 }
 

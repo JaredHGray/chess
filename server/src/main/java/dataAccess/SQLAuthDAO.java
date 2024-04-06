@@ -1,11 +1,21 @@
 package dataAccess;
 
 import java.sql.SQLException;
+import static dataAccess.ConfigureDatabase.configureDatabase;
 
 public class SQLAuthDAO implements AuthDAO{
 
     public SQLAuthDAO() throws DataAccessException {
-        configureDatabase();
+        String[] createStatements = {
+                """
+            CREATE TABLE IF NOT EXISTS auth (
+            `username` VARCHAR(255) NOT NULL,
+            `authToken` VARCHAR(255) NOT NULL,
+            PRIMARY KEY (`authToken`)
+            );
+            """
+        };
+        configureDatabase(createStatements);
     }
 
     public boolean createAuth(String username, String authToken) throws DataAccessException {
@@ -78,28 +88,5 @@ public class SQLAuthDAO implements AuthDAO{
             throw new DataAccessException(String.format("Unable to read data: %s", ex.getMessage()));
         }
         return null;
-    }
-
-    private final String[] createStatements = {
-            """
-            CREATE TABLE IF NOT EXISTS auth (
-            `username` VARCHAR(255) NOT NULL,
-            `authToken` VARCHAR(255) NOT NULL,
-            PRIMARY KEY (`authToken`)
-            );
-            """
-    };
-
-    private void configureDatabase() throws DataAccessException {
-        DatabaseManager.createDatabase();
-        try (var conn = DatabaseManager.getConnection()) {
-            for (var statement : createStatements) {
-                try (var preparedStatement = conn.prepareStatement(statement)) {
-                    preparedStatement.executeUpdate();
-                }
-            }
-        } catch (SQLException ex) {
-            throw new DataAccessException(String.format("Unable to configure database: %s", ex.getMessage()));
-        }
     }
 }
