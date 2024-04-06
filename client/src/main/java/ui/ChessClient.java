@@ -150,6 +150,26 @@ public class ChessClient {
         if(choice != 3 && choice != 5){gamePlayMenu(out);}
     }
 
+    private void observerMenu(PrintStream out){
+        out.println("1. Redraw Chess Board");
+        out.println("2. Leave");
+        out.print("Enter choice: ");
+    }
+
+    private void executeObserverChoice(int choice, PrintStream out) {
+        switch (choice) {
+            case 1:
+                drawChessBoard(out);
+                break;
+            case 2:
+                leaveGame(out);
+                break;
+            default:
+                out.println("Invalid choice");
+        }
+        if(choice != 2){observerMenu(out);}
+    }
+
     private void drawChessBoard(PrintStream out){
         out.println();
         out.println("Redraw Chessboard option selected");
@@ -243,12 +263,14 @@ public class ChessClient {
             out.println();
             printBoard.run(false, chosenGame.game().getBoard());
             out.println(chosenGame.gameName() + " successfully joined as an observer");
+            ws = new WebSocketFacade(serverUrl);
+            ws.setMessageListener(new ServerMessageHandler());
             ws.observePlayerSocket(chosenGame.gameID(), authToken);
             gamePlayMenu(out);
             do{
                 gameChoice = scanner.nextInt();
-                executeMoveChoice(gameChoice, out);
-            } while (gameChoice != 3 && gameChoice != 5);
+                executeObserverChoice(gameChoice, out);
+            } while (gameChoice != 2);
         } catch (Exception e) {
             System.out.println("Failure: " + e.getMessage());
         }
@@ -276,6 +298,8 @@ public class ChessClient {
             out.println();
             printBoard.run(false, chosenGame.game().getBoard());
             out.println(chosenGame.gameName() + " successfully joined");
+            ws = new WebSocketFacade(serverUrl);
+            ws.setMessageListener(new ServerMessageHandler());
             ws.joinPlayerSocket(chosenGame.gameID(), playerColor, authToken);
             gamePlayMenu(out);
             do{
@@ -386,8 +410,6 @@ public class ChessClient {
             authToken = response.authToken();
             loginMenu(out);
             int gameChoice;
-            ws = new WebSocketFacade(serverUrl);
-            ws.setMessageListener(new ServerMessageHandler());
             do {
                 gameChoice = scanner.nextInt();
                 executeGameChoice(gameChoice, out);
@@ -488,3 +510,6 @@ public class ChessClient {
         }
     }
 }
+
+
+//im getting some crossed wires????
