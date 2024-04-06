@@ -7,9 +7,6 @@ import chess.ChessPosition;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
-import java.util.Scanner;
-
-import static chess.ChessPiece.PieceType.*;
 
 public class ChessBoard {
     private static final int BOARD_SIZE_IN_SQUARES = 8;
@@ -103,15 +100,21 @@ public class ChessBoard {
                     out.print(EscapeSequences.SET_BG_COLOR_YELLOW);
                     out.print(EscapeSequences.SET_TEXT_COLOR_BLACK);
                     currentPiece = discoverPiece(chessboard.getPiece(currentPosition).getPieceType(), chessboard.getPiece(currentPosition).getTeamColor());
-                } else if (validMoves != null && validMoves.contains(currentPosition)) {
+                } else if (validMoves != null && checkMoves(validMoves, currentPosition)) {
                     // Highlight available moves in green
                     out.print(EscapeSequences.SET_BG_COLOR_GREEN);
                     out.print(EscapeSequences.SET_TEXT_COLOR_BLACK);
-                    currentPiece = discoverPiece(chessboard.getPiece(currentPosition).getPieceType(), chessboard.getPiece(currentPosition).getTeamColor());
+                    ChessPiece piece = chessboard.getPiece(currentPosition);
+                    if (piece != null) {
+                        ChessPiece.PieceType pieceType = piece.getPieceType();
+                        ChessGame.TeamColor teamColor = piece.getTeamColor();
+                        if (pieceType != null && teamColor != null) {
+                            currentPiece = discoverPiece(pieceType, teamColor);
+                        } else {currentPiece = EMPTY;}
+                    } else {currentPiece = EMPTY;}
                 } else if(chessboard.getBoard()[rowNumber][boardCol] == null){
                     currentPiece = EMPTY;
                 } else {
-                    //ChessPosition position = new ChessPosition(rowNumber+1, boardCol+1);
                     currentPiece = discoverPiece(chessboard.getPiece(currentPosition).getPieceType(), chessboard.getPiece(currentPosition).getTeamColor());
                 }
                 printStarterBoard(out, currentPiece, rowNumber);
@@ -119,22 +122,14 @@ public class ChessBoard {
             }
     }
 
-//    private static void initializeChessboard() {
-//        //chessboard = new String[BOARD_SIZE_IN_SQUARES][BOARD_SIZE_IN_SQUARES];
-//        // Set up pawns
-//        for (int col = 0; col < BOARD_SIZE_IN_SQUARES; col++) {
-//            chessboard[1][col] = EscapeSequences.BLACK_PAWN; // Black pawns
-//            chessboard[6][col] = EscapeSequences.WHITE_PAWN; // White pawns
-//        }
-//
-//        String[] whitePieces = {EscapeSequences.WHITE_ROOK, EscapeSequences.WHITE_KNIGHT, EscapeSequences.WHITE_BISHOP, EscapeSequences.WHITE_KING, EscapeSequences.WHITE_QUEEN, EscapeSequences.WHITE_BISHOP, EscapeSequences.WHITE_KNIGHT, EscapeSequences.WHITE_ROOK};
-//        String[] blackPieces = {EscapeSequences.BLACK_ROOK, EscapeSequences.BLACK_KNIGHT, EscapeSequences.BLACK_BISHOP, EscapeSequences.BLACK_KING, EscapeSequences.BLACK_QUEEN, EscapeSequences.BLACK_BISHOP, EscapeSequences.BLACK_KNIGHT, EscapeSequences.BLACK_ROOK};
-//
-//        for (int col = 0; col < BOARD_SIZE_IN_SQUARES; col++) {
-//            chessboard[0][col] = blackPieces[col];
-//            chessboard[7][col] = whitePieces[col];
-//        }
-//    }
+    private static boolean checkMoves(Collection<ChessMove> moves, ChessPosition currentPosition){
+        for(ChessMove move : moves){
+            if(move.getEndPosition().equals(currentPosition)){
+                return true;
+            }
+        }
+        return false;
+    }
 
     private static void setWhite(PrintStream out) {
         out.print(EscapeSequences.SET_BG_COLOR_WHITE);
