@@ -42,13 +42,13 @@ public class ChessClient {
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         out.print(EscapeSequences.ERASE_SCREEN);
         Scanner scanner = new Scanner(System.in);
-        int choice;
+        int choice = 0;
         out.println("Welcome to ♕ 240 Chess Server ♕");
-        do {
+        while (choice != 2) {
             initialMenu(out);
             choice = scanner.nextInt();
             executeInitialChoice(choice, out);
-        } while (choice != 2);
+        }
     }
 
     private void initialMenu(PrintStream out) {
@@ -170,21 +170,23 @@ public class ChessClient {
         if(choice != 2){observerMenu(out);}
     }
 
-    private void drawChessBoard(PrintStream out){
+    public void drawChessBoard(PrintStream out){
         out.println();
         out.println("Redraw Chessboard option selected");
-        printBoard.run(true, chosenGame.game().getBoard());
+        out.println("White Board");
+        printBoard.run(true, webSocketGame.getBoard());
         out.println();
-        printBoard.run(false, chosenGame.game().getBoard());
+        out.println("Black Board");
+        printBoard.run(false, webSocketGame.getBoard());
     }
 
-    private void leaveGame(PrintStream out){
+    public void leaveGame(PrintStream out){
         out.println();
         out.println("Leave option selected");
         ws.leaveGameSocket(chosenGame.gameID(), authToken);
     }
 
-    private void makeMove(PrintStream out){
+    public void makeMove(PrintStream out){
         Scanner scanner = new Scanner(System.in);
         out.println();
         out.println("Make Move option selected");
@@ -216,7 +218,7 @@ public class ChessClient {
         return false;
     }
 
-    private ChessPiece.PieceType getPromotionPieceType(String promotionPiece) {
+    public ChessPiece.PieceType getPromotionPieceType(String promotionPiece) {
         return switch (promotionPiece.toUpperCase()) {
             case "Q" -> ChessPiece.PieceType.QUEEN;
             case "R" -> ChessPiece.PieceType.ROOK;
@@ -226,13 +228,13 @@ public class ChessClient {
         };
     }
 
-    private void resignGame(PrintStream out){
+    public void resignGame(PrintStream out){
         out.println();
         out.println("Resign option selected");
         ws.resignGameSocket(authToken, chosenGame.gameID());
     }
 
-    private void highlightChoices(PrintStream out){
+    public void highlightChoices(PrintStream out){
         Scanner scanner = new Scanner(System.in);
         out.println();
         out.println("Highlight Legal Moves option selected");
@@ -244,7 +246,7 @@ public class ChessClient {
         printBoard.highlightMoves(white, webSocketGame.getBoard(), validMoves, startPosition);
     }
 
-    private void observeGame(PrintStream out) {
+    public void observeGame(PrintStream out) {
         getGames();
         Scanner scanner = new Scanner(System.in);
         out.println();
@@ -267,16 +269,19 @@ public class ChessClient {
             ws.setMessageListener(new ServerMessageHandler());
             ws.observePlayerSocket(chosenGame.gameID(), authToken);
             gamePlayMenu(out);
-            do{
+            while (true) {
                 gameChoice = scanner.nextInt();
                 executeObserverChoice(gameChoice, out);
-            } while (gameChoice != 2);
+                if (gameChoice == 2) {
+                    break;
+                }
+            }
         } catch (Exception e) {
             System.out.println("Failure: " + e.getMessage());
         }
     }
 
-    private void joinGame(PrintStream out) {
+    public void joinGame(PrintStream out) {
         getGames();
         Scanner scanner = new Scanner(System.in);
         out.println();
@@ -302,16 +307,19 @@ public class ChessClient {
             ws.setMessageListener(new ServerMessageHandler());
             ws.joinPlayerSocket(chosenGame.gameID(), playerColor, authToken);
             gamePlayMenu(out);
-            do{
+            while (true) {
                 gameChoice = scanner.nextInt();
                 executeMoveChoice(gameChoice, out);
-            } while (gameChoice != 3 && gameChoice != 5);
+                if (gameChoice == 3 || gameChoice == 5) {
+                    break;
+                }
+            }
         } catch (Exception e) {
             System.out.println("Failure: " + e.getMessage());
         }
     }
 
-    private void listGames(PrintStream out) {
+    public void listGames(PrintStream out) {
         out.println();
         out.println("List Games option selected");
         int count = 1;
@@ -325,7 +333,7 @@ public class ChessClient {
         out.println();
     }
 
-    private void createGame(PrintStream out) {
+    public void createGame(PrintStream out) {
         Scanner scanner = new Scanner(System.in);
         out.println();
         out.println("Create Game option selected");
@@ -340,7 +348,7 @@ public class ChessClient {
         }
     }
 
-    private void logout(PrintStream out) {
+    public void logout(PrintStream out) {
         out.println();
         out.println("Logout option selected");
         try {
@@ -352,7 +360,7 @@ public class ChessClient {
         authToken = null;
     }
 
-    private void userHelp(PrintStream out) {
+    public void userHelp(PrintStream out) {
         out.println();
         out.println("Help menu option selected");
         out.println("Help: You are lost and confused, in need of guidance on what to do");
@@ -410,10 +418,13 @@ public class ChessClient {
             authToken = response.authToken();
             loginMenu(out);
             int gameChoice;
-            do {
+            while (true) {
                 gameChoice = scanner.nextInt();
                 executeGameChoice(gameChoice, out);
-            } while (gameChoice != 2);
+                if (gameChoice == 2) {
+                    break;
+                }
+            }
         } catch (Exception e) {
             System.out.println("Login failed: " + e.getMessage());
         }
@@ -440,10 +451,13 @@ public class ChessClient {
             loginMenu(out);
             int gameChoice;
             ws = new WebSocketFacade(serverUrl);
-            do {
+            while (true) {
                 gameChoice = scanner.nextInt();
                 executeGameChoice(gameChoice, out);
-            } while (gameChoice != 2);
+                if (gameChoice == 2) {
+                    break;
+                }
+            }
         } catch (Exception e) {
             System.out.println("Registration failed: " + e.getMessage());
         }
@@ -491,10 +505,10 @@ public class ChessClient {
             out.println();
             out.println("NOTIFICATION: " + message.getMessage());
             out.print(EscapeSequences.RESET_TEXT_COLOR);
-            out.println();
-            out.print("Enter choice: ");
-            int gameChoice = scanner.nextInt();
-            executeMoveChoice(gameChoice, out);
+//            out.println();
+//            out.print("Enter choice: ");
+//            int gameChoice = scanner.nextInt();
+//            executeMoveChoice(gameChoice, out);
         }
 
         @Override
@@ -504,9 +518,9 @@ public class ChessClient {
             out.println();
             out.println("ERROR: " + message.getErrorMessage());
             out.print(EscapeSequences.RESET_TEXT_COLOR);
-            out.print("Enter choice: ");
-            int gameChoice = scanner.nextInt();
-            executeMoveChoice(gameChoice, out);
+//            out.print("Enter choice: ");
+//            int gameChoice = scanner.nextInt();
+//            executeMoveChoice(gameChoice, out);
         }
     }
 }

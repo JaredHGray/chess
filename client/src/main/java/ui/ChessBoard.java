@@ -11,8 +11,8 @@ import java.util.Collection;
 public class ChessBoard {
     private static final int BOARD_SIZE_IN_SQUARES = 8;
     private static final String EMPTY = "   ";
-    private static final String[] rowHeaders = { " a ", " b ", " c ", " d ", " e ", " f ", " g ", " h " };
-    private static final String[] columnHeaders = { " 8 ", " 7 ", " 6 ", " 5 ", " 4 ", " 3 ", " 2 ", " 1 " };
+    private static final String[] rowHeaders = { " h ", " g ", " f ", " e ", " d ", " c ", " b ", " a " };
+    private static final String[] columnHeaders = { " 1 ", " 2 ", " 3 ", " 4 ", " 5 ", " 6 ", " 7 ", " 8 " };
     private static chess.ChessBoard chessboard;
 
     public void run(boolean whitePerspective, chess.ChessBoard board) {
