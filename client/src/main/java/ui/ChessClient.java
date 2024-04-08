@@ -482,7 +482,7 @@ public class ChessClient {
     }
 
     private ChessPosition getPosition(String position){
-        String letters = "abcdefgh";
+        String letters = (playerColor == ChessGame.TeamColor.WHITE ? "abcdefgh" : "hgfedcba");
         char fileChar = position.charAt(0);
         int col = letters.indexOf(fileChar) + 1;
         int row = Integer.parseInt(position.substring(1));
@@ -493,34 +493,23 @@ public class ChessClient {
         @Override
         public void onLoadGame(LoadGameMessage message) {
             webSocketGame = message.getGame();
-            printBoard.run(true, webSocketGame.getBoard());
-            out.println();
-            printBoard.run(false, webSocketGame.getBoard());
+            drawChessBoard(out);
         }
 
         @Override
         public void onNotification(NotificationMessage message) {
-            Scanner scanner = new Scanner(System.in);
             out.print(EscapeSequences.SET_TEXT_COLOR_BLUE);
             out.println();
             out.println("NOTIFICATION: " + message.getMessage());
             out.print(EscapeSequences.RESET_TEXT_COLOR);
-//            out.println();
-//            out.print("Enter choice: ");
-//            int gameChoice = scanner.nextInt();
-//            executeMoveChoice(gameChoice, out);
         }
 
         @Override
         public void onError(ErrorMessage message) {
-            Scanner scanner = new Scanner(System.in);
             out.print(EscapeSequences.SET_TEXT_COLOR_RED);
             out.println();
             out.println("ERROR: " + message.getErrorMessage());
             out.print(EscapeSequences.RESET_TEXT_COLOR);
-//            out.print("Enter choice: ");
-//            int gameChoice = scanner.nextInt();
-//            executeMoveChoice(gameChoice, out);
         }
     }
 }

@@ -88,12 +88,7 @@ public class ChessBoard {
         String currentPiece;
             for (int boardCol = 0; boardCol < BOARD_SIZE_IN_SQUARES; boardCol++) {
                 ChessPosition currentPosition;
-                if (whitePerspective) {
-                    currentPosition = new ChessPosition(rowNumber + 1, boardCol + 1);
-                } else {
-                    //currentPosition = new ChessPosition(BOARD_SIZE_IN_SQUARES - rowNumber, boardCol + 1);
-                    currentPosition = new ChessPosition(rowNumber + 1, boardCol + 1);
-                }
+                currentPosition = new ChessPosition(rowNumber + 1, boardCol + 1);
                 if ((boardCol + rowNumber) % 2 == 0) {
                     setWhite(out);
                 } else {
